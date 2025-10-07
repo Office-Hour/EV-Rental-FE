@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  pull_request:
+    types: [synchronize, opened, reopened, edited]
+
+permissions:
+  id-token: write
+  contents: read
+  actions: read
+
+jobs:
+  main-ci:
+    env:
+      HUSKY: 0
+      # NX_POWERPACK_LICENSE: ${{ secrets.NX_POWERPACK_LICENSE }}
+      # AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      # AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          run_install: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Setup pnpm node_module cache
+        uses: actions/cache@v4
+        with:
+          path: /home/runner/setup-pnpm/node_modules/.bin/store/v3
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - id: main
+        run: pnpm run lint && pnpm run test:ci && pnpm run build
+
+      - if: ${{ steps.main.outcome == 'failure' }}
+        run: exit 1
