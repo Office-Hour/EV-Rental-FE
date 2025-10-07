@@ -47,7 +47,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - id: main
-        run: pnpm run lint && pnpm run test && pnpm run build
+        run: pnpm run lint && pnpm run test:ci && pnpm run build
 
       - if: ${{ steps.main.outcome == 'failure' }}
         run: exit 1
