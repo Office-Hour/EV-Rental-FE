@@ -50,8 +50,6 @@ jobs:
 
       - id: main
         run: pnpm run build && pnpm run deploy
-        with:
-          token: ${{ secrets.GH_TOKEN }}
 
       - if: ${{ steps.main.outcome == 'failure' }}
         run: exit 1
