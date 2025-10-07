@@ -1,0 +1,2 @@
+pnpm lint-staged
+pnpm run lint && pnpm run test:ci && pnpm run build
