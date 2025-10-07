@@ -14,6 +14,7 @@ jobs:
   deployment:
     env:
       HUSKY: 0
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
       # NX_POWERPACK_LICENSE: ${{ secrets.NX_POWERPACK_LICENSE }}
       # AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       # AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -50,7 +51,7 @@ jobs:
       - id: main
         run: pnpm run build && pnpm run deploy
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_TOKEN }}
 
       - if: ${{ steps.main.outcome == 'failure' }}
         run: exit 1
