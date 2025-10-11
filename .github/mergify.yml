@@ -15,3 +15,10 @@ pull_request_rules:
     actions:
       delete_head_branch:
         force: false
+
+merge_protections:
+  - name: Conventional commits
+    if:
+      - base = main
+    success_conditions:
+      - "title ~= ^(fix|feat|docs|style|refactor|perf|test|build|ci|chore|revert)(?:\\(.+\\))?:"
