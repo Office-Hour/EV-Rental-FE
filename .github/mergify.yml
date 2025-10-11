@@ -1,14 +1,15 @@
 pull_request_rules:
-  - name: automatic merge when CI passes and reviews approve
+  - name: Automatic merge when CI passes and reviews approve
     conditions:
       - base = main
-      - "#commits-behind >= 0"
-      - "#approved-reviews-by >= 0"
-      - check-success = main-ci
+      - '#commits-behind >= 0'
+      - '#approved-reviews-by >= 0'
+      - check-success = main-ci # replace "CI" with the name of your CI status check
     actions:
       merge:
         method: rebase
-  - name: delete head branch after merge but not if other PRs depend on it
+
+  - name: Delete head branch after merge but not if other PRs depend on it
     conditions:
       - merged
     actions:
