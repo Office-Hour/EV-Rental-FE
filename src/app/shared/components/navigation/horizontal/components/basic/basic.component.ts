@@ -23,7 +23,6 @@ import { HorizontalNavigationComponent } from '../../horizontal';
   selector: 'horizontal-navigation-basic-item',
   templateUrl: './basic.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [
     RouterLink,
     RouterLinkActive,

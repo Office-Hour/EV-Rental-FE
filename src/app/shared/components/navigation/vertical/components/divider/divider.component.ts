@@ -21,7 +21,6 @@ import { VerticalNavigationComponent } from '../../vertical';
   selector: 'vertical-navigation-divider-item',
   templateUrl: './divider.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
 })
 export class VerticalNavigationDividerItemComponent implements OnInit, OnDestroy {
   private _changeDetectorRef = inject(ChangeDetectorRef);

@@ -21,7 +21,6 @@ import { VerticalNavigationComponent } from '../../vertical';
   selector: 'vertical-navigation-spacer-item',
   templateUrl: './spacer.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
 })
 export class VerticalNavigationSpacerItemComponent implements OnInit, OnDestroy {
   private _changeDetectorRef = inject(ChangeDetectorRef);

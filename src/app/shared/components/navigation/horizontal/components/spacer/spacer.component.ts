@@ -18,7 +18,6 @@ import { HorizontalNavigationComponent } from '../../horizontal';
   selector: 'horizontal-navigation-spacer-item',
   templateUrl: './spacer.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
 })
 export class HorizontalNavigationSpacerItemComponent implements OnInit {
   private _changeDetectorRef = inject(ChangeDetectorRef);

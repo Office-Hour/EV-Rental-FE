@@ -32,7 +32,6 @@ import { VerticalNavigationSpacerItemComponent } from '../spacer/spacer.componen
   selector: 'vertical-navigation-aside-item',
   templateUrl: './aside.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [
     MatTooltipModule,
     MatIconModule,
