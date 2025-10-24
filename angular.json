@@ -21,8 +21,14 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/styles.css"],
-            "outputPath": "./dist"
+            "stylePreprocessorOptions": {
+              "includePaths": ["src/app/shared"]
+            },
+            "styles": [
+              "src/app/shared/styles/tailwind.scss",
+              "src/app/shared/styles/themes.scss",
+              "src/app/shared/styles/main.scss"
+            ]
           },
           "configurations": {
             "production": {
