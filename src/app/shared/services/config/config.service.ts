@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { CONFIG_DEFAULT } from './config.constants';
-import merge from 'lodash-es/merge';
+import { merge } from 'lodash-es';
 import { Config } from './config.types';
 
 @Injectable({ providedIn: 'root' })

@@ -29,7 +29,7 @@ import { EV_VERSION } from '../shared/services/version/ev-version';
  * Modern layout component using Angular 20 best practices
  */
 @Component({
-  selector: 'main-layout',
+  selector: 'app-layout',
   imports: [
     LoadingBar,
     VerticalNavigationComponent,
