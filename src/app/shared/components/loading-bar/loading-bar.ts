@@ -16,7 +16,6 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 @Component({
   selector: 'loading-bar',
   imports: [MatProgressBarModule],
-  standalone: true,
   templateUrl: './loading-bar.html',
   styleUrl: './loading-bar.css',
   encapsulation: ViewEncapsulation.None,

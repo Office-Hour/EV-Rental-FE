@@ -28,7 +28,6 @@ import { HorizontalNavigationSpacerItemComponent } from './components/spacer/spa
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   exportAs: 'HorizontalNavigation',
-  standalone: true,
   imports: [
     HorizontalNavigationBasicItemComponent,
     HorizontalNavigationBranchItemComponent,

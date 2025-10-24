@@ -27,7 +27,6 @@ import { VerticalNavigationSpacerItemComponent } from '../spacer/spacer.componen
   selector: 'vertical-navigation-group-item',
   templateUrl: './group.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [
     MatIconModule,
     VerticalNavigationBasicItemComponent,

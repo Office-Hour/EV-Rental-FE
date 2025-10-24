@@ -26,7 +26,6 @@ import { HorizontalNavigationBasicItemComponent } from '../basic/basic.component
   selector: 'horizontal-navigation-branch-item',
   templateUrl: './branch.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [
     MatMenuModule,
     NgTemplateOutlet,

@@ -6,7 +6,6 @@ import { filter } from 'rxjs';
 @Directive({
   selector: '[ScrollReset]',
   exportAs: 'ScrollReset',
-  standalone: true,
 })
 export class ScrollResetDirective implements OnInit {
   private _elementRef = inject(ElementRef);

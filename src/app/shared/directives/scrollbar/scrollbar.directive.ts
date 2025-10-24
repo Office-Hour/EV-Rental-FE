@@ -31,7 +31,6 @@ import {
 @Directive({
   selector: '[Scrollbar]',
   exportAs: 'Scrollbar',
-  standalone: true,
 })
 export class ScrollbarDirective implements OnInit, OnDestroy {
   /* eslint-disable @typescript-eslint/naming-convention */

@@ -25,7 +25,6 @@ import { VerticalNavigationComponent } from '../../vertical';
   selector: 'vertical-navigation-basic-item',
   templateUrl: './basic.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [RouterLink, RouterLinkActive, MatTooltipModule, NgTemplateOutlet, MatIconModule],
 })
 export class VerticalNavigationBasicItemComponent implements OnInit {

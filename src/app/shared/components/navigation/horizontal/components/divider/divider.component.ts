@@ -18,7 +18,6 @@ import { HorizontalNavigationComponent } from '../../horizontal';
   selector: 'horizontal-navigation-divider-item',
   templateUrl: './divider.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
 })
 export class HorizontalNavigationDividerItemComponent implements OnInit {
   private _changeDetectorRef = inject(ChangeDetectorRef);

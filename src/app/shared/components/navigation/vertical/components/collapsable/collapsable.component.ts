@@ -32,7 +32,6 @@ import { VerticalNavigationSpacerItemComponent } from '../spacer/spacer.componen
   templateUrl: './collapsable.component.html',
   animations: sharedAnimations,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [
     MatTooltipModule,
     MatIconModule,

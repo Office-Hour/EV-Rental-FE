@@ -56,7 +56,6 @@ import { VerticalNavigationSpacerItemComponent } from './components/spacer/space
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   exportAs: 'VerticalNavigation',
-  standalone: true,
   imports: [
     ScrollbarDirective,
     VerticalNavigationAsideItemComponent,
