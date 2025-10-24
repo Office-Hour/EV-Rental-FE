@@ -1,3 +1,4 @@
+/* eslint-disable @angular-eslint/directive-selector */
 import { BooleanInput } from '@angular/cdk/coercion';
 import { Platform } from '@angular/cdk/platform';
 import {

@@ -29,7 +29,7 @@ import { RouterOutlet } from '@angular/router';
  * Modern layout component using Angular 20 best practices
  */
 @Component({
-  selector: 'main-layout',
+  selector: 'app-layout',
   imports: [
     LoadingBar,
     VerticalNavigationComponent,

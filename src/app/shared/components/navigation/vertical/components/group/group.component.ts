@@ -1,3 +1,4 @@
+/* eslint-disable @angular-eslint/component-selector */
 import { BooleanInput } from '@angular/cdk/coercion';
 import {
   ChangeDetectionStrategy,
@@ -36,9 +37,7 @@ import { VerticalNavigationSpacerItemComponent } from '../spacer/spacer.componen
   ],
 })
 export class VerticalNavigationGroupItemComponent implements OnInit, OnDestroy {
-  /* eslint-disable @typescript-eslint/naming-convention */
   static ngAcceptInputType_autoCollapse: BooleanInput;
-  /* eslint-enable @typescript-eslint/naming-convention */
 
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _sharedNavigationService = inject(SharedNavigationService);

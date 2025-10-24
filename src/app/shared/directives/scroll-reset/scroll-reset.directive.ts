@@ -1,4 +1,5 @@
-import { DestroyRef, Directive, ElementRef, inject, OnDestroy, OnInit } from '@angular/core';
+/* eslint-disable @angular-eslint/directive-selector */
+import { DestroyRef, Directive, ElementRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';

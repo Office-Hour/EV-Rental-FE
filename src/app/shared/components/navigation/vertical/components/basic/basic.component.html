@@ -40,7 +40,11 @@
       class="vertical-navigation-item"
       [class.vertical-navigation-item-active-forced]="item().active"
       [matTooltip]="item().tooltip || ''"
+      tabindex="0"
+      role="button"
       (click)="item().function?.(item()!)"
+      (keydown.enter)="item().function?.(item()!)"
+      (keydown.space)="item().function?.(item()!)"
     >
       <ng-container *ngTemplateOutlet="itemTemplate"></ng-container>
     </div>
@@ -84,6 +88,8 @@
       class="vertical-navigation-item"
       [class.vertical-navigation-item-active-forced]="item().active"
       [matTooltip]="item().tooltip || ''"
+      tabindex="0"
+      role="button"
     >
       <ng-container *ngTemplateOutlet="itemTemplate"></ng-container>
     </div>
@@ -94,6 +100,9 @@
     <div
       class="vertical-navigation-item vertical-navigation-item-disabled"
       [matTooltip]="item().tooltip || ''"
+      tabindex="-1"
+      role="button"
+      aria-disabled="true"
     >
       <ng-container *ngTemplateOutlet="itemTemplate"></ng-container>
     </div>

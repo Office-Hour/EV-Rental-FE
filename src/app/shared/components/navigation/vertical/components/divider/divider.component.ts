@@ -1,3 +1,4 @@
+/* eslint-disable @angular-eslint/component-selector */
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -61,7 +62,7 @@ export class VerticalNavigationDividerItemComponent implements OnInit, OnDestroy
    * On destroy
    */
   ngOnDestroy(): void {
-    // Cleanup is handled automatically by takeUntilDestroyed
+    // No cleanup needed as takeUntilDestroyed handles subscription cleanup
   }
 
   // -----------------------------------------------------------------------------------------------------

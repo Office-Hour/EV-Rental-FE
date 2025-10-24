@@ -1,3 +1,4 @@
+/* eslint-disable @angular-eslint/component-selector */
 import { BooleanInput } from '@angular/cdk/coercion';
 import {
   ChangeDetectionStrategy,

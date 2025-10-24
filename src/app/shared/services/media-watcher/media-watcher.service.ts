@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { Observable, ReplaySubject, map, switchMap } from 'rxjs';
 import { SharedConfigService } from '../config/config.service';
-import fromPairs from 'lodash-es/fromPairs';
+import { fromPairs } from 'lodash-es';
 import { Config } from '../config/config.types';
 
 @Injectable({ providedIn: 'root' })
