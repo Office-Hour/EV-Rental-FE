@@ -1,4 +1,5 @@
-import { NgClass, NgTemplateOutlet } from '@angular/common';
+/* eslint-disable @angular-eslint/component-selector */
+import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,

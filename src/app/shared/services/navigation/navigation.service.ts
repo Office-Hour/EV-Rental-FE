@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
-import { NavigationItem } from './navigation.types';
+import { NavigationItem, NavigationComponent } from './navigation.types';
 
 @Injectable({ providedIn: 'root' })
 export class SharedNavigationService {
-  private _componentRegistry: Map<string, any> = new Map<string, any>();
-  private _navigationStore: Map<string, NavigationItem[]> = new Map<string, any>();
+  private _componentRegistry: Map<string, NavigationComponent> = new Map<
+    string,
+    NavigationComponent
+  >();
+  private _navigationStore: Map<string, NavigationItem[]> = new Map<string, NavigationItem[]>();
 
   // -----------------------------------------------------------------------------------------------------
   // @ Public methods
@@ -16,7 +19,7 @@ export class SharedNavigationService {
    * @param name
    * @param component
    */
-  registerComponent(name: string, component: any): void {
+  registerComponent(name: string, component: NavigationComponent): void {
     this._componentRegistry.set(name, component);
   }
 

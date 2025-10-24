@@ -1,4 +1,4 @@
-import { NgClass } from '@angular/common';
+/* eslint-disable @angular-eslint/component-selector */
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,

@@ -6,7 +6,6 @@ import {
   DestroyRef,
   inject,
   input,
-  OnDestroy,
   OnInit,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -18,11 +17,11 @@ import { VerticalNavigationComponent } from '../../vertical';
  * Modern vertical navigation spacer item component using Angular 20 best practices
  */
 @Component({
-  selector: 'vertical-navigation-spacer-item',
+  selector: 'app-vertical-navigation-spacer-item',
   templateUrl: './spacer.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VerticalNavigationSpacerItemComponent implements OnInit, OnDestroy {
+export class VerticalNavigationSpacerItemComponent implements OnInit {
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _sharedNavigationService = inject(SharedNavigationService);
   private _destroyRef = inject(DestroyRef);
@@ -55,13 +54,6 @@ export class VerticalNavigationSpacerItemComponent implements OnInit, OnDestroy 
       .subscribe(() => {
         this._changeDetectorRef.markForCheck();
       });
-  }
-
-  /**
-   * On destroy
-   */
-  ngOnDestroy(): void {
-    // Cleanup is handled automatically by takeUntilDestroyed
   }
 
   // -----------------------------------------------------------------------------------------------------

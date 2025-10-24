@@ -40,7 +40,7 @@ export class SharedUtilsService {
    *
    * @param length
    */
-  randomId(length: number = 20): string {
+  randomId(length = 20): string {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let name = '';
 

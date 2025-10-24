@@ -41,6 +41,10 @@
       [class.horizontal-navigation-item-active-forced]="item().active"
       [matTooltip]="item().tooltip || ''"
       (click)="item().function?.(item()!)"
+      (keydown.enter)="item().function?.(item()!)"
+      (keydown.space)="item().function?.(item()!)"
+      tabindex="0"
+      role="button"
     >
       <ng-container *ngTemplateOutlet="itemTemplate"></ng-container>
     </div>
@@ -60,6 +64,10 @@
       [routerLinkActiveOptions]="isActiveMatchOptions()"
       [matTooltip]="item().tooltip || ''"
       (click)="item().function?.(item()!)"
+      (keydown.enter)="item().function?.(item()!)"
+      (keydown.space)="item().function?.(item()!)"
+      tabindex="0"
+      role="button"
     >
       <ng-container *ngTemplateOutlet="itemTemplate"></ng-container>
     </div>

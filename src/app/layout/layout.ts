@@ -19,6 +19,7 @@ import { SharedConfigService } from '../shared/services/config/config.service';
 import { Config, Scheme, Theme } from '../shared/services/config/config.types';
 import { MediaWatcherService } from '../shared/services/media-watcher/media-watcher.service';
 import { SharedNavigationService } from '../shared/services/navigation/navigation.service';
+import { NavigationComponent } from '../shared/services/navigation/navigation.types';
 import { SharedPlatformService } from '../shared/services/platform/platform.service';
 import { EV_VERSION } from '../shared/services/version/ev-version';
 import { HorizontalNavigationComponent } from '../shared/components/navigation/horizontal/horizontal';
@@ -58,14 +59,14 @@ export class Layout {
   private _config = signal<Config>(this._configService.config);
   private _scheme = signal<Scheme>('light');
   private _theme = signal<Theme>('theme-default');
-  private _navigation = signal<any>(null);
+  private _navigation = signal<NavigationComponent | null>(null);
   private _isScreenSmall = signal<boolean>(false);
   private _isScrolled = signal<boolean>(false);
 
   // Public properties (for backward compatibility)
-  navigation: any = null;
-  isScreenSmall: boolean = false;
-  isScrolled: boolean = false;
+  navigation: NavigationComponent | null = null;
+  isScreenSmall = false;
+  isScrolled = false;
 
   // Computed values
   config = computed(() => this._config());
@@ -88,7 +89,7 @@ export class Layout {
    * Toggle navigation
    */
   toggleNavigation(name: string): void {
-    const navigation = this._sharedNavigationService.getComponent(name) as any;
+    const navigation = this._sharedNavigationService.getComponent(name);
     if (navigation && navigation.toggle) {
       navigation.toggle();
     }

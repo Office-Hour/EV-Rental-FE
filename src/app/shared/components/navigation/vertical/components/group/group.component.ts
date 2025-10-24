@@ -8,7 +8,6 @@ import {
   DestroyRef,
   inject,
   input,
-  OnDestroy,
   OnInit,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -36,7 +35,7 @@ import { VerticalNavigationSpacerItemComponent } from '../spacer/spacer.componen
     VerticalNavigationDividerItemComponent,
   ],
 })
-export class VerticalNavigationGroupItemComponent implements OnInit, OnDestroy {
+export class VerticalNavigationGroupItemComponent implements OnInit {
   static ngAcceptInputType_autoCollapse: BooleanInput;
 
   private _changeDetectorRef = inject(ChangeDetectorRef);
@@ -74,13 +73,6 @@ export class VerticalNavigationGroupItemComponent implements OnInit, OnDestroy {
       });
   }
 
-  /**
-   * On destroy
-   */
-  ngOnDestroy(): void {
-    // Cleanup is handled automatically by takeUntilDestroyed
-  }
-
   // -----------------------------------------------------------------------------------------------------
   // @ Public methods
   // -----------------------------------------------------------------------------------------------------
@@ -88,7 +80,7 @@ export class VerticalNavigationGroupItemComponent implements OnInit, OnDestroy {
   /**
    * Track by function for ngFor loops
    */
-  trackByFn(index: number, item: any): any {
+  trackByFn(index: number, item: NavigationItem): number | string {
     return item.id || index;
   }
 

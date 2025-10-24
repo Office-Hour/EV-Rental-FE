@@ -21,7 +21,6 @@ import { SharedNavigationService } from '../../../../../services/navigation/navi
 import { NavigationItem } from '../../../../../services/navigation/navigation.types';
 import { VerticalNavigationComponent } from '../../vertical';
 import { VerticalNavigationBasicItemComponent } from '../basic/basic.component';
-import { VerticalNavigationDividerItemComponent } from '../divider/divider.component';
 import { VerticalNavigationGroupItemComponent } from '../group/group.component';
 import { VerticalNavigationSpacerItemComponent } from '../spacer/spacer.component';
 
@@ -42,9 +41,7 @@ import { VerticalNavigationSpacerItemComponent } from '../spacer/spacer.componen
   ],
 })
 export class VerticalNavigationCollapsableItemComponent implements OnInit {
-  /* eslint-disable @typescript-eslint/naming-convention */
   static ngAcceptInputType_autoCollapse: BooleanInput;
-  /* eslint-enable @typescript-eslint/naming-convention */
 
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _router = inject(Router);
