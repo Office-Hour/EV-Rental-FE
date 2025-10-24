@@ -1,0 +1,3 @@
+{
+  "*.{ts,html,css,scss}": "prettier --write --ignore-unknown",
+}
