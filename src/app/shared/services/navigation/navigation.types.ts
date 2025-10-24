@@ -1,4 +1,5 @@
 import { IsActiveMatchOptions, Params, QueryParamsHandling } from '@angular/router';
+import { ReplaySubject } from 'rxjs';
 
 export interface NavigationItem {
   id?: string;
@@ -31,7 +32,7 @@ export interface NavigationItem {
     classes?: string;
   };
   children?: NavigationItem[];
-  meta?: any;
+  meta?: Record<string, unknown>;
 }
 
 export type VerticalNavigationAppearance = 'default';
@@ -39,3 +40,8 @@ export type VerticalNavigationAppearance = 'default';
 export type VerticalNavigationMode = 'over' | 'side';
 
 export type VerticalNavigationPosition = 'left' | 'right';
+
+export interface NavigationComponent {
+  refresh(): void;
+  onRefreshed: ReplaySubject<boolean>;
+}

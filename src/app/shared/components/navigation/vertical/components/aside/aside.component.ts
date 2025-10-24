@@ -44,10 +44,8 @@ import { VerticalNavigationSpacerItemComponent } from '../spacer/spacer.componen
   ],
 })
 export class VerticalNavigationAsideItemComponent implements OnChanges, OnInit {
-  /* eslint-disable @typescript-eslint/naming-convention */
   static ngAcceptInputType_autoCollapse: BooleanInput;
   static ngAcceptInputType_skipChildren: BooleanInput;
-  /* eslint-enable @typescript-eslint/naming-convention */
 
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _router = inject(Router);
@@ -115,7 +113,7 @@ export class VerticalNavigationAsideItemComponent implements OnChanges, OnInit {
   /**
    * Track by function for ngFor loops
    */
-  trackByFn(index: number, item: any): any {
+  trackByFn(index: number, item: NavigationItem): number | string {
     return item.id || index;
   }
 

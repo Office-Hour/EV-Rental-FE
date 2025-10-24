@@ -3,49 +3,56 @@
  */
 
 // PerfectScrollbar type declaration
-declare namespace PerfectScrollbar {
-  interface Options {
-    wheelSpeed?: number;
-    wheelPropagation?: boolean;
-    swipeEasing?: boolean;
-    minScrollbarLength?: number;
-    maxScrollbarLength?: number;
-    scrollingThreshold?: number;
-    useBothWheelAxes?: boolean;
-    suppressScrollX?: boolean;
-    suppressScrollY?: boolean;
-    scrollXMarginOffset?: number;
-    scrollYMarginOffset?: number;
-    handlers?: string[];
-    textarea?: HTMLElement;
-    emulatedTouch?: boolean;
-    scrollbar?: {
-      class?: string;
-      style?: string;
-    };
-    rail?: {
-      class?: string;
-      style?: string;
-    };
-    theme?: string;
-  }
+export interface PerfectScrollbarOptions {
+  wheelSpeed?: number;
+  wheelPropagation?: boolean;
+  swipeEasing?: boolean;
+  minScrollbarLength?: number;
+  maxScrollbarLength?: number;
+  scrollingThreshold?: number;
+  useBothWheelAxes?: boolean;
+  suppressScrollX?: boolean;
+  suppressScrollY?: boolean;
+  scrollXMarginOffset?: number;
+  scrollYMarginOffset?: number;
+  handlers?: string[];
+  textarea?: HTMLElement;
+  emulatedTouch?: boolean;
+  scrollbar?: {
+    class?: string;
+    style?: string;
+  };
+  rail?: {
+    class?: string;
+    style?: string;
+  };
+  theme?: string;
+}
 
-  interface Geometry {
-    x: number;
-    y: number;
-    w: number;
-    h: number;
-    isRtl: boolean;
-    isBottomVisible: boolean;
-    isRightVisible: boolean;
-    contentWidth: number;
-    contentHeight: number;
-  }
+export interface PerfectScrollbarGeometry {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  isRtl: boolean;
+  isBottomVisible: boolean;
+  isRightVisible: boolean;
+  contentWidth: number;
+  contentHeight: number;
+}
 
-  interface Position {
-    x: number;
-    y: number;
-  }
+export interface PerfectScrollbarPosition {
+  x: number;
+  y: number;
+}
+
+export interface PerfectScrollbarInstance {
+  scrollTo(x: number, y: number, speed?: number): void;
+  scrollToElement(element: HTMLElement, offset?: number, speed?: number): void;
+  geometry(): PerfectScrollbarGeometry;
+  position(): PerfectScrollbarPosition;
+  update(): void;
+  destroy(): void;
 }
 
 export interface ScrollbarGeometry {
@@ -62,7 +69,7 @@ export interface ScrollbarPosition {
 
 export interface ScrollbarConfig {
   enabled: boolean;
-  options: PerfectScrollbar.Options;
+  options: PerfectScrollbarOptions;
 }
 
 export interface ScrollbarState {
@@ -86,7 +93,7 @@ export class ScrollbarGeometryImpl implements ScrollbarGeometry {
   /**
    * Create from Perfect Scrollbar geometry
    */
-  static fromPerfectScrollbar(geometry: any): ScrollbarGeometryImpl {
+  static fromPerfectScrollbar(geometry: PerfectScrollbarGeometry): ScrollbarGeometryImpl {
     return new ScrollbarGeometryImpl(
       geometry.x || 0,
       geometry.y || 0,
@@ -122,7 +129,7 @@ export class ScrollbarPositionImpl implements ScrollbarPosition {
   /**
    * Create from Perfect Scrollbar position
    */
-  static fromPerfectScrollbar(position: any): ScrollbarPositionImpl {
+  static fromPerfectScrollbar(position: PerfectScrollbarPosition): ScrollbarPositionImpl {
     return new ScrollbarPositionImpl(position.x || 0, position.y || 0);
   }
 

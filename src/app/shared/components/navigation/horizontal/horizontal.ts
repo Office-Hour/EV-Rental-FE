@@ -1,3 +1,4 @@
+/* eslint-disable @angular-eslint/component-selector */
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -72,7 +73,7 @@ export class HorizontalNavigationComponent implements OnChanges, OnInit, OnDestr
     // Make sure the name input is not an empty string
     if (this.name() === '') {
       // Note: name is an input signal; ensure it has a value before register
-      (this as any).name.set(this._sharedUtilsService.randomId());
+      this.name.set(this._sharedUtilsService.randomId());
     }
 
     // Register the navigation component
@@ -108,7 +109,7 @@ export class HorizontalNavigationComponent implements OnChanges, OnInit, OnDestr
    * @param index
    * @param item
    */
-  trackByFn(index: number, item: any): any {
+  trackByFn(index: number, item: NavigationItem): number | string {
     return item.id || index;
   }
 }

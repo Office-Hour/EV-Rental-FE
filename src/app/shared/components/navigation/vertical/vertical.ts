@@ -49,7 +49,7 @@ import { VerticalNavigationSpacerItemComponent } from './components/spacer/space
  * Modern vertical navigation component using Angular 20 best practices
  */
 @Component({
-  selector: 'vertical-navigation',
+  selector: 'app-vertical-navigation',
   templateUrl: './vertical.html',
   styleUrls: ['./vertical.sass'],
   animations: sharedAnimations,
@@ -67,11 +67,9 @@ import { VerticalNavigationSpacerItemComponent } from './components/spacer/space
   ],
 })
 export class VerticalNavigationComponent implements OnChanges, OnInit, AfterViewInit, OnDestroy {
-  /* eslint-disable @typescript-eslint/naming-convention */
   static ngAcceptInputType_inner: BooleanInput;
   static ngAcceptInputType_opened: BooleanInput;
   static ngAcceptInputType_transparentOverlay: BooleanInput;
-  /* eslint-enable @typescript-eslint/naming-convention */
 
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _document = inject(DOCUMENT);
@@ -125,8 +123,8 @@ export class VerticalNavigationComponent implements OnChanges, OnInit, AfterView
 
   // Private properties
   private _asideOverlay: HTMLElement | undefined;
-  private readonly _handleAsideOverlayClick: any;
-  private readonly _handleOverlayClick: any;
+  private readonly _handleAsideOverlayClick: () => void;
+  private readonly _handleOverlayClick: () => void;
   private _mutationObserver: MutationObserver | undefined;
   private _overlay: HTMLElement | undefined;
   private _scrollStrategy: ScrollStrategy = this._scrollStrategyOptions.block();
@@ -152,8 +150,7 @@ export class VerticalNavigationComponent implements OnChanges, OnInit, AfterView
   /**
    * Host binding for component classes
    */
-  @HostBinding('class') get classList(): any {
-    /* eslint-disable @typescript-eslint/naming-convention */
+  @HostBinding('class') get classList(): Record<string, boolean> {
     return {
       'vertical-navigation-animations-enabled': this.animationsEnabled(),
       [`vertical-navigation-appearance-${this.appearance()}`]: true,
@@ -165,13 +162,12 @@ export class VerticalNavigationComponent implements OnChanges, OnInit, AfterView
       'vertical-navigation-position-left': this.position() === 'left',
       'vertical-navigation-position-right': this.position() === 'right',
     };
-    /* eslint-enable @typescript-eslint/naming-convention */
   }
 
   /**
    * Host binding for component inline styles
    */
-  @HostBinding('style') get styleList(): any {
+  @HostBinding('style') get styleList(): Record<string, string> {
     return {
       visibility: this.opened() ? 'visible' : 'hidden',
     };
@@ -443,7 +439,7 @@ export class VerticalNavigationComponent implements OnChanges, OnInit, AfterView
   /**
    * Track by function for ngFor loops
    */
-  trackByFn(index: number, item: any): any {
+  trackByFn(index: number, item: NavigationItem): number | string {
     return item.id || index;
   }
 

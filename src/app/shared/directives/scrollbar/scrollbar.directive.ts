@@ -23,6 +23,8 @@ import {
   ScrollbarPosition,
   ScrollbarPositionImpl,
   ScrollbarState,
+  PerfectScrollbarOptions,
+  PerfectScrollbarInstance,
 } from './scrollbar.types';
 
 /**
@@ -34,9 +36,7 @@ import {
   exportAs: 'Scrollbar',
 })
 export class ScrollbarDirective implements OnInit, OnDestroy {
-  /* eslint-disable @typescript-eslint/naming-convention */
   static ngAcceptInputType_Scrollbar: BooleanInput;
-  /* eslint-enable @typescript-eslint/naming-convention */
 
   private _elementRef = inject(ElementRef);
   private _platform = inject(Platform);
@@ -44,7 +44,7 @@ export class ScrollbarDirective implements OnInit, OnDestroy {
 
   // Modern input signals
   Scrollbar = input<boolean>(true);
-  ScrollbarOptions = input<PerfectScrollbar.Options>({});
+  ScrollbarOptions = input<PerfectScrollbarOptions>({});
 
   // Internal signals
   private _isInitialized = signal<boolean>(false);
@@ -60,8 +60,8 @@ export class ScrollbarDirective implements OnInit, OnDestroy {
 
   // State management
   private _animation: number | null = null;
-  private _options: PerfectScrollbar.Options = {};
-  private _ps: PerfectScrollbar | null = null;
+  private _options: PerfectScrollbarOptions = {};
+  private _ps: PerfectScrollbarInstance | null = null;
 
   constructor() {
     // Watch for input changes
@@ -120,7 +120,7 @@ export class ScrollbarDirective implements OnInit, OnDestroy {
   /**
    * Update scrollbar options
    */
-  updateOptions(options: PerfectScrollbar.Options): void {
+  updateOptions(options: PerfectScrollbarOptions): void {
     if (this._ps) {
       this._options = merge(this._options, options);
       this._ps.update();
@@ -132,7 +132,7 @@ export class ScrollbarDirective implements OnInit, OnDestroy {
    */
   scrollTo(x: number, y: number, speed?: number): void {
     if (this._ps) {
-      (this._ps as any).scrollTo(x, y, speed);
+      this._ps.scrollTo(x, y, speed);
     }
   }
 
@@ -141,7 +141,7 @@ export class ScrollbarDirective implements OnInit, OnDestroy {
    */
   scrollToElement(element: HTMLElement, offset?: number, speed?: number): void {
     if (this._ps) {
-      (this._ps as any).scrollToElement(element, offset, speed);
+      this._ps.scrollToElement(element, offset, speed);
     }
   }
 
@@ -157,7 +157,7 @@ export class ScrollbarDirective implements OnInit, OnDestroy {
    */
   scrollToBottom(speed?: number): void {
     if (this._ps) {
-      const geometry = (this._ps as any).geometry();
+      const geometry = this._ps.geometry();
       this.scrollTo(0, geometry.contentHeight, speed);
     }
   }
@@ -174,7 +174,7 @@ export class ScrollbarDirective implements OnInit, OnDestroy {
    */
   scrollToRight(speed?: number): void {
     if (this._ps) {
-      const geometry = (this._ps as any).geometry();
+      const geometry = this._ps.geometry();
       this.scrollTo(geometry.contentWidth, 0, speed);
     }
   }
@@ -202,7 +202,7 @@ export class ScrollbarDirective implements OnInit, OnDestroy {
   /**
    * Initialize Perfect Scrollbar
    */
-  private _initialize(options: PerfectScrollbar.Options = {}): void {
+  private _initialize(options: PerfectScrollbarOptions = {}): void {
     if (!this._platform.isBrowser || this._ps) {
       return;
     }
@@ -296,7 +296,7 @@ export class ScrollbarDirective implements OnInit, OnDestroy {
     if (!this._ps) return;
 
     try {
-      const geometry = (this._ps as any).geometry();
+      const geometry = this._ps.geometry();
       this._geometry.set(ScrollbarGeometryImpl.fromPerfectScrollbar(geometry));
       this._isVisible.set(geometry.isRtl || geometry.isBottomVisible || geometry.isRightVisible);
     } catch (error) {
@@ -311,7 +311,7 @@ export class ScrollbarDirective implements OnInit, OnDestroy {
     if (!this._ps) return;
 
     try {
-      const position = (this._ps as any).position();
+      const position = this._ps.position();
       this._position.set(ScrollbarPositionImpl.fromPerfectScrollbar(position));
     } catch (error) {
       console.error('Failed to update scrollbar position:', error);
