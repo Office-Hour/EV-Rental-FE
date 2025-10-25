@@ -1,6 +1,8 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { LottieAnimationComponent } from './common-ui/components/lottie-animation/lottie-animation.component';
+import { SplashScreenService } from './common-ui/services/splash-screen/splash-screen.service';
+
 import { NgScrollbarModule } from 'ngx-scrollbar';
 @Component({
   selector: 'app-root',
@@ -8,14 +10,16 @@ import { NgScrollbarModule } from 'ngx-scrollbar';
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
-export class App implements OnInit {
-  protected readonly title = signal('EV-Rental-FE');
-  showSplash = signal(true);
+export class App {
+  private readonly _splashScreenService = inject(SplashScreenService);
 
-  ngOnInit(): void {
-    // Hide splash after 500ms
-    setTimeout(() => {
-      this.showSplash.update(() => false);
-    }, 1300);
+  protected readonly title = signal('EV-Rental-FE');
+
+  /**
+   * Constructor - Initialize splash screen
+   */
+  constructor() {
+    // Show splash screen when app starts
+    this._splashScreenService.show();
   }
 }
