@@ -1,11 +1,11 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { AnimationOptions, LottieComponent } from 'ngx-lottie';
 
 @Component({
   selector: 'app-lottie-animation',
-  standalone: true,
   imports: [LottieComponent],
   template: ` <ng-lottie [options]="options" [width]="width" [height]="height"> </ng-lottie> `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LottieAnimationComponent implements OnChanges {
   @Input() animationPath = ''; // Path to the Lottie JSON file
