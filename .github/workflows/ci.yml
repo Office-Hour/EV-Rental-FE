@@ -37,10 +37,15 @@ jobs:
           node-version: 20
           cache: 'pnpm'
 
-      - name: Setup pnpm node_module cache
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
         uses: actions/cache@v4
         with:
-          path: /home/runner/setup-pnpm/node_modules/.bin/store/v3
+          path: ${{ env.STORE_PATH }}
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
