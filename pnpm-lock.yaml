@@ -38,6 +38,9 @@ importers:
       lottie-web:
         specifier: ^5.13.0
         version: 5.13.0
+      ngx-cookie-service:
+        specifier: ^20.1.0
+        version: 20.1.0(@angular/common@20.3.7(@angular/core@20.3.7(@angular/compiler@20.3.7)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@20.3.7(@angular/compiler@20.3.7)(rxjs@7.8.2))
       ngx-lottie:
         specifier: ^20.0.0
         version: 20.0.0(@angular/core@20.3.7(@angular/compiler@20.3.7)(rxjs@7.8.2))(lottie-web@5.13.0)
@@ -3134,6 +3137,12 @@ packages:
   negotiator@1.0.0:
     resolution: {integrity: sha512-8Ofs/AUQh8MaEcrlq5xOX0CQ9ypTF5dl78mjlMNfOK08fzpgTHQRQPBxcPlEtIw0yRpws+Zo/3r+5WRby7u3Gg==}
     engines: {node: '>= 0.6'}
+
+  ngx-cookie-service@20.1.0:
+    resolution: {integrity: sha512-g7Ddq8097qujmJfoEK27H12KLEpuO4SBPhoOYQ2kmLMSvz65vRrSKVwzOxdc75cFLQPW45Jfyyg3LoMTjKW0uA==}
+    peerDependencies:
+      '@angular/common': ^20.0.0
+      '@angular/core': ^20.0.0
 
   ngx-lottie@20.0.0:
     resolution: {integrity: sha512-8BRgwXH98bjvRqm1RPgk1+3cWcwDmoHjM08/9klK2Bunq0bfyhpz38tub5RH5CK8yBtYjQna/7BB8z6d0kClFQ==}
@@ -7222,6 +7231,12 @@ snapshots:
   negotiator@0.6.3: {}
 
   negotiator@1.0.0: {}
+
+  ngx-cookie-service@20.1.0(@angular/common@20.3.7(@angular/core@20.3.7(@angular/compiler@20.3.7)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@20.3.7(@angular/compiler@20.3.7)(rxjs@7.8.2)):
+    dependencies:
+      '@angular/common': 20.3.7(@angular/core@20.3.7(@angular/compiler@20.3.7)(rxjs@7.8.2))(rxjs@7.8.2)
+      '@angular/core': 20.3.7(@angular/compiler@20.3.7)(rxjs@7.8.2)
+      tslib: 2.8.1
 
   ngx-lottie@20.0.0(@angular/core@20.3.7(@angular/compiler@20.3.7)(rxjs@7.8.2))(lottie-web@5.13.0):
     dependencies:
