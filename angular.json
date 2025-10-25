@@ -29,13 +29,7 @@
             "stylePreprocessorOptions": {
               "includePaths": ["src/app/shared"]
             },
-            "styles": [
-              "src/styles.scss",
-              "src/vendors.scss",
-              "src/app/shared/styles/tailwind.scss",
-              "src/app/shared/styles/themes.scss",
-              "src/app/shared/styles/main.scss"
-            ]
+            "styles": ["src/styles.scss", "src/vendors.scss"]
           },
           "configurations": {
             "production": {
