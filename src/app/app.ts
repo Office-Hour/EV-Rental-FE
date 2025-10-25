@@ -10,12 +10,12 @@ import { LottieAnimationComponent } from './common-ui/components/lottie-animatio
 })
 export class App implements OnInit {
   protected readonly title = signal('EV-Rental-FE');
-  showSplash = true;
+  showSplash = signal(true);
 
   ngOnInit(): void {
     // Hide splash after 500ms
     setTimeout(() => {
-      this.showSplash = false;
+      this.showSplash.update(() => false);
     }, 1300);
   }
 }
