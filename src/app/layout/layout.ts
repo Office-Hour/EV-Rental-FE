@@ -11,6 +11,4 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './layout.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Layout {
-  constructor() {}
-}
+export class Layout {}

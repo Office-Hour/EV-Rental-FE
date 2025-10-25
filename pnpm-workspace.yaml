@@ -1,5 +1,6 @@
 onlyBuiltDependencies:
   - '@parcel/watcher'
+  - '@scarf/scarf'
   - esbuild
   - lmdb
   - msgpackr-extract

@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { LottieAnimationComponent } from './common-ui/components/lottie-animation/lottie-animation.component';
 
@@ -8,14 +8,9 @@ import { LottieAnimationComponent } from './common-ui/components/lottie-animatio
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
-export class App {
+export class App implements OnInit {
   protected readonly title = signal('EV-Rental-FE');
   showSplash = true;
-
-  /**
-   * Constructor
-   */
-  constructor() {}
 
   ngOnInit(): void {
     // Hide splash after 500ms
