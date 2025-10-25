@@ -15,16 +15,16 @@ import { MatIcon } from '@angular/material/icon';
 import { RouterOutlet } from '@angular/router';
 import { combineLatest, map, tap } from 'rxjs';
 import { NavigationService } from '../core/navigation/navigation.service';
-import { LoadingBar } from '../shared/components/loading-bar/loading-bar';
-import { HorizontalNavigationComponent } from '../shared/components/navigation/horizontal/horizontal';
-import { VerticalNavigationComponent } from '../shared/components/navigation/vertical/vertical';
-import { SharedConfigService } from '../shared/services/config/config.service';
-import { Config, Scheme, Theme } from '../shared/services/config/config.types';
-import { MediaWatcherService } from '../shared/services/media-watcher/media-watcher.service';
-import { SharedNavigationService } from '../shared/services/navigation/navigation.service';
-import { NavigationComponent } from '../shared/services/navigation/navigation.types';
-import { SharedPlatformService } from '../shared/services/platform/platform.service';
-import { EV_VERSION } from '../shared/services/version/ev-version';
+import { LoadingBar } from '../common-ui/components/loading-bar/loading-bar';
+import { HorizontalNavigationComponent } from '../common-ui/components/navigation/horizontal/horizontal';
+import { VerticalNavigationComponent } from '../common-ui/components/navigation/vertical/vertical';
+import { SharedConfigService } from '../common-ui/services/config/config.service';
+import { Config, Scheme, Theme } from '../common-ui/services/config/config.types';
+import { MediaWatcherService } from '../common-ui/services/media-watcher/media-watcher.service';
+import { SharedNavigationService } from '../common-ui/services/navigation/navigation.service';
+import { NavigationComponent } from '../common-ui/services/navigation/navigation.types';
+import { SharedPlatformService } from '../common-ui/services/platform/platform.service';
+import { EV_VERSION } from '../common-ui/services/version/ev-version';
 
 /**
  * Modern layout component using Angular 20 best practices

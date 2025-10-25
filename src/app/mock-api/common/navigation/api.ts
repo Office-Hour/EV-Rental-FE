@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { defaultNavigation } from '../../../mock-api/common/navigation/data';
 import { cloneDeep } from 'lodash-es';
-import { NavigationItem } from '../../../shared/services/navigation/navigation.types';
-import { MockApiService } from '../../../shared/mock-api/mock-api.service';
+import { NavigationItem } from '../../../common-ui/services/navigation/navigation.types';
+import { MockApiService } from '../../../common-ui/mock-api/mock-api.service';
 
 @Injectable({ providedIn: 'root' })
 export class NavigationMockApi {

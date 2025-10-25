@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { NavigationItem } from '../../../shared/services/navigation/navigation.types';
+import { NavigationItem } from '../../../common-ui/services/navigation/navigation.types';
 
 export const defaultNavigation: NavigationItem[] = [
   {
