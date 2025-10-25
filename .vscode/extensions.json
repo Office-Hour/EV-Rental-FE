@@ -15,6 +15,7 @@
     "rafamel.subtle-brackets",
     "bradlc.vscode-tailwindcss",
     "meganrogge.template-string-converter",
-    "usernamehw.errorlens"
+    "usernamehw.errorlens",
+    "cyrilletuzi.angular-schematics"
   ]
 }

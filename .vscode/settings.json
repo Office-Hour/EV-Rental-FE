@@ -64,5 +64,11 @@
   "javascript.updateImportsOnFileMove.enabled": "always",
   "json.schemaDownload.enable": true,
   "workbench.tree.indent": 15,
-  "workbench.tree.renderIndentGuides": "always"
+  "workbench.tree.renderIndentGuides": "always",
+  "angular-schematics.schematicsDefaultOptions": {
+    "angular-*": {
+      "style": "scss",
+      "externalTemplate": true
+    }
+  }
 }
