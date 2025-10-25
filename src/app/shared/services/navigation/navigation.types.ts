@@ -34,7 +34,6 @@ export interface NavigationItem {
   meta?: any;
 }
 
-// export type VerticalNavigationAppearance = 'default' | 'compact' | 'dense' | 'thin';
 export type VerticalNavigationAppearance = 'default';
 
 export type VerticalNavigationMode = 'over' | 'side';

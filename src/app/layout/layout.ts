@@ -11,9 +11,12 @@ import {
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatIcon } from '@angular/material/icon';
+import { RouterOutlet } from '@angular/router';
 import { combineLatest, map, tap } from 'rxjs';
 import { NavigationService } from '../core/navigation/navigation.service';
 import { LoadingBar } from '../shared/components/loading-bar/loading-bar';
+import { HorizontalNavigationComponent } from '../shared/components/navigation/horizontal/horizontal';
 import { VerticalNavigationComponent } from '../shared/components/navigation/vertical/vertical';
 import { SharedConfigService } from '../shared/services/config/config.service';
 import { Config, Scheme, Theme } from '../shared/services/config/config.types';
@@ -21,9 +24,6 @@ import { MediaWatcherService } from '../shared/services/media-watcher/media-watc
 import { SharedNavigationService } from '../shared/services/navigation/navigation.service';
 import { SharedPlatformService } from '../shared/services/platform/platform.service';
 import { EV_VERSION } from '../shared/services/version/ev-version';
-import { HorizontalNavigationComponent } from '../shared/components/navigation/horizontal/horizontal';
-import { MatIcon } from '@angular/material/icon';
-import { RouterOutlet } from '@angular/router';
 
 /**
  * Modern layout component using Angular 20 best practices
@@ -38,7 +38,7 @@ import { RouterOutlet } from '@angular/router';
     RouterOutlet,
   ],
   templateUrl: './layout.html',
-  styleUrl: './layout.css',
+  styleUrl: './layout.sass',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Layout {
