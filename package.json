@@ -36,13 +36,14 @@
     "@angular/platform-browser": "^20.3.7",
     "@angular/router": "^20.3.7",
     "@tailwindcss/postcss": "^4.1.16",
+    "lottie-web": "^5.13.0",
+    "ngx-lottie": "^20.0.0",
+    "ngx-scrollbar": "^18.0.0",
+    "perfect-scrollbar": "1.5.6",
     "postcss": "^8.5.6",
     "rxjs": "~7.8.0",
     "tailwindcss": "^4.1.16",
-    "tslib": "^2.8.1",
-    "perfect-scrollbar": "1.5.6",
-    "ngx-lottie": "^20.0.0",
-    "lottie-web": "^5.13.0"
+    "tslib": "^2.8.1"
   },
   "devDependencies": {
     "@angular-eslint/builder": "20.4.0",
@@ -55,7 +56,6 @@
     "@types/jasmine": "~5.1.12",
     "@types/lodash": "4.17.20",
     "@types/lodash-es": "4.17.12",
-    "lodash-es": "4.17.21",
     "angular-cli-ghpages": "2.0.3",
     "angular-eslint": "20.4.0",
     "eslint": "^9.38.0",
@@ -67,6 +67,7 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
     "lint-staged": "^16.2.6",
+    "lodash-es": "4.17.21",
     "prettier": "3.6.2",
     "typescript": "~5.9.3",
     "typescript-eslint": "8.46.2"
