@@ -29,7 +29,8 @@
             "stylePreprocessorOptions": {
               "includePaths": ["src/app/shared"]
             },
-            "styles": ["src/styles.scss", "src/vendors.scss"]
+            "styles": ["src/styles.scss", "src/vendors.scss"],
+            "allowedCommonJsDependencies": ["lottie-web"]
           },
           "configurations": {
             "production": {
