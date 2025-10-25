@@ -1,3 +1,4 @@
+import { MAT_ICON_DEFAULT_OPTIONS } from '@angular/material/icon';
 import {
   ApplicationConfig,
   provideBrowserGlobalErrorListeners,
@@ -15,5 +16,13 @@ export const appConfig: ApplicationConfig = {
 
     //Common UI - MANY PROVIDERS IN HERE
     provideCommonUI(),
+
+    //Material Icon
+    {
+      provide: MAT_ICON_DEFAULT_OPTIONS,
+      useValue: {
+        fontSet: 'material-symbols-outlined',
+      },
+    },
   ],
 };
