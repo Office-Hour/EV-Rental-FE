@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { CONFIG_DEFAULT } from './config.constants';
-import merge from 'lodash-es/merge';
+import { merge } from 'lodash-es';
 import { Config } from './config.types';
 
 @Injectable({ providedIn: 'root' })
@@ -23,7 +23,7 @@ export class SharedConfigService {
     this._config.next(config);
   }
 
-  // eslint-disable-next-line @typescript-eslint/member-ordering
+   
   get config$(): Observable<Config> {
     return this._config.asObservable();
   }

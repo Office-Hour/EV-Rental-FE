@@ -1,3 +1,4 @@
+/* eslint-disable @angular-eslint/component-selector */
 import { BooleanInput } from '@angular/cdk/coercion';
 import {
   ChangeDetectionStrategy,
@@ -7,7 +8,6 @@ import {
   DestroyRef,
   inject,
   input,
-  OnDestroy,
   OnInit,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -35,10 +35,8 @@ import { VerticalNavigationSpacerItemComponent } from '../spacer/spacer.componen
     VerticalNavigationDividerItemComponent,
   ],
 })
-export class VerticalNavigationGroupItemComponent implements OnInit, OnDestroy {
-  /* eslint-disable @typescript-eslint/naming-convention */
+export class VerticalNavigationGroupItemComponent implements OnInit {
   static ngAcceptInputType_autoCollapse: BooleanInput;
-  /* eslint-enable @typescript-eslint/naming-convention */
 
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _sharedNavigationService = inject(SharedNavigationService);
@@ -75,13 +73,6 @@ export class VerticalNavigationGroupItemComponent implements OnInit, OnDestroy {
       });
   }
 
-  /**
-   * On destroy
-   */
-  ngOnDestroy(): void {
-    // Cleanup is handled automatically by takeUntilDestroyed
-  }
-
   // -----------------------------------------------------------------------------------------------------
   // @ Public methods
   // -----------------------------------------------------------------------------------------------------
@@ -89,7 +80,7 @@ export class VerticalNavigationGroupItemComponent implements OnInit, OnDestroy {
   /**
    * Track by function for ngFor loops
    */
-  trackByFn(index: number, item: any): any {
+  trackByFn(index: number, item: NavigationItem): number | string {
     return item.id || index;
   }
 

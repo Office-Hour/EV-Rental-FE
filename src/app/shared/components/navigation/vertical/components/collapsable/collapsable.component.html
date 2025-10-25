@@ -7,7 +7,11 @@
     class="vertical-navigation-item"
     [class.vertical-navigation-item-disabled]="item().disabled"
     [matTooltip]="item().tooltip || ''"
+    tabindex="0"
+    role="button"
     (click)="toggleCollapsable()"
+    (keydown.enter)="toggleCollapsable()"
+    (keydown.space)="toggleCollapsable()"
   >
     <!-- Icon -->
     @if (item().icon) {

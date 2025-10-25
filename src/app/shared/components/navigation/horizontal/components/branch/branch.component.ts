@@ -1,5 +1,5 @@
 import { BooleanInput } from '@angular/cdk/coercion';
-import { NgClass, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -10,7 +10,6 @@ import {
   input,
   OnInit,
   viewChild,
-  ViewChild,
 } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenu, MatMenuModule } from '@angular/material/menu';
@@ -23,7 +22,7 @@ import { HorizontalNavigationDividerItemComponent } from '../divider/divider.com
 import { HorizontalNavigationBasicItemComponent } from '../basic/basic.component';
 
 @Component({
-  selector: 'horizontal-navigation-branch-item',
+  selector: 'app-horizontal-navigation-branch-item',
   templateUrl: './branch.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
@@ -36,9 +35,7 @@ import { HorizontalNavigationBasicItemComponent } from '../basic/basic.component
   ],
 })
 export class HorizontalNavigationBranchItemComponent implements OnInit {
-  /* eslint-disable @typescript-eslint/naming-convention */
   static ngAcceptInputType_child: BooleanInput;
-  /* eslint-enable @typescript-eslint/naming-convention */
 
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _sharedNavigationService = inject(SharedNavigationService);
@@ -92,7 +89,7 @@ export class HorizontalNavigationBranchItemComponent implements OnInit {
    * @param index
    * @param item
    */
-  trackByFn(index: number, item: any): any {
+  trackByFn(index: number, item: NavigationItem): number | string {
     return item.id || index;
   }
 }

@@ -1,3 +1,4 @@
+/* eslint-disable @angular-eslint/component-selector */
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -6,7 +7,6 @@ import {
   DestroyRef,
   inject,
   input,
-  OnDestroy,
   OnInit,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -22,7 +22,7 @@ import { VerticalNavigationComponent } from '../../vertical';
   templateUrl: './divider.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VerticalNavigationDividerItemComponent implements OnInit, OnDestroy {
+export class VerticalNavigationDividerItemComponent implements OnInit {
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _sharedNavigationService = inject(SharedNavigationService);
   private _destroyRef = inject(DestroyRef);
@@ -55,13 +55,6 @@ export class VerticalNavigationDividerItemComponent implements OnInit, OnDestroy
       .subscribe(() => {
         this._changeDetectorRef.markForCheck();
       });
-  }
-
-  /**
-   * On destroy
-   */
-  ngOnDestroy(): void {
-    // Cleanup is handled automatically by takeUntilDestroyed
   }
 
   // -----------------------------------------------------------------------------------------------------

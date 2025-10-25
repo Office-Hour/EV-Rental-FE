@@ -1,3 +1,4 @@
+/* eslint-disable @angular-eslint/component-selector */
 import { BooleanInput } from '@angular/cdk/coercion';
 import {
   ChangeDetectionStrategy,
@@ -20,7 +21,6 @@ import { SharedNavigationService } from '../../../../../services/navigation/navi
 import { NavigationItem } from '../../../../../services/navigation/navigation.types';
 import { VerticalNavigationComponent } from '../../vertical';
 import { VerticalNavigationBasicItemComponent } from '../basic/basic.component';
-import { VerticalNavigationDividerItemComponent } from '../divider/divider.component';
 import { VerticalNavigationGroupItemComponent } from '../group/group.component';
 import { VerticalNavigationSpacerItemComponent } from '../spacer/spacer.component';
 
@@ -36,15 +36,12 @@ import { VerticalNavigationSpacerItemComponent } from '../spacer/spacer.componen
     MatTooltipModule,
     MatIconModule,
     VerticalNavigationBasicItemComponent,
-    VerticalNavigationDividerItemComponent,
     VerticalNavigationGroupItemComponent,
     VerticalNavigationSpacerItemComponent,
   ],
 })
 export class VerticalNavigationCollapsableItemComponent implements OnInit {
-  /* eslint-disable @typescript-eslint/naming-convention */
   static ngAcceptInputType_autoCollapse: BooleanInput;
-  /* eslint-enable @typescript-eslint/naming-convention */
 
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _router = inject(Router);
@@ -138,7 +135,7 @@ export class VerticalNavigationCollapsableItemComponent implements OnInit {
   /**
    * Track by function for ngFor loops
    */
-  trackByFn(index: number, item: any): any {
+  trackByFn(index: number, item: NavigationItem): number | string {
     return item.id || index;
   }
 
@@ -164,14 +161,6 @@ export class VerticalNavigationCollapsableItemComponent implements OnInit {
    * Check if the item is active
    */
   private _checkIfActive(): void {
-    // Get the current route
-    let active = this._router.isActive(this.item().link || '', {
-      paths: 'subset',
-      queryParams: 'subset',
-      fragment: 'ignored',
-      matrixParams: 'ignored',
-    });
-
     // If the collapsable is collapsed...
     if (this.collapsable() && this.collapsed()) {
       // If the auto collapse is on...
