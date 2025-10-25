@@ -1,10 +1,10 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { LottieAnimationComponent } from './common-ui/components/lottie-animation/lottie-animation.component';
-
+import { NgScrollbarModule } from 'ngx-scrollbar';
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, LottieAnimationComponent],
+  imports: [RouterOutlet, LottieAnimationComponent, NgScrollbarModule],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
