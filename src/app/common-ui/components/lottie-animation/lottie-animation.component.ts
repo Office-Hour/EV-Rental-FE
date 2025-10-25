@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/c
 import { AnimationOptions, LottieComponent } from 'ngx-lottie';
 
 @Component({
-  selector: 'app-lottie-animation',
+  selector: 'lottie-animation',
   imports: [LottieComponent],
   template: ` <ng-lottie [options]="options" [width]="width" [height]="height"> </ng-lottie> `,
   changeDetection: ChangeDetectionStrategy.OnPush,

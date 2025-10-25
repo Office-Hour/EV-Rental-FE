@@ -1,8 +1,9 @@
 // chỗ cho style host/app (BUNDLE VÀ MINIFY vào app bởi vì đc gọi từ app.ts)
 
-// :host {
-//   display: flex;
-//   flex: 1 1 auto;
-//   width: 100%;
-//   height: 100%;
-// }
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  width: 100%;
+  height: 100%;
+}
