@@ -7,6 +7,7 @@ import {
 import { SplashScreenService } from './services/splash-screen/splash-screen.service';
 import { provideScrollbarOptions } from 'ngx-scrollbar';
 import { provideCacheableAnimationLoader, provideLottieOptions } from 'ngx-lottie';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 /**
  * Provider
@@ -33,6 +34,9 @@ export const provideCommonUI = (): (Provider | EnvironmentProviders)[] => {
       visibility: 'hover',
       appearance: 'compact',
     }),
+
+    //Charts - chart.js - ng2-charts
+    provideCharts(withDefaultRegisterables()),
   ];
 
   // Return the providers
