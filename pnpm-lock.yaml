@@ -35,6 +35,12 @@ importers:
       '@tailwindcss/postcss':
         specifier: ^4.1.16
         version: 4.1.16
+      lottie-web:
+        specifier: ^5.13.0
+        version: 5.13.0
+      ngx-lottie:
+        specifier: ^20.0.0
+        version: 20.0.0(@angular/core@20.3.7(@angular/compiler@20.3.7)(rxjs@7.8.2))(lottie-web@5.13.0)
       perfect-scrollbar:
         specifier: 1.5.6
         version: 1.5.6
@@ -1384,6 +1390,9 @@ packages:
     resolution: {integrity: sha512-zGIbEVVXVtauFgl3MRwGWEN36P5ZGenHRMgNw88X5wEhEBpq0XrMEZwOn07+ICrwM17XO5xfMZqh0OldCH5VTA==}
     cpu: [x64]
     os: [win32]
+
+  '@scarf/scarf@1.4.0':
+    resolution: {integrity: sha512-xxeapPiUXdZAE3che6f3xogoJPeZgig6omHEy1rIY5WVsB3H2BHNnZH+gHG6x91SCWyQCzWGsuL2Hh3ClO5/qQ==}
 
   '@schematics/angular@20.3.7':
     resolution: {integrity: sha512-jR2LPJVGK6yzPTNXkGJZYtdeLGkNdqJhVow2E+ILt3pk/LZuT/iSdr9V4nArU9yysifGuJFTyZapVOYkEYaykg==}
@@ -2928,6 +2937,9 @@ packages:
     resolution: {integrity: sha512-1somDdy9sChrr9/f4UlzhdaGfDR2c/SaD2a4T7qEkG4jTS57/B3qmnjLYePwQ8cqWnUHZI0iAKxMBpCZICiZ2g==}
     engines: {node: '>=8.0'}
 
+  lottie-web@5.13.0:
+    resolution: {integrity: sha512-+gfBXl6sxXMPe8tKQm7qzLnUy5DUPJPKIyRHwtpCpyUEYjHYRJC/5gjUvdkuO2c3JllrPtHXH5UJJK8LRYl5yQ==}
+
   lru-cache@10.4.3:
     resolution: {integrity: sha512-JNAzZcXrCt42VGLuYz0zfAzDfAvJWW6AfYlDBQyDV5DClI2m5sAmK+OIO7s59XfsRsWHp02jAJrRadPRGTt6SQ==}
 
@@ -3119,6 +3131,12 @@ packages:
   negotiator@1.0.0:
     resolution: {integrity: sha512-8Ofs/AUQh8MaEcrlq5xOX0CQ9ypTF5dl78mjlMNfOK08fzpgTHQRQPBxcPlEtIw0yRpws+Zo/3r+5WRby7u3Gg==}
     engines: {node: '>= 0.6'}
+
+  ngx-lottie@20.0.0:
+    resolution: {integrity: sha512-8BRgwXH98bjvRqm1RPgk1+3cWcwDmoHjM08/9klK2Bunq0bfyhpz38tub5RH5CK8yBtYjQna/7BB8z6d0kClFQ==}
+    peerDependencies:
+      '@angular/core': '>=20'
+      lottie-web: '>=5.9.2'
 
   node-addon-api@6.1.0:
     resolution: {integrity: sha512-+eawOlIgy680F0kBzPUNFhMZGtJ1YmqM6l4+Crf4IkImjYrO/mqPwRMh352g23uIaQKFItcQ64I7KMaJxHgAVA==}
@@ -5293,6 +5311,8 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.52.3':
     optional: true
 
+  '@scarf/scarf@1.4.0': {}
+
   '@schematics/angular@20.3.7':
     dependencies:
       '@angular-devkit/core': 20.3.7
@@ -7015,6 +7035,8 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  lottie-web@5.13.0: {}
+
   lru-cache@10.4.3: {}
 
   lru-cache@11.2.2: {}
@@ -7189,6 +7211,13 @@ snapshots:
   negotiator@0.6.3: {}
 
   negotiator@1.0.0: {}
+
+  ngx-lottie@20.0.0(@angular/core@20.3.7(@angular/compiler@20.3.7)(rxjs@7.8.2))(lottie-web@5.13.0):
+    dependencies:
+      '@angular/core': 20.3.7(@angular/compiler@20.3.7)(rxjs@7.8.2)
+      '@scarf/scarf': 1.4.0
+      lottie-web: 5.13.0
+      tslib: 2.8.1
 
   node-addon-api@6.1.0:
     optional: true
