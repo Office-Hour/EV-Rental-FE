@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { LottieAnimationComponent } from './common-ui/components/lottie-animation/lottie-animation.component';
-import { SplashScreenService } from './common-ui/services/splash-screen/splash-screen.service';
+import { LottieAnimationComponent } from './lib/common-ui/components/lottie-animation/lottie-animation.component';
+import { SplashScreenService } from './lib/common-ui/services/splash-screen/splash-screen.service';
 
 import { NgScrollbarModule } from 'ngx-scrollbar';
 @Component({

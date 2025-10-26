@@ -8,6 +8,6 @@
     "Tailwind postcss config": "./.postcssrc.json"
   },
   "paths": {
-    "*": "./src/app/ngm-dev-blocks"
+    "*": "./src/app/lib/ngm-dev-blocks"
   }
 }
