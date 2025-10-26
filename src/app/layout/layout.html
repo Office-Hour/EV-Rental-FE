@@ -19,9 +19,7 @@
             [activated]="item.current"
             [attr.aria-current]="item.current ? 'page' : undefined"
             [class]="
-              item.current
-                ? 'bg-[color-mix(in_srgb,_var(--mat-sys-primary)_10%,_transparent)]!'
-                : ''
+              item.current ? 'bg-[color-mix(in_srgb,var(--mat-sys-primary)10%,transparent)]!' : ''
             "
           >
             {{ item.name }}
@@ -30,7 +28,7 @@
         <mat-divider />
         <div mat-subheader>
           <div class="flex items-center">
-            <div class="flex-shrink-0">
+            <div class="shrink-0">
               <img [src]="user.imageUrl" alt="" class="size-10 rounded-full object-cover" />
             </div>
             <div class="ml-3">
@@ -73,7 +71,7 @@
                   [fragment]="item.href"
                   [class]="
                     item.current
-                      ? 'bg-[color-mix(in_srgb,_var(--mat-sys-primary)_10%,_transparent)]!'
+                      ? 'bg-[color-mix(in_srgb,var(--mat-sys-primary)10%,transparent)]!'
                       : ''
                   "
                   [attr.aria-current]="item.current ? 'page' : undefined"
