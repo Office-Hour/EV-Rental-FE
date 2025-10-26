@@ -26,13 +26,10 @@
                 "input": "public"
               }
             ],
-            "stylePreprocessorOptions": {
-              "includePaths": ["src/app/shared"]
-            },
             "styles": [
               "src/styles.scss",
               "src/vendors.scss",
-              "src/app/ngm-dev-blocks/styles/ngm-dev-blocks-styles.scss"
+              "src/app/lib/ngm-dev-blocks/styles/ngm-dev-blocks-styles.scss"
             ],
             "allowedCommonJsDependencies": ["lottie-web"],
             "outputPath": "./dist"

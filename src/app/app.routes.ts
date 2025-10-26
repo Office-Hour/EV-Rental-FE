@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { Layout } from './layout/layout';
+import { LayoutComponent } from './layout/layout';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'home' },
@@ -8,7 +8,7 @@ export const routes: Routes = [
   // Landing routes
   {
     path: '',
-    component: Layout,
+    component: LayoutComponent,
     children: [
       {
         path: 'landing',

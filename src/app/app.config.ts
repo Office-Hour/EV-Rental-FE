@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
-import { provideCommonUI } from './common-ui/provider';
+import { provideCommonUI } from './lib/common-ui/provider';
 
 export const appConfig: ApplicationConfig = {
   providers: [
