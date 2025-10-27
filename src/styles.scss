@@ -1,50 +1,474 @@
-// Include theming for Angular Material with `mat.theme()`.
-// This Sass mixin will define CSS variables that are used for styling Angular Material
-// components according to the Material 3 design spec.
-// Learn more about theming and how to use it for your application's
-// custom components at https://material.angular.dev/guide/theming
+/* ==================================================
+ * MODERN TECH THEME - Professional Application Design
+ * ==================================================
+ */
+
+// Import dependencies
 @use '@angular/material' as mat;
 @use 'tailwindcss';
 @use 'app/lib/common-ui/styles/splash-screen.scss' as splash-screen;
+
+// ==================================================
+// THEME CONFIGURATION
+// ==================================================
+
+// Base theme configuration shared between light and dark modes
+$base-theme: (
+  color: (
+    primary: mat.$blue-palette,
+    tertiary: mat.$cyan-palette,
+  ),
+  typography: (
+    plain-family: 'Roboto',
+    brand-family: 'Roboto',
+    bold-weight: 600,
+    medium-weight: 500,
+    regular-weight: 400,
+  ),
+  density: 0,
+);
+
+// Apply base theme to html element with light/dark mode support
 html {
-  @include mat.theme(
+  color-scheme: light dark;
+
+  // Apply Material theme
+  @include mat.theme($base-theme);
+
+  // Dark mode specific theme adjustments
+  @media (prefers-color-scheme: dark) {
+    color-scheme: dark;
+    @include mat.theme($base-theme);
+  }
+}
+
+// ==================================================
+// BASE STYLES
+// ==================================================
+
+body {
+  // Theme-aware styling
+  color-scheme: light dark;
+  background: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+
+  // Layout and viewport
+  margin: 0;
+  min-height: 100vh;
+  height: 100vh;
+  overflow-x: hidden;
+
+  // Performance optimizations
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+
+  // Remove default focus outline (we'll add custom ones)
+  outline: none;
+}
+// ==================================================
+// UTILITY CLASSES
+// ==================================================
+// These classes are available globally for consistent styling
+
+.tech-glow {
+  box-shadow: 0 0 20px rgba(var(--mat-sys-primary, 0, 102, 204), 0.3);
+}
+
+.tech-border {
+  border: 1px solid var(--mat-sys-outline-variant, rgba(59, 130, 246, 0.2));
+}
+
+.glass-effect {
+  background: rgba(var(--mat-sys-surface), 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--mat-sys-outline-variant, rgba(255, 255, 255, 0.2));
+}
+
+// ==================================================
+// BROWSER CUSTOMIZATIONS
+// ==================================================
+
+// Custom scrollbar styling - theme aware
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--mat-sys-surface-container, rgba(0, 0, 0, 0.1));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--mat-sys-primary, rgba(59, 130, 246, 0.5));
+  border-radius: 4px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0.6;
+
+  &:hover {
+    background: var(--mat-sys-primary, rgba(59, 130, 246, 0.8));
+    opacity: 1;
+    transform: scaleY(1.1);
+  }
+}
+
+// Enhanced focus styles for accessibility
+*:focus {
+  outline: 2px solid var(--mat-sys-primary, rgb(59, 130, 246));
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+// Selection styling
+::selection {
+  background: var(--mat-sys-primary, rgba(0, 102, 204, 0.2));
+  color: var(--mat-sys-on-primary, #ffffff);
+}
+
+// ==================================================
+// CUSTOM THEME OVERRIDES
+// ==================================================
+// Custom color tokens that extend Material Design 3
+// These create a cohesive professional tech theme
+
+:root,
+:host {
+  @include mat.theme-overrides(
     (
-      color: (
-        primary: mat.$rose-palette,
-        tertiary: mat.$red-palette,
-      ),
-      typography: Roboto,
-      density: 0,
+      // Primary Colors - Professional Blue Theme
+      primary: #0066cc,
+      on-primary: #ffffff,
+      primary-container: #d3e4fd,
+      on-primary-container: #001b3e,
+      inverse-primary: #a4c8ff,
+      primary-fixed: #d3e4fd,
+      primary-fixed-dim: #a4c8ff,
+      on-primary-fixed: #001b3e,
+      on-primary-fixed-variant: #004a77,
+
+      // Secondary Colors - Tech Teal Accent
+      secondary: #006a6b,
+      on-secondary: #ffffff,
+      secondary-container: #7ff5f6,
+      on-secondary-container: #002020,
+      secondary-fixed: #7ff5f6,
+      secondary-fixed-dim: #4ddada,
+      on-secondary-fixed: #002020,
+      on-secondary-fixed-variant: #004f50,
+
+      // Tertiary Colors - Warm Orange for CTAs
+      tertiary: #8c5000,
+      on-tertiary: #ffffff,
+      tertiary-container: #ffdfcc,
+      on-tertiary-container: #2b1700,
+      tertiary-fixed: #ffdfcc,
+      tertiary-fixed-dim: #ffb68c,
+      on-tertiary-fixed: #2b1700,
+      on-tertiary-fixed-variant: #6b3d00,
+
+      // Surface System - Sophisticated Backgrounds
+      background: #fefbff,
+      on-background: #1c1b1f,
+      surface: #fefbff,
+      surface-dim: #e5e1e8,
+      surface-bright: #fefbff,
+      surface-container-lowest: #ffffff,
+      surface-container-low: #f7f2fa,
+      surface-container: #f2edf4,
+      surface-container-high: #ede8ef,
+      surface-container-highest: #e7e2e9,
+      on-surface: #1c1b1f,
+      surface-variant: #e7e2e9,
+      on-surface-variant: #49454f,
+      surface-tint: #0066cc,
+
+      // Neutral Colors - Balanced Gray Scale
+      outline: #79747e,
+      outline-variant: #cac4d0,
+      neutral: #6c757d,
+      neutral-variant: #2d3748,
+
+      // Error Colors - Accessible Red
+      error: #dc3545,
+      error-container: #ffdad6,
+      on-error: #ffffff,
+      on-error-container: #410002,
+
+      // System Colors
+      shadow: #000000,
+      scrim: #000000,
+      inverse-surface: #313033,
+      inverse-on-surface: #f4eff4,
+      inverse-secondary: #4ddada,
+      inverse-tertiary: #ffb68c
     )
   );
 }
 
-body {
-  // Default the application to a light color theme. This can be changed to
-  // `dark` to enable the dark color theme, or to `light dark` to defer to the
-  // user's system settings.
-  color-scheme: light;
+/* Dark Theme - Modern Professional */
+.dark {
+  @include mat.theme-overrides(
+    (
+      // Primary Colors - Lighter Blue for Dark Mode
+      primary: #a4c8ff,
+      on-primary: #001b3e,
+      primary-container: #004a77,
+      on-primary-container: #d3e4fd,
+      inverse-primary: #0066cc,
+      primary-fixed: #d3e4fd,
+      primary-fixed-dim: #a4c8ff,
+      on-primary-fixed: #001b3e,
+      on-primary-fixed-variant: #004a77,
 
-  // Set a default background, font and text colors for the application using
-  // Angular Material's system-level CSS variables. Learn more about these
-  // variables at https://material.angular.dev/guide/system-variables
-  background-color: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
-  font: var(--mat-sys-body-medium);
+      // Secondary Colors - Bright Teal for Dark Mode
+      secondary: #4ddada,
+      on-secondary: #002020,
+      secondary-container: #004f50,
+      on-secondary-container: #7ff5f6,
+      secondary-fixed: #7ff5f6,
+      secondary-fixed-dim: #4ddada,
+      on-secondary-fixed: #002020,
+      on-secondary-fixed-variant: #004f50,
 
-  // Reset the user agent margin.
-  margin: 0;
+      // Tertiary Colors - Warm Orange for Dark Mode
+      tertiary: #ffb68c,
+      on-tertiary: #2b1700,
+      tertiary-container: #6b3d00,
+      on-tertiary-container: #ffdfcc,
+      tertiary-fixed: #ffdfcc,
+      tertiary-fixed-dim: #ffb68c,
+      on-tertiary-fixed: #2b1700,
+      on-tertiary-fixed-variant: #6b3d00,
+
+      // Dark Surface System - Professional Dark Backgrounds
+      background: #0f1419,
+      on-background: #e6e1e5,
+      surface: #0f1419,
+      surface-dim: #0f1419,
+      surface-bright: #36343a,
+      surface-container-lowest: #0a0f13,
+      surface-container-low: #171c20,
+      surface-container: #1d2125,
+      surface-container-high: #282c30,
+      surface-container-highest: #33363a,
+      on-surface: #e6e1e5,
+      surface-variant: #33363a,
+      on-surface-variant: #cac4d0,
+      surface-tint: #a4c8ff,
+
+      // Dark Neutral Colors - Optimized for Dark Mode
+      outline: #938f99,
+      outline-variant: #44474e,
+      neutral: #9c9ea3,
+      neutral-variant: #5c5f64,
+
+      // Error Colors - Accessible for Dark Mode
+      error: #ffbab1,
+      error-container: #93000a,
+      on-error: #690005,
+      on-error-container: #ffdad6,
+
+      // System Colors for Dark Mode
+      shadow: #000000,
+      scrim: #000000,
+      inverse-surface: #e6e1e5,
+      inverse-on-surface: #313033,
+      inverse-secondary: #006a6b,
+      inverse-tertiary: #8c5000
+    )
+  );
 }
-/* You can add global styles to this file, and also import other style files */
 
-//****File build thẳng xuống thành styles.css, ko bundle và minify vào app.
-// Cấu hình tổng của tailwind
+// ==================================================
+// TYPOGRAPHY SYSTEM
+// ==================================================
+// Consistent typography configuration using Roboto font family
 
-html,
-body {
-  height: 100%;
+:root,
+:host {
+  // Core typography variables
+  --mat-sys-brand-font-family: 'Roboto', sans-serif;
+  --mat-sys-plain-font-family: 'Roboto', sans-serif;
+  --mat-sys-bold-font-weight: 700;
+  --mat-sys-medium-font-weight: 500;
+  --mat-sys-regular-font-weight: 400;
+
+  // Simplified typography overrides - only essential configurations
+  @include mat.theme-overrides(
+    (
+      // Font families
+      brand-family: 'Roboto',
+      plain-family: 'Roboto',
+      bold-weight: 700,
+      medium-weight: 500,
+      regular-weight: 400,
+
+      // Display and headline fonts (brand font)
+      headline-large-font: var(--mat-sys-brand-font-family),
+      headline-medium-font: var(--mat-sys-brand-font-family),
+      headline-small-font: var(--mat-sys-brand-font-family),
+      display-large-font: var(--mat-sys-brand-font-family),
+      display-medium-font: var(--mat-sys-brand-font-family),
+      display-small-font: var(--mat-sys-brand-font-family),
+      title-large-font: var(--mat-sys-brand-font-family),
+      // Body text uses plain font family by default (inherited from theme)
+      body-large: var(--mat-sys-body-large-weight) var(--mat-sys-body-large-size) /
+        var(--mat-sys-body-large-line-height) var(--mat-sys-body-large-font),
+      body-medium: var(--mat-sys-body-medium-weight) var(--mat-sys-body-medium-size) /
+        var(--mat-sys-body-medium-line-height) var(--mat-sys-body-medium-font),
+      body-small: var(--mat-sys-body-small-weight) var(--mat-sys-body-small-size) /
+        var(--mat-sys-body-small-line-height) var(--mat-sys-body-small-font),
+      // Labels and titles
+      label-large: var(--mat-sys-label-large-weight) var(--mat-sys-label-large-size) /
+        var(--mat-sys-label-large-line-height) var(--mat-sys-label-large-font),
+      label-medium: var(--mat-sys-label-medium-weight) var(--mat-sys-label-medium-size) /
+        var(--mat-sys-label-medium-line-height) var(--mat-sys-label-medium-font),
+      label-small: var(--mat-sys-label-small-weight) var(--mat-sys-label-small-size) /
+        var(--mat-sys-label-small-line-height) var(--mat-sys-label-small-font),
+      // Titles
+      title-large: var(--mat-sys-title-large-weight) var(--mat-sys-title-large-size) /
+        var(--mat-sys-title-large-line-height) var(--mat-sys-title-large-font),
+      title-medium: var(--mat-sys-title-medium-weight) var(--mat-sys-title-medium-size) /
+        var(--mat-sys-title-medium-line-height) var(--mat-sys-title-medium-font),
+      title-small: var(--mat-sys-title-small-weight) var(--mat-sys-title-small-size) /
+        var(--mat-sys-title-small-line-height) var(--mat-sys-title-small-font),
+      // Headlines
+      headline-large: var(--mat-sys-headline-large-weight) var(--mat-sys-headline-large-size) /
+        var(--mat-sys-headline-large-line-height) var(--mat-sys-headline-large-font),
+      headline-medium: var(--mat-sys-headline-medium-weight) var(--mat-sys-headline-medium-size) /
+        var(--mat-sys-headline-medium-line-height) var(--mat-sys-headline-medium-font),
+      headline-small: var(--mat-sys-headline-small-weight) var(--mat-sys-headline-small-size) /
+        var(--mat-sys-headline-small-line-height) var(--mat-sys-headline-small-font),
+      // Display text
+      display-large: var(--mat-sys-display-large-weight) var(--mat-sys-display-large-size) /
+        var(--mat-sys-display-large-line-height) var(--mat-sys-display-large-font),
+      display-medium: var(--mat-sys-display-medium-weight) var(--mat-sys-display-medium-size) /
+        var(--mat-sys-display-medium-line-height) var(--mat-sys-display-medium-font),
+      display-small: var(--mat-sys-display-small-weight) var(--mat-sys-display-small-size) /
+        var(--mat-sys-display-small-line-height) var(--mat-sys-display-small-font)
+    )
+  );
 }
-body {
-  margin: 0;
-  font-family: Roboto, 'Helvetica Neue', sans-serif;
+
+// ==================================================
+// PERFORMANCE OPTIMIZATIONS & BEST PRACTICES
+// ==================================================
+
+// CSS containment for better performance
+* {
+  box-sizing: border-box;
 }
+
+// Optimize repaints and reflows
+.smooth-transform {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+// High-performance animations
+@keyframes high-performance-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Reduce motion for users who prefer it
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+// ==================================================
+// DEVELOPMENT & DEBUGGING UTILITIES
+// ==================================================
+// These utilities are helpful during development
+
+// Visual debugging (remove in production)
+// .debug-grid {
+//   background-image:
+//     linear-gradient(rgba(255, 0, 0, 0.1) 1px, transparent 1px),
+//     linear-gradient(90deg, rgba(255, 0, 0, 0.1) 1px, transparent 1px);
+//   background-size: 20px 20px;
+// }
+
+// Component isolation (uncomment if needed)
+// :host {
+//   display: block;
+//   contain: layout style;
+// }
+
+// ==================================================
+// RESPONSIVE DESIGN UTILITIES
+// ==================================================
+
+// Breakpoint variables for consistency
+:root {
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+}
+
+// Responsive typography scale
+@media (max-width: 768px) {
+  :root {
+    font-size: 14px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  :root {
+    font-size: 15px;
+  }
+}
+
+@media (min-width: 1025px) {
+  :root {
+    font-size: 16px;
+  }
+}
+
+// ==================================================
+// THEME CUSTOMIZATION NOTES
+// ==================================================
+// To customize this theme:
+//
+// 1. Color Palette:
+//    - Primary: Professional blue (#0066cc)
+//    - Secondary: Tech teal (#006a6b)
+//    - Tertiary: Warm orange (#8c5000)
+//    - Error: Accessible red (#dc3545)
+//
+// 2. Surface Colors:
+//    - Light mode: Cream backgrounds (#fefbff)
+//    - Dark mode: Dark blue-gray (#0f1419)
+//
+// 3. Typography:
+//    - Font Family: Roboto (Google Fonts)
+//    - Weights: 400 (regular), 500 (medium), 700 (bold)
+//
+// 4. Dark Mode:
+//    - Automatic detection via prefers-color-scheme
+//    - High contrast ratios for accessibility
+//    - Consistent color usage across all components
+//
+// 5. Performance:
+//    - CSS custom properties for theme switching
+//    - Optimized selectors and minimal repaints
+//    - Modern CSS features with fallbacks
