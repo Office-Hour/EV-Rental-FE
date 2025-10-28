@@ -14,6 +14,10 @@ export const routes: Routes = [
         path: 'landing',
         loadChildren: () => import('./features/landing/landing.route'),
       },
+      {
+        path: 'booking',
+        loadChildren: () => import('./features/booking/booking.route'),
+      },
     ],
   },
 ];
