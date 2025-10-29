@@ -1,1 +1,393 @@
-<p>car-detail works!</p>
+<div class="w-full max-w-7xl mx-auto py-6 lg:py-8">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Left: main content -->
+    <div class="lg:col-span-2 space-y-6">
+      <!-- Gallery -->
+      <section class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="p-4">
+          <div class="grid grid-cols-4 gap-3">
+            <div class="col-span-4 lg:col-span-3 lg:h-full">
+              <div
+                class="aspect-video lg:aspect-auto lg:h-full rounded-lg overflow-hidden bg-gray-100"
+              >
+                <img
+                  src="/vf6_1.jpg"
+                  alt="VF6 exterior front view"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+            </div>
+            <div
+              class="col-span-4 lg:col-span-1 grid grid-cols-4 lg:grid-cols-1 gap-3 lg:h-full lg:grid-rows-4"
+            >
+              <div
+                class="aspect-video lg:aspect-auto lg:h-full rounded-lg overflow-hidden bg-gray-100"
+              >
+                <img src="/vf6_2.jpg" alt="VF6 interior" class="w-full h-full object-cover" />
+              </div>
+              <div
+                class="aspect-video lg:aspect-auto lg:h-full rounded-lg overflow-hidden bg-gray-100"
+              >
+                <img src="/vf6_3.jpg" alt="VF6 rear seats" class="w-full h-full object-cover" />
+              </div>
+              <div
+                class="aspect-video lg:aspect-auto lg:h-full rounded-lg overflow-hidden bg-gray-100"
+              >
+                <img
+                  src="/vf6_4.jpg"
+                  alt="VF6 dashboard detail"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <div
+                class="aspect-video lg:aspect-auto lg:h-full rounded-lg overflow-hidden bg-gray-100"
+              >
+                <img
+                  src="/vf6_1.jpg"
+                  alt="VF6 exterior alternate angle"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Title + meta -->
+      <section class="bg-white rounded-xl shadow-sm border border-gray-200">
+        <div class="p-5">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div>
+              <h1 class="text-2xl font-semibold tracking-tight">VinFast VF6 Eco</h1>
+              <div class="mt-2 flex flex-wrap items-center gap-3 text-sm text-gray-600">
+                <span
+                  class="inline-flex items-center gap-1 rounded-full bg-emerald-50 text-emerald-700 px-2.5 py-0.5 text-xs font-medium border border-emerald-200"
+                >
+                  <span class="material-symbols-outlined text-base leading-none align-middle"
+                    >bolt</span
+                  >
+                  Moi
+                </span>
+                <span class="inline-flex items-center gap-1 text-gray-600">
+                  <span class="material-symbols-outlined text-base leading-none align-middle"
+                    >location_on</span
+                  >
+                  Quan Binh Thanh
+                </span>
+                <button class="inline-flex items-center gap-1 text-blue-600 hover:text-blue-700">
+                  <span class="material-symbols-outlined text-base leading-none align-middle"
+                    >share</span
+                  >
+                  Chia sẻ
+                </button>
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="text-sm font-medium text-gray-500">Đánh giá</span>
+              <div class="flex items-center gap-1 text-amber-500">
+                <span class="material-symbols-outlined text-2xl leading-none align-middle"
+                  >star</span
+                >
+                <span class="material-symbols-outlined text-2xl leading-none align-middle"
+                  >star</span
+                >
+                <span class="material-symbols-outlined text-2xl leading-none align-middle"
+                  >star</span
+                >
+                <span class="material-symbols-outlined text-2xl leading-none align-middle"
+                  >star</span
+                >
+                <span class="material-symbols-outlined text-2xl leading-none align-middle"
+                  >star_half</span
+                >
+              </div>
+              <span class="text-sm text-gray-600 font-medium">4.8/5</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Highlights -->
+      <section class="bg-white rounded-xl shadow-sm border border-gray-200">
+        <div class="p-5">
+          <h2 class="text-lg font-semibold mb-4">Đặc điểm</h2>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm text-gray-700">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-lg text-emerald-600">group</span>
+              <span>7 chỗ</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-lg text-emerald-600">settings</span>
+              <span>Số tự động</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-lg text-emerald-600"
+                >local_gas_station</span
+              >
+              <span>Nhiên liệu: Dầu</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-lg text-emerald-600">speed</span>
+              <span>7l/100km</span>
+            </div>
+          </div>
+          <div class="my-6 border-t border-dashed"></div>
+          <h3 class="text-base font-semibold mb-2">Mô tả</h3>
+          <p class="text-sm leading-6 text-gray-700">
+            Phiên bản hybrid dung hòa giữa vận hành êm ái và tiết kiệm của Kia Carnival 2024. Nội
+            thất rộng rãi 3 hàng ghế, phù hợp gia đình hoặc chuyến đi nhóm nhỏ.
+          </p>
+        </div>
+      </section>
+
+      <!-- Location -->
+      <section class="bg-white rounded-xl shadow-sm border border-gray-200">
+        <div class="p-5 space-y-3">
+          <h2 class="text-lg font-semibold">Vị trí xe</h2>
+          <div class="text-sm text-gray-700 flex items-center gap-2">
+            <span class="material-symbols-outlined text-lg text-emerald-600">location_on</span>
+            183 Nguyễn Hữu Cảnh, Phường 22, Quận Bình Thạnh
+          </div>
+        </div>
+      </section>
+
+      <!-- Amenities -->
+      <section class="bg-white rounded-xl shadow-sm border border-gray-200">
+        <div class="p-5">
+          <h2 class="text-lg font-semibold mb-4">Các tiện nghi khác</h2>
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 text-sm text-gray-700">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-lg text-emerald-600">sensors</span>
+              Cảm biến
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-lg text-emerald-600">bluetooth</span>
+              Bluetooth
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-lg text-emerald-600">videocam</span>
+              Camera 360°
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-lg text-emerald-600">lightbulb</span>
+              Đèn LED
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-lg text-emerald-600"
+                >sensor_occupied</span
+              >
+              Cảm biến lùi
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-lg text-emerald-600">map</span>
+              Bản đồ
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-lg text-emerald-600">tv</span>
+              Màn hình DVD
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-lg text-emerald-600">gpp_maybe</span>
+              Cảnh báo lệch làn
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-lg text-emerald-600">usb</span>
+              Cổng USB
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-lg text-emerald-600">block</span>
+              ETC
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Terms -->
+      <section class="bg-white rounded-xl shadow-sm border border-gray-200">
+        <div class="p-5 space-y-4">
+          <h2 class="text-lg font-semibold">Điều khoản</h2>
+          <ul class="list-disc pl-5 text-sm text-gray-700 space-y-1">
+            <li>Không hút thuốc, không chở hàng cấm, không thú cưng.</li>
+            <li>Hoàn xăng theo mức khi nhận xe, giữ vệ sinh.</li>
+            <li>Phạt do vi phạm giao thông do khách tự chi trả.</li>
+            <li>Xe có bảo hiểm vật chất hai chiều.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Cancellation Policy -->
+      <section class="bg-white rounded-xl shadow-sm border border-gray-200">
+        <div class="p-5 space-y-3">
+          <h2 class="text-lg font-semibold">Chính sách hủy chuyến</h2>
+          <div class="overflow-x-auto">
+            <table class="min-w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
+              <thead class="bg-gray-50 text-gray-700">
+                <tr>
+                  <th class="text-left p-3 border-b">Thời điểm</th>
+                  <th class="text-left p-3 border-b">Phí áp dụng</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y">
+                <tr>
+                  <td class="p-3">Hơn 5 ngày trước chuyến</td>
+                  <td class="p-3">Hoàn 100% cọc</td>
+                </tr>
+                <tr>
+                  <td class="p-3">3–5 ngày trước chuyến</td>
+                  <td class="p-3">Phí 30% tổng tiền</td>
+                </tr>
+                <tr>
+                  <td class="p-3">Trong 48 giờ trước chuyến</td>
+                  <td class="p-3">Phí 50% tổng tiền</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Owner info -->
+      <section class="bg-white rounded-xl shadow-sm border border-gray-200">
+        <div class="p-5">
+          <h2 class="text-lg font-semibold mb-3">Thông tin chủ xe</h2>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-gray-200"></div>
+            <div>
+              <div class="font-medium">Diep Luong</div>
+              <div class="text-sm text-gray-600">Xe được vận hành bởi Voltera</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Right: booking card -->
+    <aside class="lg:col-span-1">
+      <div class="sticky top-24">
+        <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+          <div class="p-5">
+            <div class="flex items-end gap-2">
+              <div class="text-2xl font-bold text-emerald-600">970K</div>
+              <div class="text-sm text-gray-500">/24 giờ</div>
+              <span
+                class="ml-auto text-sm font-semibold px-3 py-1.5 rounded-full bg-red-50 text-red-600 border border-red-200"
+                >-10%</span
+              >
+            </div>
+          </div>
+
+          <div class="p-5 space-y-4">
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Thời gian thuê</mat-label>
+              <mat-date-range-input [rangePicker]="bookingRangePicker">
+                <input matStartDate placeholder="Bắt đầu" />
+                <input matEndDate placeholder="Kết thúc" />
+              </mat-date-range-input>
+              <mat-datepicker-toggle
+                matIconSuffix
+                [for]="bookingRangePicker"
+              ></mat-datepicker-toggle>
+              <mat-date-range-picker #bookingRangePicker></mat-date-range-picker>
+            </mat-form-field>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Gio giao</mat-label>
+                <mat-select [(ngModel)]="startTime">
+                  <mat-option value="">Chon gio</mat-option>
+                  <mat-option *ngFor="let hour of hourOptions" [value]="hour">{{
+                    hour
+                  }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Gio nhan</mat-label>
+                <mat-select [(ngModel)]="endTime">
+                  <mat-option value="">Chon gio</mat-option>
+                  <mat-option *ngFor="let hour of hourOptions" [value]="hour">{{
+                    hour
+                  }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="space-y-2">
+              <div class="text-sm font-medium">Vị trí đậu</div>
+              <div class="rounded-lg border border-emerald-200 bg-emerald-50 text-sm p-3">
+                183 Nguyễn Hữu Cảnh, Phường 22, Quận Bình Thạnh
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <span class="text-sm font-medium">Điểm đón</span>
+              <mat-radio-group [(ngModel)]="pickupOption" class="flex flex-col gap-2">
+                <mat-radio-button value="lot">Nhận xe tại vị trí đậu</mat-radio-button>
+                <mat-radio-button value="custom">Chọn địa điểm</mat-radio-button>
+              </mat-radio-group>
+            </div>
+
+            <div class="space-y-3" *ngIf="pickupOption === 'custom'">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Địa chỉ</mat-label>
+                <input matInput placeholder="Số nhà, tên đường" />
+              </mat-form-field>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <mat-form-field appearance="outline" class="w-full">
+                  <mat-label>Phường/Xã</mat-label>
+                  <input matInput placeholder="Phường, xã" />
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="w-full">
+                  <mat-label>Quận/Huyện</mat-label>
+                  <input matInput placeholder="Quận, huyện" />
+                </mat-form-field>
+              </div>
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Tỉnh/Thành phố</mat-label>
+                <input matInput placeholder="Ví dụ: Hồ Chí Minh" />
+              </mat-form-field>
+            </div>
+
+            <div class="flex items-center gap-2 text-sm">
+              <input id="ins" type="checkbox" class="rounded border-gray-300" checked />
+              <label for="ins">Xe đã bảo hiểm vật chất hai chiều</label>
+            </div>
+
+            <div class="border-t pt-4 space-y-2 text-sm">
+              <div class="flex justify-between">
+                <span>Phí thuê xe</span><span>5.697.500đ</span>
+              </div>
+              <div class="flex justify-between text-red-600">
+                <span>Giảm giá</span><span>-569.750đ</span>
+              </div>
+              <div class="flex justify-between"><span>Thuế VAT</span><span>455.800đ</span></div>
+              <div class="flex justify-between font-semibold text-gray-900 pt-2 border-t">
+                <span>Tổng tạm tính</span><span>5.583.550đ</span>
+              </div>
+            </div>
+
+            <button
+              class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-medium py-3 rounded-lg"
+            >
+              Thuê xe
+            </button>
+
+            <div class="text-xs text-gray-500">
+              Bằng việc nhấn đặt cọc/thuê xe, bạn đồng ý với Điều khoản sử dụng và Chính sách bảo
+              mật.
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="mt-4 bg-white rounded-xl shadow-sm border border-gray-200 p-5 text-sm space-y-2"
+        >
+          <h3 class="font-semibold">Các chi phí khác</h3>
+          <div class="flex justify-between"><span>Phí vệ sinh</span><span>100.000đ</span></div>
+          <div class="flex justify-between">
+            <span>Giao nhận xe</span><span>120.000–150.000đ</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
