@@ -1,0 +1,26 @@
+// ==================================================
+// @ Animation Variables - SCSS Constants for Animations
+// ==================================================
+
+// Animation curves (Material Design 3 standard)
+$animation-curve-standard: cubic-bezier(0.4, 0, 0.2, 1);
+$animation-curve-deceleration: cubic-bezier(0, 0, 0.2, 1);
+$animation-curve-acceleration: cubic-bezier(0.4, 0, 1, 1);
+$animation-curve-sharp: cubic-bezier(0.4, 0, 0.6, 1);
+
+// Animation durations (Material Design 3 standard)
+$animation-duration-complex: 375ms;
+$animation-duration-entering: 225ms;
+$animation-duration-exiting: 195ms;
+$animation-duration-short: 150ms;
+$animation-duration-long: 300ms;
+
+// Shake animation timing
+$shake-duration: 0.8s;
+$shake-curve: cubic-bezier(0.455, 0.03, 0.515, 0.955);
+
+// Expand/collapse animation timing
+$expand-collapse-duration-entering: $animation-duration-entering;
+$expand-collapse-duration-exiting: $animation-duration-exiting;
+$expand-collapse-curve-entering: $animation-curve-deceleration;
+$expand-collapse-curve-exiting: $animation-curve-acceleration;

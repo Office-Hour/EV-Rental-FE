@@ -1,0 +1,165 @@
+@use '../animation-variables.scss' as vars;
+
+// ==================================================
+// FADE ANIMATIONS
+// ==================================================
+
+// Fade in
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fade-in #{vars.$animation-duration-entering} #{vars.$animation-curve-deceleration};
+}
+
+// Fade in from top
+@keyframes fade-in-top {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -100%, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.fade-in-top {
+  animation: fade-in-top #{vars.$animation-duration-entering} #{vars.$animation-curve-deceleration};
+}
+
+// Fade in from bottom
+@keyframes fade-in-bottom {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 100%, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.fade-in-bottom {
+  animation: fade-in-bottom #{vars.$animation-duration-entering}
+    #{vars.$animation-curve-deceleration};
+}
+
+// Fade in from left
+@keyframes fade-in-left {
+  from {
+    opacity: 0;
+    transform: translate3d(-100%, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.fade-in-left {
+  animation: fade-in-left #{vars.$animation-duration-entering} #{vars.$animation-curve-deceleration};
+}
+
+// Fade in from right
+@keyframes fade-in-right {
+  from {
+    opacity: 0;
+    transform: translate3d(100%, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.fade-in-right {
+  animation: fade-in-right #{vars.$animation-duration-entering}
+    #{vars.$animation-curve-deceleration};
+}
+
+// Fade out
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.fade-out {
+  animation: fade-out #{vars.$animation-duration-exiting} #{vars.$animation-curve-acceleration};
+}
+
+// Fade out to top
+@keyframes fade-out-top {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(0, -100%, 0);
+  }
+}
+
+.fade-out-top {
+  animation: fade-out-top #{vars.$animation-duration-exiting} #{vars.$animation-curve-acceleration};
+}
+
+// Fade out to bottom
+@keyframes fade-out-bottom {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(0, 100%, 0);
+  }
+}
+
+.fade-out-bottom {
+  animation: fade-out-bottom #{vars.$animation-duration-exiting}
+    #{vars.$animation-curve-acceleration};
+}
+
+// Fade out to left
+@keyframes fade-out-left {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(-100%, 0, 0);
+  }
+}
+
+.fade-out-left {
+  animation: fade-out-left #{vars.$animation-duration-exiting} #{vars.$animation-curve-acceleration};
+}
+
+// Fade out to right
+@keyframes fade-out-right {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(100%, 0, 0);
+  }
+}
+
+.fade-out-right {
+  animation: fade-out-right #{vars.$animation-duration-exiting}
+    #{vars.$animation-curve-acceleration};
+}

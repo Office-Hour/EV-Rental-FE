@@ -1,0 +1,37 @@
+@use '../animation-variables.scss' as vars;
+
+// ==================================================
+// ZOOM ANIMATIONS
+// ==================================================
+
+// Zoom in
+@keyframes zoom-in {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.zoom-in {
+  animation: zoom-in #{vars.$animation-duration-entering} #{vars.$animation-curve-deceleration};
+}
+
+// Zoom out
+@keyframes zoom-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+}
+
+.zoom-out {
+  animation: zoom-out #{vars.$animation-duration-exiting} #{vars.$animation-curve-acceleration};
+}
