@@ -7,6 +7,7 @@
 @use '@angular/material' as mat;
 @use 'tailwindcss';
 @use 'app/lib/common-ui/styles/splash-screen.scss' as splash-screen;
+@use 'app/lib/common-ui/animations/animations.scss' as animations;
 
 // ==================================================
 // THEME CONFIGURATION
@@ -85,6 +86,69 @@ body {
   background: rgba(var(--mat-sys-surface), 0.1);
   backdrop-filter: blur(10px);
   border: 1px solid var(--mat-sys-outline-variant, rgba(255, 255, 255, 0.2));
+}
+
+// ==================================================
+// ICON SIZE UTILITIES
+// ==================================================
+// Standardized icon sizes for consistent UI
+
+.icon-size-1 {
+  font-size: 12px !important;
+  width: 12px !important;
+  height: 12px !important;
+  line-height: 12px !important;
+}
+
+.icon-size-2 {
+  font-size: 14px !important;
+  width: 14px !important;
+  height: 14px !important;
+  line-height: 14px !important;
+}
+
+.icon-size-3 {
+  font-size: 16px !important;
+  width: 16px !important;
+  height: 16px !important;
+  line-height: 16px !important;
+}
+
+.icon-size-4 {
+  font-size: 18px !important;
+  width: 18px !important;
+  height: 18px !important;
+  line-height: 18px !important;
+}
+
+.icon-size-5 {
+  font-size: 20px !important;
+  width: 20px !important;
+  height: 20px !important;
+  line-height: 20px !important;
+}
+
+.icon-size-6 {
+  font-size: 24px !important;
+  width: 24px !important;
+  height: 24px !important;
+  line-height: 24px !important;
+}
+
+// ==================================================
+// CARD & SHADOW UTILITIES
+// ==================================================
+// Common card and shadow styles
+
+.bg-card {
+  background: var(--mat-sys-surface-container-low, #ffffff);
+  border-radius: 8px;
+}
+
+.shadow-md {
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 // ==================================================

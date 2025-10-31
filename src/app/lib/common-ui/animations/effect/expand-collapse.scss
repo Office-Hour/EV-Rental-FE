@@ -1,0 +1,51 @@
+@use '../animation-variables.scss' as vars;
+
+// ==================================================
+// EXPAND/COLLAPSE ANIMATIONS
+// ==================================================
+
+@keyframes expand-collapse-expand {
+  from {
+    height: 0;
+    overflow: hidden;
+  }
+  to {
+    height: var(--expand-collapse-height, auto);
+    overflow: visible;
+  }
+}
+
+@keyframes expand-collapse-collapse {
+  from {
+    height: var(--expand-collapse-height, auto);
+    overflow: visible;
+  }
+  to {
+    height: 0;
+    overflow: hidden;
+  }
+}
+
+.expand-collapse-collapsed {
+  height: 0;
+  overflow: hidden;
+}
+
+.expand-collapse-expanded {
+  height: auto;
+  overflow: visible;
+}
+
+.expand-collapse-animating {
+  overflow: hidden;
+}
+
+.expand-collapse-animating.expand-collapse-expanded {
+  animation: expand-collapse-expand #{vars.$animation-duration-entering}
+    #{vars.$animation-curve-deceleration} forwards;
+}
+
+.expand-collapse-animating.expand-collapse-collapsed {
+  animation: expand-collapse-collapse #{vars.$animation-duration-exiting}
+    #{vars.$animation-curve-acceleration} forwards;
+}
