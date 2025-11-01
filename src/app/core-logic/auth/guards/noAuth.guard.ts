@@ -8,10 +8,10 @@ export const NoAuthGuard: CanActivateFn | CanActivateChildFn = () => {
   const authService = inject(AuthService);
 
   //check the user status
-  return authService.checkAuthenticationStatus().pipe(
-    switchMap((authenticated: boolean) => {
+  return of(authService.isAuthenticated).pipe(
+    switchMap((isAuthenticated) => {
       // If the user is not authenticated...
-      if (!authenticated) {
+      if (isAuthenticated) {
         // Redirect to the sign-in page with a redirectUrl param
         router.navigate(['/']);
         return of(false);
