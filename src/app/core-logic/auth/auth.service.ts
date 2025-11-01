@@ -1,28 +1,30 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
-import { catchError, Observable, of, switchMap, throwError } from 'rxjs';
+import { Observable, of, switchMap, tap, throwError } from 'rxjs';
 import { UserService } from '../user/user.service';
-import { User } from '../user/user.types';
-import { AuthUtils } from './auth.utils';
+import { SignInRequest, SignInResponse, SignUpRequest } from './auth.types';
+import { TokenService } from '../token/token.service';
+import { UserRole } from '../user/user.types';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private _httpClient = inject(HttpClient);
-  private _isAuthenticated = signal<boolean>(false);
   private _userService = inject(UserService);
+  private _tokenService = inject(TokenService);
+  private _isAuthenticated = signal<boolean>(false);
 
   // -----------------------------------------------------------------------------------------------------
   // @ Accessors
   // -----------------------------------------------------------------------------------------------------
 
   /**
-   * Getter & Setter for access token in localStorage
+   * Getter & Setter for the isAuthenticated signal
    */
-  get accessToken(): string {
-    return localStorage.getItem('accessToken') ?? '';
+  get isAuthenticated(): boolean {
+    return this._isAuthenticated();
   }
-  set accessToken(token: string) {
-    localStorage.setItem('accessToken', token);
+  set isAuthenticated(isAuthenticated: boolean) {
+    this._isAuthenticated.set(isAuthenticated);
   }
 
   // -----------------------------------------------------------------------------------------------------
@@ -30,21 +32,12 @@ export class AuthService {
   // -----------------------------------------------------------------------------------------------------
 
   /**
-   * Forgot password
-   *
-   * @param email
-   */
-  forgotPassword(email: string): Observable<{ message: string }> {
-    return this._httpClient.post<{ message: string }>('api/auth/forgot-password', email);
-  }
-
-  /**
    * Reset password
    *
    * @param password
    */
   resetPassword(password: string): Observable<{ message: string }> {
-    return this._httpClient.post<{ message: string }>('api/auth/reset-password', password);
+    return this._httpClient.post<{ message: string }>('api/Account/change-password', password);
   }
 
   /**
@@ -52,80 +45,49 @@ export class AuthService {
    *
    * @param credentials
    */
-  login(credentials: {
-    email: string;
-    password: string;
-  }): Observable<{ accessToken: string; user: User }> {
+  signIn(credentials: SignInRequest): Observable<SignInResponse> {
     // Throw error, if the user is already logged in
-    if (this._isAuthenticated()) {
+    if (this.isAuthenticated) {
       return throwError(() => new Error('User is already logged in.'));
     }
 
-    return this._httpClient
-      .post<{ accessToken: string; user: User }>('api/auth/login', credentials)
-      .pipe(
-        switchMap((response) => {
-          // Store the access token in the local storage
-          this.accessToken = response.accessToken;
+    return this._httpClient.post<SignInResponse>('api/Account/login', credentials).pipe(
+      switchMap((response) => {
+        // Store the tokens in the token service
+        this._tokenService.accessToken = {
+          token: response.accessToken,
+          expiration: new Date(response.accessTokenExpiration),
+        };
+        // Store the refresh token in the token service
+        this._tokenService.refreshToken = {
+          token: response.refreshToken,
+          expiration: new Date(response.refreshTokenExpiration),
+        };
 
-          // Set the authenticated flag to true
-          this._isAuthenticated.set(true);
+        // Set the isAuthenticated signal to true
+        this.isAuthenticated = true;
 
-          // Store the user on the user service
-          this._userService.user = response.user;
+        // Get the user from the user service
+        this._userService.getUser().subscribe();
 
-          // Return a new observable with the response
-          return of(response);
-        }),
-      );
-  }
-
-  /**
-   * Sign in using the access token
-   */
-  loginUsingToken(): Observable<boolean> {
-    // Sign in using the token
-    return this._httpClient
-      .post<{ accessToken: string; user: User }>('api/auth/login-with-token', {
-        accessToken: this.accessToken,
-      })
-      .pipe(
-        catchError(() =>
-          // Return false
-          of(false as const),
-        ),
-        switchMap((response) => {
-          if (typeof response === 'object' && 'accessToken' in response && response.accessToken) {
-            this.accessToken = response.accessToken;
-          }
-
-          // Set the authenticated flag to true
-          this._isAuthenticated.set(true);
-
-          // Store the user on the user service
-          this._userService.user =
-            typeof response === 'object' && response?.user ? (response.user as User) : null;
-          // Return true
-          return of(true as const);
-        }),
-      );
+        // Return a new observable with the response
+        return of(response);
+      }),
+    );
   }
 
   /**
    * Sign out
    */
-  logout(): Observable<true> {
-    // Remove the access token from the local storage
-    localStorage.removeItem('accessToken');
-
-    // Set the authenticated flag to false
-    this._isAuthenticated.set(false);
-
+  signOut(): Observable<true> {
+    // Clear the tokens
+    this._tokenService.clearAllTokens();
     // Clear the user from the user service
     this._userService.user = null;
-
+    // Set the isAuthenticated signal to false
+    this.isAuthenticated = false;
     // Return the observable
-    return of(true as const);
+    return of(true);
   }
 
   /**
@@ -133,48 +95,45 @@ export class AuthService {
    *
    * @param user
    */
-  register(user: {
-    email: string;
-    password: string;
-  }): Observable<{ accessToken: string; user: User }> {
-    return this._httpClient.post<{ accessToken: string; user: User }>('api/auth/register', user);
-  }
-
-  /**
-   * Unlock session
-   *
-   * @param credentials
-   */
-  unlockSession(credentials: {
-    email: string;
-    password: string;
-  }): Observable<{ accessToken: string; user: User }> {
-    return this._httpClient.post<{ accessToken: string; user: User }>(
-      'api/auth/unlock-session',
-      credentials,
+  signUp(user: SignUpRequest) {
+    return this._httpClient.post('api/Account/register', user).pipe(
+      tap(() => {
+        this.signIn({ email: user.email, password: user.password }).subscribe();
+      }),
     );
   }
 
   /**
-   * Check the authentication status
+   * Invoke access token expiration
+   *
    */
-  checkAuthenticationStatus(): Observable<boolean> {
-    // Check if the user is logged in
-    if (this._isAuthenticated()) {
-      return of(true as const);
-    }
+  invokeAccessTokenExpiration(): Observable<SignInResponse> {
+    return this._httpClient
+      .post<SignInResponse>('api/Account/refresh-token', {
+        refreshToken: this._tokenService.refreshToken.token,
+      })
+      .pipe(
+        tap((response: SignInResponse) => {
+          this._tokenService.accessToken = {
+            token: response.accessToken,
+            expiration: new Date(response.accessTokenExpiration),
+          };
+          this._tokenService.refreshToken = {
+            token: response.refreshToken,
+            expiration: new Date(response.refreshTokenExpiration),
+          };
+        }),
+      );
+  }
 
-    // Check the access token availability
-    if (!this.accessToken) {
-      return of(false as const);
-    }
+  /**
+   * Check if the user has a role
+   */
+  checkUserRole(role: UserRole) {
+    return this._userService.user?.role === role ? true : false;
+  }
 
-    // Check the access token expire date
-    if (AuthUtils.isTokenExpired(this.accessToken)) {
-      return of(false as const);
-    }
-
-    // If the access token exists, and it didn't expire, sign in using it
-    return this.loginUsingToken();
+  checkUserHasAnyRole(roles: UserRole[]): boolean {
+    return roles.some((r) => this.checkUserRole(r));
   }
 }

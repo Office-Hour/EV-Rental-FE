@@ -1,8 +1,17 @@
 export interface User {
   id: string;
-  name: string;
+  userName: string;
   email: string;
-  avatarUrl?: string;
-  role: 'customer' | 'staff' | 'admin';
-  status: 'active' | 'pending' | 'blocked';
+  emailConfirmed: boolean;
+  phoneNumber: string;
+  phoneNumberConfirmed: boolean;
+  role: UserRole;
+}
+
+export type UserRole = 'customer' | 'staff' | 'admin';
+
+export interface UpdateUserRequest {
+  userName: string;
+  email: string;
+  phoneNumber: string;
 }

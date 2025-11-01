@@ -1,8 +1,9 @@
 import { HttpErrorResponse, HttpEvent, HttpHandlerFn, HttpRequest } from '@angular/common/http';
 import { inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable, catchError, finalize, take, throwError } from 'rxjs';
 import { AuthService } from './auth.service';
-import { AuthUtils } from './auth.utils';
+import { TokenService } from '../token/token.service';
 
 /**
  * Intercept
@@ -15,21 +16,29 @@ export const authInterceptor = (
   next: HttpHandlerFn,
 ): Observable<HttpEvent<unknown>> => {
   const authService = inject(AuthService);
-
+  const tokenService = inject(TokenService);
+  const router = inject(Router);
   // Clone the request object
   let newReq = req.clone();
 
   // Request
-  //
-  // If the access token didn't expire, add the Authorization header.
-  // We won't add the Authorization header if the access token expired.
-  // This will force the server to return a "401 Unauthorized" response
-  // for the protected API routes which our response interceptor will
-  // catch and delete the access token from the local storage while logging
-  // the user out from the app.
-  if (authService.accessToken && !AuthUtils.isTokenExpired(authService.accessToken)) {
+  // Check if the access token is expiration
+  if (tokenService.isAccessTokenExpiration()) {
+    // Invoke access token expiration
+    authService.invokeAccessTokenExpiration().subscribe({
+      next: () => {
+        newReq = req.clone({
+          headers: req.headers.set('Authorization', 'Bearer ' + tokenService.accessToken.token),
+        });
+      },
+      error: () => {
+        return throwError(() => new Error('Failed to invoke access token expiration.'));
+      },
+    });
+  } else {
+    // If the access token exists, add the Authorization header.
     newReq = req.clone({
-      headers: req.headers.set('Authorization', 'Bearer ' + authService.accessToken),
+      headers: req.headers.set('Authorization', 'Bearer ' + tokenService.accessToken.token),
     });
   }
 
@@ -38,9 +47,12 @@ export const authInterceptor = (
     catchError((error) => {
       // Catch "401 Unauthorized" responses
       if (error instanceof HttpErrorResponse && error.status === 401) {
+        //Show alert message about 401 Unauthorized
+        // alertService.show('401 Unauthorized');
+        // Run when refresh token is expiration
         // Sign out
         authService
-          .logout()
+          .signOut()
           .pipe(
             take(1),
             finalize(() => {
@@ -59,6 +71,13 @@ export const authInterceptor = (
               return next(newReq);
             },
           });
+      }
+      // Catch other errors
+      if (error instanceof HttpErrorResponse) {
+        //Show alert message about other errors
+        // alertService.show('Other errors');
+        // Redirect to the login page
+        router.navigate(['/error-page']);
       }
 
       return throwError(() => error);

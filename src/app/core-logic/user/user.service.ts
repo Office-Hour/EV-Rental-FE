@@ -1,7 +1,7 @@
-import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { User } from './user.types';
+import { inject, Injectable, signal } from '@angular/core';
 import { Observable, tap } from 'rxjs';
+import { UpdateUserRequest, User } from './user.types';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -30,13 +30,15 @@ export class UserService {
    * Get the user from the API
    */
   getUser(): Observable<User | null> {
-    return this._httpClient.get<User | null>('api/user').pipe(tap((user) => this._user.set(user)));
+    return this._httpClient
+      .get<User | null>('api/Account/profile')
+      .pipe(tap((user) => this._user.set(user)));
   }
 
   /**
    * Update the user in the API
    */
-  updateUser(user: User) {
-    return this._httpClient.put<User>('api/user', user).pipe(tap((user) => this._user.set(user)));
+  updateUser(user: UpdateUserRequest) {
+    return this._httpClient.put('api/Account/update-profile', user).pipe(tap(() => this.getUser()));
   }
 }
