@@ -18,6 +18,10 @@ export const routes: Routes = [
         path: 'booking',
         loadChildren: () => import('./features/booking/booking.route'),
       },
+      {
+        path: 'car-detail',
+        loadChildren: () => import('./features/car-detail/car-detail.route'),
+      },
     ],
   },
 ];
