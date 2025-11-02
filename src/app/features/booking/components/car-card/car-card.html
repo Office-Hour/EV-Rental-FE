@@ -1,1 +1,56 @@
-<p>car-card works!</p>
+<article class="car-card">
+  <div class="car-card__content">
+    @if (leadingBadges().length || trailingBadges().length) {
+      <!-- <div class="car-card__badge-row">
+        @if (leadingBadges().length) {
+          <div class="car-card__badge-group">
+            @for (badge of leadingBadges(); track badge.label) {
+              <span class="car-card__badge" [class]="badgeToneClass(badge.tone)">
+                {{ badge.label }}
+              </span>
+            }
+          </div>
+        }
+        @if (trailingBadges().length) {
+          <div class="car-card__badge-group car-card__badge-group--trailing">
+            @for (badge of trailingBadges(); track badge.label) {
+              <span class="car-card__badge" [class]="badgeToneClass(badge.tone)">
+                {{ badge.label }}
+              </span>
+            }
+          </div>
+        }
+      </div> -->
+    }
+
+    <h2 class="car-card__name">
+      {{ car().name }}
+    </h2>
+
+    <div class="car-card__media">
+      <img
+        [ngSrc]="car().imageUrl"
+        [alt]="car().name"
+        class="car-card__image"
+        width="512"
+        height="256"
+        loading="lazy"
+      />
+    </div>
+
+    <div class="car-card__pricing">
+      <span class="car-card__price-prefix">{{ car().pricePrefix ?? 'Chỉ từ' }}</span>
+      <span class="car-card__price-amount">{{ formattedPrice() }}</span>
+      <span class="car-card__price-unit">{{ car().currency }}/{{ car().rateUnit }}</span>
+    </div>
+
+    <div class="car-card__specs">
+      @for (spec of car().specs; track spec.label) {
+        <div class="car-card__spec">
+          <span class="car-card__spec-icon" [attr.data-icon]="spec.icon" aria-hidden="true"></span>
+          <span class="car-card__spec-value">{{ spec.value }}</span>
+        </div>
+      }
+    </div>
+  </div>
+</article>
