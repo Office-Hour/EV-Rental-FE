@@ -1,1 +1,118 @@
-<p>car-list works!</p>
+<section class="car-list">
+  <div class="car-list__container">
+    <header class="car-list__hero">
+      <p class="car-list__eyebrow">Tìm xe tự lái</p>
+      <h1 class="car-list__title">Chọn chiếc xe phù hợp nhất cho nhu cầu di chuyển</h1>
+      <p class="car-list__description">
+        Ứng dụng bộ lọc nhiều tiêu chí để tìm nhanh dòng xe phù hợp theo ngân sách, tiện ích và khu
+        vực mong muốn. Đặt xe trực tuyến chỉ trong vài phút với hỗ trợ 24/7 và chính sách giao nhận
+        linh hoạt.
+      </p>
+    </header>
+
+    <div class="car-list__filters">
+      <div class="car-list__filter-bar">
+        <button
+          mat-raised-button
+          class="car-list__filter-all"
+          type="button"
+          (click)="resetFilters()"
+          [disabled]="!hasActiveFilters()"
+        >
+          Tất cả
+        </button>
+
+        <mat-form-field appearance="outline" class="car-list__filter-field">
+          <mat-label>Số chỗ</mat-label>
+          <mat-select multiple [value]="selectedSeatValues()" (valueChange)="onSeatChanged($event)">
+            @for (seat of seatOptions; track seat) {
+              <mat-option [value]="seat">{{ seatLabel(seat) }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="car-list__filter-field">
+          <mat-label>Hãng xe</mat-label>
+          <mat-select [value]="selectedBrand()" (valueChange)="onBrandChanged($event)">
+            <mat-option [value]="null">Tất cả</mat-option>
+            @for (brand of brandOptions; track brand) {
+              <mat-option [value]="brand">{{ brand }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field
+          appearance="outline"
+          class="car-list__filter-field"
+          [class.car-list__filter-field--disabled]="!availableModels().length"
+        >
+          <mat-label>Mẫu xe</mat-label>
+          <mat-select
+            multiple
+            [value]="selectedModelValues()"
+            (valueChange)="onModelsChanged($event)"
+            [disabled]="!availableModels().length"
+          >
+            @for (model of availableModels(); track model) {
+              <mat-option [value]="model">{{ model }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="car-list__filter-field">
+          <mat-label>Khu vực</mat-label>
+          <mat-select [value]="selectedLocation()" (valueChange)="onLocationChanged($event)">
+            <mat-option [value]="null">Tất cả</mat-option>
+            @for (location of locationOptions; track location) {
+              <mat-option [value]="location">{{ location }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field
+          appearance="outline"
+          class="car-list__filter-field car-list__filter-field--sort"
+        >
+          <mat-label>Sắp xếp</mat-label>
+          <mat-select [value]="selectedSort()" (valueChange)="onSortChanged($event)">
+            @for (option of sortOptions; track option.value) {
+              <mat-option [value]="option.value">{{ option.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="car-list__summary">
+      <p class="car-list__summary-text">
+        Tìm thấy <span class="car-list__summary-highlight">{{ resultCount() }}</span> trong tổng số
+        {{ totalAvailableCars }} xe.
+      </p>
+      <button
+        mat-stroked-button
+        type="button"
+        class="car-list__reset"
+        (click)="resetFilters()"
+        [disabled]="!hasActiveFilters()"
+      >
+        Đặt lại bộ lọc
+      </button>
+    </div>
+
+    @if (filteredCars().length) {
+      <div class="car-list__grid">
+        @for (car of filteredCars(); track car.id) {
+          <app-car-card [car]="car" />
+        }
+      </div>
+    } @else {
+      <div class="car-list-empty">
+        <h2 class="car-list-empty__title">Không có xe theo kết quả tìm kiếm này!</h2>
+        <p class="car-list-empty__subtitle">
+          Vui lòng kiểm tra lại thông tin liên hệ. Chúng tôi sẽ liên hệ bạn trong thời gian sớm
+          nhất.
+        </p>
+      </div>
+    }
+  </div>
+</section>

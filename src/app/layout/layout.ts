@@ -9,6 +9,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { cx } from '../lib/ngm-dev-blocks/utils/functions/cx';
 import { DeviceService } from '../lib/ngm-dev-blocks/utils/services/device.service';
+//import { CarCard } from '../features/booking/components/car-card/car-card';
+import { CarList } from '../features/booking/pages/car-list/car-list';
 
 interface NavigationItem {
   name: string;
@@ -43,6 +45,8 @@ interface User {
     MatListModule,
     RouterLink,
     RouterOutlet,
+    //CarCard,
+    CarList,
   ],
 })
 export class LayoutComponent {
