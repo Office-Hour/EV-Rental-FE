@@ -1,0 +1,29 @@
+/* Angular Material form field customizations for car list filters */
+.mat-mdc-form-field {
+  .mat-mdc-select-trigger {
+    font-weight: 600;
+    color: #10b981;
+  }
+
+  .mat-mdc-select-value-text {
+    font-weight: 600;
+    color: #10b981;
+  }
+
+  .mat-mdc-form-field-subscript-wrapper {
+    display: none;
+  }
+
+  .mat-mdc-form-field-flex {
+    border-radius: 18px;
+    background-color: rgba(15, 23, 42, 0.02);
+  }
+
+  .mdc-floating-label {
+    color: #10b981;
+  }
+}
+
+.mat-mdc-form-field--disabled .mat-mdc-select-trigger {
+  color: rgba(15, 23, 42, 0.35);
+}

@@ -1,1 +1,9 @@
-<p>landing works!</p>
+<button type="button" (click)="toggle()">Toggle Element</button>
+@if (isShown()) {
+  <div animate.enter="fade-in" animate.leave="fade-out">
+    <p>landing works!</p>
+    <p>landing works!</p>
+    <p>landing works!</p>
+    <mat-icon aria-hidden="false">check_circle</mat-icon>
+  </div>
+}
