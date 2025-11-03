@@ -1,27 +1,13 @@
-<article class="car-card">
+<a href="/detail-card/{{ car().id }}" class="car-card">
+  <!-- Hover Overlay -->
+  <div class="car-card__overlay">
+    <div class="car-card__icon">
+      <mat-icon aria-hidden="false" fontIcon="zoom_in"></mat-icon>
+    </div>
+  </div>
+
   <div class="car-card__content">
-    @if (leadingBadges().length || trailingBadges().length) {
-      <!-- <div class="car-card__badge-row">
-        @if (leadingBadges().length) {
-          <div class="car-card__badge-group">
-            @for (badge of leadingBadges(); track badge.label) {
-              <span class="car-card__badge" [class]="badgeToneClass(badge.tone)">
-                {{ badge.label }}
-              </span>
-            }
-          </div>
-        }
-        @if (trailingBadges().length) {
-          <div class="car-card__badge-group car-card__badge-group--trailing">
-            @for (badge of trailingBadges(); track badge.label) {
-              <span class="car-card__badge" [class]="badgeToneClass(badge.tone)">
-                {{ badge.label }}
-              </span>
-            }
-          </div>
-        }
-      </div> -->
-    }
+    @if (leadingBadges().length || trailingBadges().length) {}
 
     <h2 class="car-card__name">
       {{ car().name }}
@@ -29,7 +15,7 @@
 
     <div class="car-card__media">
       <img
-        [ngSrc]="car().imageUrl"
+        [ngSrc]="car().imageUrl + '.webp'"
         [alt]="car().name"
         class="car-card__image"
         width="512"
@@ -47,10 +33,10 @@
     <div class="car-card__specs">
       @for (spec of car().specs; track spec.label) {
         <div class="car-card__spec">
-          <span class="car-card__spec-icon" [attr.data-icon]="spec.icon" aria-hidden="true"></span>
+          <mat-icon class="car-card__spec-icon">{{ getSpecIcon(spec.icon) }}</mat-icon>
           <span class="car-card__spec-value">{{ spec.value }}</span>
         </div>
       }
     </div>
   </div>
-</article>
+</a>

@@ -114,3 +114,163 @@
   outline: 2px solid rgb(59, 130, 246);
   outline-offset: 2px;
 }
+
+.logo-container {
+  position: relative;
+  width: 150px;
+  height: auto;
+  cursor: pointer;
+
+  .logo-text,
+  .logo-text-dark {
+    width: 150px;
+    height: auto;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 0;
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  .logo-text-dark {
+    opacity: 0;
+  }
+
+  &:hover {
+    .logo-text {
+      opacity: 0;
+    }
+
+    .logo-text-dark {
+      opacity: 1;
+    }
+  }
+}
+
+// ==================================================
+// MATERIAL DESIGN 3 COLOR SYSTEM UTILITIES
+// ==================================================
+
+// Primary colors - Main brand interactions
+.hover-primary {
+  transition: all 0.2s ease-in-out;
+}
+
+.hover-primary:hover {
+  background-color: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
+}
+
+.text-primary {
+  color: var(--mat-sys-primary);
+}
+
+.bg-primary {
+  background-color: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+}
+
+.bg-primary-container {
+  background-color: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
+}
+
+.border-primary {
+  border-color: var(--mat-sys-primary);
+}
+
+// Secondary colors - Less prominent components
+.hover-secondary {
+  transition: all 0.2s ease-in-out;
+}
+
+.hover-secondary:hover {
+  background-color: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
+}
+
+.text-secondary {
+  color: var(--mat-sys-secondary);
+}
+
+.bg-secondary {
+  background-color: var(--mat-sys-secondary);
+  color: var(--mat-sys-on-secondary);
+}
+
+.bg-secondary-container {
+  background-color: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
+}
+
+// Tertiary colors - Complementary accents
+.text-tertiary {
+  color: var(--mat-sys-tertiary);
+}
+
+.bg-tertiary {
+  background-color: var(--mat-sys-tertiary);
+  color: var(--mat-sys-on-tertiary);
+}
+
+.bg-tertiary-container {
+  background-color: var(--mat-sys-tertiary-container);
+  color: var(--mat-sys-on-tertiary-container);
+}
+
+// Surface colors - Backgrounds and content areas
+.text-on-surface {
+  color: var(--mat-sys-on-surface);
+}
+
+.bg-surface {
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+}
+
+.bg-surface-variant {
+  background-color: var(--mat-sys-surface-variant);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+// Error colors - Error states and validation
+.text-error {
+  color: var(--mat-sys-error);
+}
+
+.bg-error {
+  background-color: var(--mat-sys-error);
+  color: var(--mat-sys-on-error);
+}
+
+.bg-error-container {
+  background-color: var(--mat-sys-error-container);
+  color: var(--mat-sys-on-error-container);
+}
+
+// Outline colors - Borders and separators
+.border-outline {
+  border-color: var(--mat-sys-outline);
+}
+
+.border-outline-variant {
+  border-color: var(--mat-sys-outline-variant);
+}
+
+// Ring utilities - Focus and interaction states
+.ring-primary {
+  transition: all 0.2s ease-in-out;
+  --tw-ring-color: var(--mat-sys-primary);
+}
+
+.ring-primary:hover {
+  --tw-ring-color: var(--mat-sys-primary-container);
+}
+
+.ring-outline {
+  --tw-ring-color: var(--mat-sys-outline);
+}
+
+.ring-error {
+  --tw-ring-color: var(--mat-sys-error);
+}

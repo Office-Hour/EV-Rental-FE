@@ -5,6 +5,8 @@ import { UserService } from '../user/user.service';
 import { SignInRequest, SignInResponse, SignUpRequest } from './auth.types';
 import { TokenService } from '../token/token.service';
 import { UserRole } from '../user/user.types';
+import { CarService } from '../car/car.service';
+import { BookingService } from '../booking/booking.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -12,6 +14,8 @@ export class AuthService {
   private _userService = inject(UserService);
   private _tokenService = inject(TokenService);
   private _isAuthenticated = signal<boolean>(false);
+  private _carService = inject(CarService);
+  private _bookingService = inject(BookingService);
 
   // -----------------------------------------------------------------------------------------------------
   // @ Accessors
@@ -70,6 +74,12 @@ export class AuthService {
         // Get the user from the user service
         this._userService.getUser().subscribe();
 
+        // Get the bookings from the booking service
+        this._bookingService.getBookings().subscribe();
+
+        // Get the cars from the car service
+        this._carService.getCars().subscribe();
+
         // Return a new observable with the response
         return of(response);
       }),
@@ -86,6 +96,10 @@ export class AuthService {
     this._userService.user = null;
     // Set the isAuthenticated signal to false
     this.isAuthenticated = false;
+    // Clear the bookings from the booking service
+    this._bookingService.bookings = [];
+    // Clear the cars from the car service
+    this._carService.cars = [];
     // Return the observable
     return of(true);
   }

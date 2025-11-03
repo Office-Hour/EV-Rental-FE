@@ -1,5 +1,6 @@
-﻿import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { NgOptimizedImage } from '@angular/common';
+﻿import { NgOptimizedImage } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
 
 export type CarCardBadgeTone = 'accent' | 'success' | 'danger' | 'neutral';
 
@@ -32,7 +33,7 @@ export interface CarCardData {
 
 @Component({
   selector: 'app-car-card',
-  imports: [NgOptimizedImage],
+  imports: [NgOptimizedImage, MatIconModule],
   templateUrl: './car-card.html',
   styleUrl: './car-card.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -57,5 +58,15 @@ export class CarCard {
 
   public badgeToneClass(tone: CarCardBadgeTone): string {
     return `car-card__badge--${tone}`;
+  }
+
+  public getSpecIcon(specIcon: CarCardSpecIcon): string {
+    const iconMap: Record<CarCardSpecIcon, string> = {
+      segment: 'category',
+      range: 'electric_bolt',
+      seats: 'airline_seat_recline_normal',
+      cargo: 'work',
+    };
+    return iconMap[specIcon] || 'info';
   }
 }
