@@ -12,7 +12,6 @@ export const routes: Routes = [
     path: '',
     canActivate: [NoAuthGuard],
     canActivateChild: [NoAuthGuard],
-    component: LayoutComponent,
     children: [
       {
         path: 'confirmation-required',
@@ -58,7 +57,8 @@ export const routes: Routes = [
       },
       {
         path: 'car-detail',
-        loadChildren: () => import('./features/car-detail/car-detail.route'),
+        loadChildren: () =>
+          import('./features/customer/booking/pages/car-detail/car-detail.routes'),
       },
       {
         path: 'booking',
