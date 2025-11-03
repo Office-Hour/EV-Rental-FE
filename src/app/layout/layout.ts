@@ -81,11 +81,6 @@ export class LayoutComponent {
       { name: 'Báo cáo', href: '/admin/reports', current: false, icon: 'analytics' },
       { name: 'Cài đặt hệ thống', href: '/admin/settings', current: false, icon: 'settings' },
     ],
-    guest: [
-      { name: 'Thuê xe', href: '/booking', current: false, icon: 'directions_car' },
-      { name: 'Về chúng tôi', href: '/about', current: false, icon: 'info' },
-      { name: 'Liên hệ', href: '/contact', current: false, icon: 'contact_support' },
-    ],
   };
 
   // User navigation data
@@ -111,16 +106,12 @@ export class LayoutComponent {
     const isAuth = this.isAuthenticated();
     const role = this.userRole();
 
-    let navigationItems: typeof this.navigationData.customer;
-
-    if (!isAuth) {
-      navigationItems = this.navigationData.guest;
-    } else {
-      navigationItems = role
+    const navigationItems = isAuth
+      ? role
         ? this.navigationData[role as keyof typeof this.navigationData] ||
           this.navigationData.customer
-        : this.navigationData.customer;
-    }
+        : this.navigationData.customer
+      : [];
 
     return this.updateCurrentRoute(navigationItems, currentUrl);
   });
