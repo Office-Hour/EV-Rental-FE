@@ -42,7 +42,7 @@ export const routes: Routes = [
     ],
   },
 
-  // public routes
+  // public routes - guest only access landing
   {
     path: '',
     component: LayoutComponent,
@@ -53,16 +53,9 @@ export const routes: Routes = [
       },
       {
         path: 'error-page',
+        canActivate: [NoAuthGuard],
+        canActivateChild: [NoAuthGuard],
         loadChildren: () => import('./features/auth/error-page/error-page.routes'),
-      },
-      {
-        path: 'car-detail',
-        loadChildren: () =>
-          import('./features/customer/booking/pages/car-detail/car-detail.routes'),
-      },
-      {
-        path: 'booking',
-        loadChildren: () => import('./features/customer/booking/booking.routes'),
       },
     ],
   },
@@ -76,10 +69,7 @@ export const routes: Routes = [
       roles: ['admin'],
     },
     component: LayoutComponent,
-    children: [
-      { path: 'admin', loadChildren: () => import('./features/admin/admin.routes') },
-      // ví dụ: { path: 'admin/users', loadChildren: ... },
-    ],
+    children: [{ path: 'admin', loadChildren: () => import('./features/admin/admin.routes') }],
   },
 
   // Staff area (Staff hoặc Admin)

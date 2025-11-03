@@ -1,9 +1,295 @@
-<button type="button" (click)="toggle()">Toggle Element</button>
-@if (isShown()) {
-  <div animate.enter="fade-in" animate.leave="fade-out">
-    <p>landing works!</p>
-    <p>landing works!</p>
-    <p>landing works!</p>
-    <mat-icon aria-hidden="false">check_circle</mat-icon>
+<!-- Hero Section -->
+<section
+  class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center px-4"
+>
+  <div class="max-w-6xl mx-auto text-center">
+    <!-- Logo -->
+    <div class="mb-8">
+      <img class="mx-auto h-16 w-auto" src="logo-text.webp" alt="Voltera" />
+    </div>
+
+    <!-- Main Heading -->
+    <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
+      Thuê Xe Điện
+      <span
+        class="block text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400"
+      >
+        Tương Lai
+      </span>
+    </h1>
+
+    <!-- Subtitle -->
+    <p class="text-xl md:text-2xl text-slate-300 mb-8 max-w-3xl mx-auto leading-relaxed">
+      Trải nghiệm di chuyển xanh với đội xe điện hiện đại. An toàn, tiện lợi và thân thiện với môi
+      trường.
+    </p>
+
+    <!-- CTA Buttons -->
+    <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+      <a
+        routerLink="/sign-up"
+        class="px-8 py-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-semibold rounded-full hover:from-emerald-600 hover:to-teal-600 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+      >
+        Bắt Đầu Ngay
+      </a>
+      <a
+        href="#features"
+        class="px-8 py-4 border-2 border-slate-400 text-slate-300 font-semibold rounded-full hover:border-emerald-400 hover:text-emerald-400 transition-all duration-300"
+      >
+        Tìm Hiểu Thêm
+      </a>
+    </div>
+
+    <!-- Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+      <div class="text-center">
+        <div class="text-3xl md:text-4xl font-bold text-emerald-400 mb-2">500+</div>
+        <div class="text-slate-400">Chiếc Xe</div>
+      </div>
+      <div class="text-center">
+        <div class="text-3xl md:text-4xl font-bold text-emerald-400 mb-2">50k+</div>
+        <div class="text-slate-400">Khách Hàng</div>
+      </div>
+      <div class="text-center">
+        <div class="text-3xl md:text-4xl font-bold text-emerald-400 mb-2">4.9/5</div>
+        <div class="text-slate-400">Đánh Giá</div>
+      </div>
+    </div>
   </div>
-}
+</section>
+
+<!-- Features Section -->
+<section id="features" class="py-20 bg-slate-50">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mb-4">Tại Sao Chọn Voltera?</h2>
+      <p class="text-lg text-slate-600 max-w-2xl mx-auto">
+        Chúng tôi mang đến giải pháp di chuyển xanh với công nghệ tiên tiến và dịch vụ hoàn hảo.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Feature 1 -->
+      <div
+        class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300"
+      >
+        <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mb-6">
+          <mat-icon class="text-emerald-600 text-3xl">electric_car</mat-icon>
+        </div>
+        <h3 class="text-xl font-semibold text-slate-800 mb-3">Xe Điện Hiện Đại</h3>
+        <p class="text-slate-600">
+          Đội xe điện VinFast với công nghệ tiên tiến, phạm vi di chuyển lên đến 500km.
+        </p>
+      </div>
+
+      <!-- Feature 2 -->
+      <div
+        class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300"
+      >
+        <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-6">
+          <mat-icon class="text-blue-600 text-3xl">schedule</mat-icon>
+        </div>
+        <h3 class="text-xl font-semibold text-slate-800 mb-3">Đặt Xe Dễ Dàng</h3>
+        <p class="text-slate-600">
+          Ứng dụng thân thiện, đặt xe chỉ với vài chạm. Có xe mọi lúc mọi nơi.
+        </p>
+      </div>
+
+      <!-- Feature 3 -->
+      <div
+        class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300"
+      >
+        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-6">
+          <mat-icon class="text-green-600 text-3xl">eco</mat-icon>
+        </div>
+        <h3 class="text-xl font-semibold text-slate-800 mb-3">Thân Thiện Môi Trường</h3>
+        <p class="text-slate-600">
+          Giảm phát thải CO2, góp phần bảo vệ môi trường xanh cho tương lai.
+        </p>
+      </div>
+
+      <!-- Feature 4 -->
+      <div
+        class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300"
+      >
+        <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mb-6">
+          <mat-icon class="text-purple-600 text-3xl">security</mat-icon>
+        </div>
+        <h3 class="text-xl font-semibold text-slate-800 mb-3">An Toàn Tối Đa</h3>
+        <p class="text-slate-600">Hệ thống giám sát 24/7, bảo hiểm toàn diện và hỗ trợ khẩn cấp.</p>
+      </div>
+
+      <!-- Feature 5 -->
+      <div
+        class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300"
+      >
+        <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mb-6">
+          <mat-icon class="text-orange-600 text-3xl">support_agent</mat-icon>
+        </div>
+        <h3 class="text-xl font-semibold text-slate-800 mb-3">Hỗ Trợ 24/7</h3>
+        <p class="text-slate-600">
+          Đội ngũ hỗ trợ chuyên nghiệp, sẵn sàng giải đáp mọi thắc mắc của bạn.
+        </p>
+      </div>
+
+      <!-- Feature 6 -->
+      <div
+        class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300"
+      >
+        <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-6">
+          <mat-icon class="text-red-600 text-3xl">local_shipping</mat-icon>
+        </div>
+        <h3 class="text-xl font-semibold text-slate-800 mb-3">Giao Xe Tận Nơi</h3>
+        <p class="text-slate-600">
+          Dịch vụ giao nhận xe tận nhà, thuận tiện và tiết kiệm thời gian.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="py-20 bg-white">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mb-4">Cách Thuê Xe Đơn Giản</h2>
+      <p class="text-lg text-slate-600 max-w-2xl mx-auto">
+        Chỉ với 3 bước đơn giản để có xe điện chất lượng cao.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- Step 1 -->
+      <div class="text-center">
+        <div
+          class="w-20 h-20 bg-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6 text-white text-2xl font-bold"
+        >
+          1
+        </div>
+        <h3 class="text-xl font-semibold text-slate-800 mb-3">Đặt Xe</h3>
+        <p class="text-slate-600">
+          Chọn xe phù hợp với nhu cầu, thời gian và địa điểm thông qua ứng dụng hoặc website.
+        </p>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="text-center">
+        <div
+          class="w-20 h-20 bg-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6 text-white text-2xl font-bold"
+        >
+          2
+        </div>
+        <h3 class="text-xl font-semibold text-slate-800 mb-3">Nhận Xe</h3>
+        <p class="text-slate-600">
+          Xe sẽ được giao tận nơi hoặc bạn có thể đến điểm giao nhận gần nhất.
+        </p>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="text-center">
+        <div
+          class="w-20 h-20 bg-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6 text-white text-2xl font-bold"
+        >
+          3
+        </div>
+        <h3 class="text-xl font-semibold text-slate-800 mb-3">Trải Nghiệm</h3>
+        <p class="text-slate-600">
+          Tận hưởng chuyến đi với xe điện hiện đại, an toàn và thân thiện môi trường.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-20 bg-gradient-to-r from-emerald-500 to-teal-500">
+  <div class="max-w-4xl mx-auto text-center px-4">
+    <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">Sẵn Sàng Trải Nghiệm?</h2>
+    <p class="text-xl text-emerald-100 mb-8">
+      Đăng ký ngay hôm nay và nhận ưu đãi đặc biệt cho chuyến đi đầu tiên.
+    </p>
+    <a
+      routerLink="/sign-up"
+      class="inline-block px-10 py-4 bg-white text-emerald-600 font-semibold rounded-full hover:bg-slate-50 transition-all duration-300 transform hover:scale-105 shadow-lg"
+    >
+      Đăng Ký Ngay
+    </a>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-slate-800 py-12">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+      <!-- Company Info -->
+      <div class="md:col-span-2">
+        <img class="h-10 w-auto mb-4" src="logo-text.webp" alt="Voltera" />
+        <p class="text-slate-400 mb-4">
+          Voltera - Giải pháp di chuyển xanh với đội xe điện hiện đại, mang đến trải nghiệm lái xe
+          tương lai.
+        </p>
+        <div class="flex space-x-4">
+          <a href="#" class="text-slate-400 hover:text-emerald-400 transition-colors">
+            <mat-icon>facebook</mat-icon>
+          </a>
+          <a href="#" class="text-slate-400 hover:text-emerald-400 transition-colors">
+            <mat-icon>instagram</mat-icon>
+          </a>
+          <a href="#" class="text-slate-400 hover:text-emerald-400 transition-colors">
+            <mat-icon>twitter</mat-icon>
+          </a>
+        </div>
+      </div>
+
+      <!-- Quick Links -->
+      <div>
+        <h4 class="text-white font-semibold mb-4">Liên Kết</h4>
+        <ul class="space-y-2">
+          <li>
+            <a href="#" class="text-slate-400 hover:text-emerald-400 transition-colors"
+              >Về Chúng Tôi</a
+            >
+          </li>
+          <li>
+            <a href="#" class="text-slate-400 hover:text-emerald-400 transition-colors">Dịch Vụ</a>
+          </li>
+          <li>
+            <a href="#" class="text-slate-400 hover:text-emerald-400 transition-colors">Giá Cả</a>
+          </li>
+          <li>
+            <a href="#" class="text-slate-400 hover:text-emerald-400 transition-colors">Liên Hệ</a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Support -->
+      <div>
+        <h4 class="text-white font-semibold mb-4">Hỗ Trợ</h4>
+        <ul class="space-y-2">
+          <li>
+            <a href="#" class="text-slate-400 hover:text-emerald-400 transition-colors">Trợ Giúp</a>
+          </li>
+          <li>
+            <a href="#" class="text-slate-400 hover:text-emerald-400 transition-colors"
+              >Điều Khoản</a
+            >
+          </li>
+          <li>
+            <a href="#" class="text-slate-400 hover:text-emerald-400 transition-colors">Bảo Mật</a>
+          </li>
+          <li>
+            <a href="#" class="text-slate-400 hover:text-emerald-400 transition-colors">FAQ</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Bottom -->
+    <div
+      class="border-t border-slate-700 pt-8 flex flex-col md:flex-row justify-between items-center"
+    >
+      <p class="text-slate-400 text-sm">© 2025 Voltera. Tất cả quyền được bảo lưu.</p>
+      <p class="text-slate-400 text-sm mt-2 md:mt-0">Made with ❤️ for sustainable mobility</p>
+    </div>
+  </div>
+</footer>

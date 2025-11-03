@@ -17,20 +17,23 @@
         </button>
       </mat-toolbar>
       <mat-list class="bg-transparent">
-        @for (item of navigation(); track item) {
-          <a
-            mat-list-item
-            [href]="item.href"
-            class="text-on-surface hover-primary border-l-2 border-transparent hover:border-primary transition-all duration-200 rounded-r-lg mx-2 my-1 cursor-pointer"
-            [class.border-primary]="item.current"
-            [class.bg-primary-container]="item.current"
-            [class.text-primary]="item.current"
-            [class.font-semibold]="item.current"
-          >
-            {{ item.name }}
-          </a>
+        <!-- Mobile Navigation - Only for authenticated users -->
+        @if (isAuthenticated()) {
+          @for (item of navigation(); track item) {
+            <a
+              mat-list-item
+              [href]="item.href"
+              class="text-on-surface hover-primary border-l-2 border-transparent hover:border-primary transition-all duration-200 rounded-r-lg mx-2 my-1 cursor-pointer"
+              [class.border-primary]="item.current"
+              [class.bg-primary-container]="item.current"
+              [class.text-primary]="item.current"
+              [class.font-semibold]="item.current"
+            >
+              {{ item.name }}
+            </a>
+          }
+          <mat-divider class="border-outline-variant" />
         }
-        <mat-divider class="border-outline-variant" />
 
         @if (isAuthenticated()) {
           <div mat-subheader class="bg-surface-variant border-b border-outline">

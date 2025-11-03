@@ -1,16 +1,14 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { MatIcon } from '@angular/material/icon';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-landing',
-  imports: [MatIcon],
+  imports: [RouterLink, MatIconModule],
   templateUrl: './landing.html',
   styleUrl: './landing.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Landing {
-  isShown = signal(false);
-  toggle() {
-    this.isShown.update((isShown) => !isShown);
-  }
+  // Landing page component - no additional logic needed
 }
