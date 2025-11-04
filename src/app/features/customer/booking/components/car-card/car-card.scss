@@ -1,6 +1,6 @@
 .car-card {
   --car-card-radius: 28px;
-  --car-card-overlay: linear-gradient(180deg, rgba(15, 23, 42, 0.05) 0%, rgba(2, 6, 23, 0.82) 100%);
+  --car-card-overlay: linear-gradient(180deg, rgb(15 23 42 / 5%) 0%, rgb(2 6 23 / 82%) 100%);
 
   position: relative;
   display: flex;
@@ -28,12 +28,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(
-    135deg,
-    rgba(59, 130, 246, 0.3) 0%,
-    rgba(147, 197, 253, 0.4) 50%,
-    rgba(59, 130, 246, 0.3) 100%
-  );
+  background: linear-gradient(135deg,
+  rgb(59 130 246 / 30%) 0%,
+  rgb(147 197 253 / 40%) 50%,
+  rgb(59 130 246 / 30%) 100%);
   backdrop-filter: blur(2px);
   opacity: 0;
   visibility: hidden;
@@ -53,35 +51,35 @@
   justify-content: center;
   width: 80px;
   height: 80px;
-  background: rgba(255, 255, 255, 0.15);
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  background: rgb(255 255 255 / 15%);
+  border: 2px solid rgb(255 255 255 / 30%);
   border-radius: 50%;
   backdrop-filter: blur(10px);
   box-shadow:
-    0 8px 32px rgba(59, 130, 246, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    0 8px 32px rgb(59 130 246 / 30%),
+    inset 0 1px 0 rgb(255 255 255 / 20%);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .car-card:hover .car-card__icon {
   transform: scale(1.1);
   box-shadow:
-    0 12px 48px rgba(59, 130, 246, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    0 12px 48px rgb(59 130 246 / 40%),
+    inset 0 1px 0 rgb(255 255 255 / 30%);
 }
 
 // Magnifying Glass Icon - Clean AI-driven Design
 .car-card__magnifier {
   width: 32px;
   height: 32px;
-  color: #ffffff;
-  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+  color: #fff;
+  filter: drop-shadow(0 2px 8px rgb(0 0 0 / 30%));
   transition: all 0.3s ease;
 }
 
 .car-card:hover .car-card__magnifier {
   transform: rotate(5deg);
-  filter: drop-shadow(0 4px 16px rgba(59, 130, 246, 0.5));
+  filter: drop-shadow(0 4px 16px rgb(59 130 246 / 50%));
 }
 
 .car-card__content {
@@ -117,8 +115,8 @@
   gap: 0.35rem;
   padding: 0.35rem 0.85rem;
   border-radius: 999px;
-  border: 1px solid rgba(248, 250, 252, 0.18);
-  background: rgba(15, 23, 42, 0.45);
+  border: 1px solid rgb(248 250 252 / 18%);
+  background: rgb(15 23 42 / 45%);
   color: #f8fafc;
   font-size: 0.75rem;
   font-weight: 600;
@@ -128,26 +126,26 @@
 }
 
 .car-card__badge--accent {
-  background: rgba(13, 148, 136, 0.35);
-  border-color: rgba(45, 212, 191, 0.55);
+  background: rgb(13 148 136 / 35%);
+  border-color: rgb(45 212 191 / 55%);
   color: #d1fae5;
 }
 
 .car-card__badge--success {
-  background: rgba(34, 197, 94, 0.28);
-  border-color: rgba(134, 239, 172, 0.5);
+  background: rgb(34 197 94 / 28%);
+  border-color: rgb(134 239 172 / 50%);
   color: #bbf7d0;
 }
 
 .car-card__badge--danger {
-  background: rgba(248, 113, 113, 0.28);
-  border-color: rgba(252, 165, 165, 0.5);
+  background: rgb(248 113 113 / 28%);
+  border-color: rgb(252 165 165 / 50%);
   color: #fecdd3;
 }
 
 .car-card__badge--neutral {
-  background: rgba(148, 163, 184, 0.3);
-  border-color: rgba(226, 232, 240, 0.45);
+  background: rgb(148 163 184 / 30%);
+  border-color: rgb(226 232 240 / 45%);
   color: #e2e8f0;
 }
 
@@ -178,7 +176,7 @@
   width: auto;
   height: auto;
   object-fit: contain;
-  filter: drop-shadow(0 24px 35px rgba(2, 6, 23, 0.72));
+  filter: drop-shadow(0 24px 35px rgb(2 6 23 / 72%));
   position: absolute;
   top: 50%;
   left: 50%;
@@ -194,8 +192,8 @@
   padding: 0.25rem 0.75rem;
   margin: 0 auto;
   border-radius: 999px;
-  background: rgba(45, 212, 191, 0.08);
-  box-shadow: inset 0 0 0 1px rgba(45, 212, 191, 0.22);
+  background: rgb(45 212 191 / 8%);
+  box-shadow: inset 0 0 0 1px rgb(45 212 191 / 22%);
 }
 
 .car-card__price-prefix {
@@ -203,7 +201,7 @@
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(45, 212, 191, 0.8);
+  color: rgb(45 212 191 / 80%);
 }
 
 .car-card__price-amount {
@@ -216,7 +214,7 @@
 .car-card__price-unit {
   font-size: 0.82rem;
   font-weight: 600;
-  color: rgba(45, 212, 191, 0.8);
+  color: rgb(45 212 191 / 80%);
 }
 
 .car-card__specs {
@@ -254,7 +252,7 @@
   text-overflow: ellipsis;
 }
 
-@media (max-width: 380px) {
+@media (width <= 380px) {
   .car-card {
     min-width: 280px;
     max-width: 100%;

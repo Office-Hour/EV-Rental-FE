@@ -16,7 +16,7 @@
 
   .mat-mdc-form-field-flex {
     border-radius: 18px;
-    background-color: rgba(15, 23, 42, 0.02);
+    background-color: rgb(15 23 42 / 2%);
   }
 
   .mdc-floating-label {
@@ -25,5 +25,5 @@
 }
 
 .mat-mdc-form-field--disabled .mat-mdc-select-trigger {
-  color: rgba(15, 23, 42, 0.35);
+  color: rgb(15 23 42 / 35%);
 }

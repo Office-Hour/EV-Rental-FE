@@ -23,6 +23,7 @@
         container-shape: 0,
       )
     );
+
     .mat-mdc-dialog-content {
       // device height - header height -actions height
       max-height: calc(100dvh - 68px);
