@@ -22,7 +22,7 @@
           @for (item of navigation(); track item) {
             <a
               mat-list-item
-              [href]="item.href"
+              [routerLink]="item.href"
               class="text-on-surface hover-primary border-l-2 border-transparent hover:border-primary transition-all duration-200 rounded-r-lg mx-2 my-1 cursor-pointer"
               [class.border-primary]="item.current"
               [class.bg-primary-container]="item.current"
@@ -97,7 +97,10 @@
     >
       <div class="flex-1 w-full max-w-7xl mx-auto flex items-center px-4 sm:px-6 lg:px-8">
         <!-- Logo with hover effect -->
-        <a class="logo-container flex items-center w-full justify-center cursor-pointer" href="/">
+        <a
+          class="logo-container flex items-center w-full justify-center cursor-pointer"
+          routerLink="/"
+        >
           <img class="logo-text" src="logo-text.webp" alt="Voltera Logo" />
           <img class="logo-text-dark" src="logo-text-dark.webp" alt="Voltera Logo" />
         </a>
@@ -108,7 +111,7 @@
             <div class="flex items-baseline space-x-2">
               @for (item of navigation(); track item) {
                 <a
-                  [href]="item.href"
+                  [routerLink]="item.href"
                   matButton
                   class="px-3 py-2 rounded-md transition-all duration-200 relative"
                   [class.text-primary]="item.current"
