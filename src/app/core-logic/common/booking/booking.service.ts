@@ -2,7 +2,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { Booking } from './booking.type';
 import { HttpClient } from '@angular/common/http';
-import { BOOKING_ENDPOINTS } from '../api/api.config';
+import { BOOKING_ENDPOINTS } from '../../api.config';
 
 @Injectable({ providedIn: 'root' })
 export class BookingService {

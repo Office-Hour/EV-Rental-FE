@@ -1,14 +1,14 @@
 import { Routes } from '@angular/router';
 import { LayoutComponent } from './layout/layout';
-import { NoAuthGuard } from './core-logic/auth/guards/noAuth.guard';
-import { AuthGuard } from './core-logic/auth/guards/auth.guard';
+import { NoAuthGuard } from './core-logic/common/auth/guards/noAuth.guard';
+import { AuthGuard } from './core-logic/common/auth/guards/auth.guard';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'landing' },
   {
     path: 'signed-in-redirect',
     loadComponent: () =>
-      import('./core-logic/auth/guards/auth-redirect.component').then(
+      import('./core-logic/common/auth/guards/auth-redirect.component').then(
         (m) => m.AuthRedirectComponent,
       ),
   },

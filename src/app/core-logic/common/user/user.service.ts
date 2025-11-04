@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { UpdateUserRequest, User, UserRole } from './user.types';
-import { AUTH_ENDPOINTS } from '../api/api.config';
+import { AUTH_ENDPOINTS } from '../../api.config';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {

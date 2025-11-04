@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { Car } from './car.type';
 import { Observable, tap } from 'rxjs';
-import { CAR_ENDPOINTS } from '../api/api.config';
+import { CAR_ENDPOINTS } from '../../api.config';
 
 @Injectable({ providedIn: 'root' })
 export class CarService {
@@ -47,7 +47,7 @@ export class CarService {
    * Create a new car
    */
   createCar(car: Car): Observable<Car> {
-    return this._httpClient.post<Car>('api/cars', car).pipe(tap(() => this.getCars()));
+    return this._httpClient.post<Car>(CAR_ENDPOINTS.create, car).pipe(tap(() => this.getCars()));
   }
 
   /**
@@ -56,7 +56,9 @@ export class CarService {
    * @param car
    */
   updateCar(car: Car): Observable<Car> {
-    return this._httpClient.put<Car>(`api/cars/${car.id}`, car).pipe(tap(() => this.getCars()));
+    return this._httpClient
+      .put<Car>(CAR_ENDPOINTS.update(car.id as string), car)
+      .pipe(tap(() => this.getCars()));
   }
 
   /**
@@ -65,6 +67,8 @@ export class CarService {
    * @param id
    */
   deleteCar(id: string): Observable<void> {
-    return this._httpClient.delete<void>(`api/cars/${id}`).pipe(tap(() => this.getCars()));
+    return this._httpClient
+      .delete<void>(CAR_ENDPOINTS.delete(id as string))
+      .pipe(tap(() => this.getCars()));
   }
 }

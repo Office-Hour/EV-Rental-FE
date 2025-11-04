@@ -9,8 +9,8 @@ import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { filter, map, startWith } from 'rxjs';
-import { AuthService } from '../core-logic/auth/auth.service';
-import { UserService } from '../core-logic/user/user.service';
+import { AuthService } from '../core-logic/common/auth/auth.service';
+import { UserService } from '../core-logic/common/user/user.service';
 import { cx } from '../lib/ngm-dev-blocks/utils/functions/cx';
 import { DeviceService } from '../lib/ngm-dev-blocks/utils/services/device.service';
 

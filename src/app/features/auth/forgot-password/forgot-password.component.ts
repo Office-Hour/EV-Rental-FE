@@ -6,7 +6,7 @@ import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { AuthService } from '../../../core-logic/auth/auth.service';
+import { AuthService } from '../../../core-logic/common/auth/auth.service';
 
 @Component({
   selector: 'app-forgot-password',

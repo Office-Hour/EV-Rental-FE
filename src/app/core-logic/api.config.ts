@@ -8,9 +8,11 @@
  * For production: Update to your production API URL
  */
 
+import { environment } from '../../environments/environment';
+
 export const API_CONFIG = {
   // Base URL for API calls - UPDATE THIS TO MATCH YOUR BACKEND
-  baseUrl: 'https://localhost:7007', // Update this to match your backend URL
+  baseUrl: environment.apiUrl, // Update this to match your backend URL
 
   // API Endpoints
   endpoints: {

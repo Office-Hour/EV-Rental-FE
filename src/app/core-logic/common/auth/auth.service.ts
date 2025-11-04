@@ -7,7 +7,7 @@ import { TokenService } from '../token/token.service';
 import { UserRole } from '../user/user.types';
 import { CarService } from '../car/car.service';
 import { BookingService } from '../booking/booking.service';
-import { AUTH_ENDPOINTS } from '../api/api.config';
+import { AUTH_ENDPOINTS } from '../../api.config';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {

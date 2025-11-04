@@ -2,7 +2,7 @@ import { Component, ViewEncapsulation, inject, OnInit, signal } from '@angular/c
 import { Router } from '@angular/router';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { AuthService } from '../../../core-logic/auth/auth.service';
+import { AuthService } from '../../../core-logic/common/auth/auth.service';
 
 @Component({
   selector: 'app-sign-out',
