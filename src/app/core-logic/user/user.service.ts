@@ -1,14 +1,13 @@
-import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
-import { Observable, tap } from 'rxjs';
-import { UpdateUserRequest, User, UserRole } from './user.types';
-import { AUTH_ENDPOINTS } from '../api/api.config';
+import { Observable, switchMap, tap } from 'rxjs';
+import { AccountService, ApiResponseOfUserInfoDto, UserInfoDto } from '../../../contract';
+import { UpdateUserRequest, UserRole } from './user.types';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-  private _httpClient = inject(HttpClient);
-  private _user = signal<User | null>(null);
+  private _user = signal<UserInfoDto | undefined>(undefined);
   private _userRole = signal<UserRole>('renter');
+  private _accountService = inject(AccountService);
 
   // -----------------------------------------------------------------------------------------------------
   // @ Accessors
@@ -17,10 +16,10 @@ export class UserService {
   /**
    * Getter & Setter for the user signal
    */
-  get user(): User | null {
+  get user(): UserInfoDto | undefined {
     return this._user();
   }
-  set user(user: User | null) {
+  set user(user: UserInfoDto | undefined) {
     this._user.set(user);
   }
 
@@ -40,16 +39,25 @@ export class UserService {
   /**
    * Get the user from the API
    */
-  getUser(): Observable<User | null> {
-    return this._httpClient
-      .get<User | null>(AUTH_ENDPOINTS.profile)
-      .pipe(tap((user) => this._user.set(user)));
+  getUser(): Observable<ApiResponseOfUserInfoDto> {
+    return this._accountService.apiAccountProfileGet().pipe(
+      tap((response: ApiResponseOfUserInfoDto) => {
+        const data: UserInfoDto = response.data ?? {};
+        if (data) {
+          this._user.set(data);
+        }
+      }),
+    );
   }
 
   /**
    * Update the user in the API
    */
   updateUser(user: UpdateUserRequest) {
-    return this._httpClient.put(AUTH_ENDPOINTS.updateProfile, user).pipe(tap(() => this.getUser()));
+    return this._accountService.apiAccountUpdateProfilePut(user).pipe(
+      switchMap(() => {
+        return this.getUser();
+      }),
+    );
   }
 }

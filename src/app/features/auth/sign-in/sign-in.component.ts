@@ -1,6 +1,5 @@
 import { Component, ViewEncapsulation, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { MatButton } from '@angular/material/button';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
@@ -8,7 +7,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { AuthService } from '../../../core-logic/auth/auth.service';
-import { SignInRequest } from '../../../core-logic/auth/auth.types';
+import { LoginRequest } from '../../../../contract';
 
 @Component({
   selector: 'app-sign-in',
@@ -29,7 +28,6 @@ import { SignInRequest } from '../../../core-logic/auth/auth.types';
 export class SignInComponent {
   private _formBuilder = inject(FormBuilder);
   private _authService = inject(AuthService);
-  private _router = inject(Router);
 
   signInForm: FormGroup;
   isLoading = signal(false);
@@ -56,7 +54,7 @@ export class SignInComponent {
     this.isLoading.set(true);
 
     // Get the credentials
-    const credentials: SignInRequest = {
+    const credentials: LoginRequest = {
       email: this.signInForm.value.email,
       password: this.signInForm.value.password,
     };
@@ -64,8 +62,9 @@ export class SignInComponent {
     // Sign in
     this._authService.signIn(credentials).subscribe({
       next: () => {
+        this.isLoading.set(false);
         // Navigate to role-based redirect
-        this._router.navigate(['/signed-in-redirect']);
+        this._authService.redirectUser();
       },
       error: (error) => {
         console.error('Sign in error:', error);

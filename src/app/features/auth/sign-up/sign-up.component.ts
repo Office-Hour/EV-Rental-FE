@@ -16,7 +16,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { AuthService } from '../../../core-logic/auth/auth.service';
-import { SignUpRequest } from '../../../core-logic/auth/auth.types';
+import { RegisterRequest } from '../../../../contract';
 
 /**
  * Custom validator for password requirements
@@ -124,7 +124,7 @@ export class SignUpComponent {
     this.isLoading.set(true);
 
     // Get the sign up data
-    const signUpData: SignUpRequest = {
+    const signUpData: RegisterRequest = {
       userName: this.signUpForm.get('userName')?.value,
       email: this.signUpForm.get('email')?.value,
       password: this.signUpForm.get('password')?.value,
@@ -136,8 +136,8 @@ export class SignUpComponent {
       next: () => {
         // Show success message
         //<AlertComponent>
-        // Navigate to the sign-in page
-        this._router.navigate(['/sign-in']);
+        //Redirect to the signed-in-redirect page
+        this._router.navigate(['/signed-in-redirect']);
       },
       error: (error) => {
         console.error('Sign up error:', error);
