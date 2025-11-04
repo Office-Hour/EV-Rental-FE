@@ -1,70 +1,103 @@
 <div
-  class="flex min-w-0 flex-auto flex-col items-center sm:flex-row sm:justify-center md:items-start md:justify-start"
+  class="flex min-h-screen items-center justify-center bg-surface-container-lowest px-4 py-12 sm:px-6 lg:px-8"
 >
-  <div
-    class="w-full px-4 py-8 sm:bg-card sm:w-auto sm:rounded-2xl sm:p-12 sm:shadow md:flex md:h-full md:w-1/2 md:items-center md:justify-end md:rounded-none md:p-16 md:shadow-none"
-  >
-    <div class="mx-auto w-full max-w-80 sm:mx-0 sm:w-80">
-      <!-- Logo -->
-      <div class="w-12">
-        <img src="/logo.png" alt="Voltera Logo" />
+  <div class="w-full max-w-md space-y-8">
+    <!-- Success Message -->
+    @if (emailSent()) {
+      <!-- Success Icon -->
+      <div
+        class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-success-container"
+      >
+        <mat-icon class="text-2xl text-on-success-container">check_circle</mat-icon>
       </div>
 
-      <!-- Title -->
-      <div class="mt-8 text-4xl font-extrabold leading-tight tracking-tight">
-        Confirmation required
-      </div>
-      <div class="mt-4">
-        A confirmation mail with instructions has been sent to your email address. Follow those
-        instructions to confirm your email address and activate your account.
+      <!-- Success Header -->
+      <div class="text-center">
+        <h1 class="text-3xl font-bold tracking-tight text-on-surface">Confirmation email sent</h1>
+        <p class="mt-2 text-sm text-on-surface-variant">
+          We've sent another confirmation email to {{ userEmail() }}. Please check your inbox and
+          follow the instructions.
+        </p>
       </div>
 
-      <!-- Form footer -->
-      <div class="text-secondary mt-8 text-md font-medium">
-        <span>Return to</span>
-        <a class="ml-1 text-primary-500 hover:underline" [routerLink]="['/sign-in']">sign in </a>
+      <!-- Back to Sign In -->
+      <button
+        matButton="filled"
+        type="button"
+        class="w-full"
+        (click)="goToSignIn()"
+        color="primary"
+      >
+        <mat-icon class="mr-2">login</mat-icon>
+        Go to sign in
+      </button>
+    }
+
+    <!-- Main Confirmation Message -->
+    @else {
+      <!-- Icon -->
+      <div
+        class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary-container"
+      >
+        <mat-icon class="text-2xl text-on-primary-container">mail</mat-icon>
       </div>
-    </div>
-  </div>
-  <div
-    class="relative hidden h-full w-1/2 flex-auto items-center justify-center overflow-hidden bg-gray-800 p-16 dark:border-l md:flex lg:px-28"
-  >
-    <!-- Background -->
-    <!-- Rings -->
-    <!-- prettier-ignore -->
-    <svg class="absolute inset-0 pointer-events-none"
-             viewBox="0 0 960 540" width="100%" height="100%" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
-            <g class="text-gray-700 opacity-25" fill="none" stroke="currentColor" stroke-width="100">
-                <circle r="234" cx="196" cy="23"></circle>
-                <circle r="234" cx="790" cy="491"></circle>
-            </g>
-        </svg>
-    <!-- Dots -->
-    <!-- prettier-ignore -->
-    <svg class="absolute -top-16 -right-16 text-gray-700"
-             viewBox="0 0 220 192" width="220" height="192" fill="none">
-            <defs>
-                <pattern id="837c3e70-6c3a-44e6-8854-cc48c737b659" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
-                    <rect x="0" y="0" width="4" height="4" fill="currentColor"></rect>
-                </pattern>
-            </defs>
-            <rect width="220" height="192" fill="url(#837c3e70-6c3a-44e6-8854-cc48c737b659)"></rect>
-        </svg>
-    <!-- Content -->
-    <div class="relative z-10 w-full max-w-2xl">
-      <div class="text-7xl font-bold leading-none text-gray-100">
-        <div>Welcome to</div>
-        <div>our community</div>
+
+      <!-- Header -->
+      <div class="text-center">
+        <h1 class="text-3xl font-bold tracking-tight text-on-surface">Check your email</h1>
+        <p class="mt-2 text-sm text-on-surface-variant">
+          We've sent a confirmation link to {{ userEmail() || 'your email address' }}.
+        </p>
       </div>
-      <div class="mt-6 text-lg leading-6 tracking-tight text-gray-400">
-        Fuse helps developers to build organized and well coded dashboards full of beautiful and
-        rich modules. Join us and start building your application today.
+
+      <!-- Instructions -->
+      <div class="rounded-lg bg-surface-container p-6 text-center">
+        <p class="text-sm text-on-surface-variant mb-4">
+          Click the confirmation link in the email to activate your account. The link will expire in
+          24 hours.
+        </p>
+
+        <!-- Resend Button -->
+        @if (canResend()) {
+          <button matButton="outlined" type="button" (click)="resendConfirmation()" color="primary">
+            <mat-icon class="mr-2">refresh</mat-icon>
+            Resend confirmation email
+          </button>
+        }
+
+        <!-- Resending State -->
+        @if (isResending()) {
+          <button matButton="outlined" type="button" disabled color="primary">
+            <mat-spinner diameter="16" class="mr-2"></mat-spinner>
+            Sending email...
+          </button>
+        }
       </div>
-      <div class="mt-8 flex items-center">
-        <div class="ml-4 font-medium tracking-tight text-gray-400">
-          More than 17k people joined us, it's your turn
-        </div>
+
+      <!-- Help Text -->
+      <div class="text-center space-y-2">
+        <p class="text-xs text-on-surface-variant">
+          Didn't receive the email? Check your spam folder or try resending.
+        </p>
+        <p class="text-xs text-on-surface-variant">
+          Wrong email address?
+          <a href="/sign-up" class="text-primary hover:text-primary-container underline">
+            Sign up again
+          </a>
+        </p>
       </div>
-    </div>
+
+      <!-- Back to Sign In -->
+      <button
+        matButton="filled"
+        type="button"
+        class="w-full"
+        (click)="goToSignIn()"
+        color="primary"
+      >
+        <mat-icon class="mr-2">arrow_back</mat-icon>
+        Back to sign in
+      </button>
+    }
   </div>
 </div>

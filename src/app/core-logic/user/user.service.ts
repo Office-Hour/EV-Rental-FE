@@ -1,12 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { Observable, tap } from 'rxjs';
-import { UpdateUserRequest, User } from './user.types';
+import { UpdateUserRequest, User, UserRole } from './user.types';
+import { AUTH_ENDPOINTS } from '../api/api.config';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
   private _httpClient = inject(HttpClient);
   private _user = signal<User | null>(null);
+  private _userRole = signal<UserRole>('renter');
 
   // -----------------------------------------------------------------------------------------------------
   // @ Accessors
@@ -22,6 +24,15 @@ export class UserService {
     this._user.set(user);
   }
 
+  /**
+   * Getter & Setter for the user role signal
+   */
+  get userRole(): UserRole {
+    return this._userRole();
+  }
+  set userRole(role: UserRole) {
+    this._userRole.set(role);
+  }
   // -----------------------------------------------------------------------------------------------------
   // @ Public methods
   // -----------------------------------------------------------------------------------------------------
@@ -31,7 +42,7 @@ export class UserService {
    */
   getUser(): Observable<User | null> {
     return this._httpClient
-      .get<User | null>('api/Account/profile')
+      .get<User | null>(AUTH_ENDPOINTS.profile)
       .pipe(tap((user) => this._user.set(user)));
   }
 
@@ -39,6 +50,6 @@ export class UserService {
    * Update the user in the API
    */
   updateUser(user: UpdateUserRequest) {
-    return this._httpClient.put('api/Account/update-profile', user).pipe(tap(() => this.getUser()));
+    return this._httpClient.put(AUTH_ENDPOINTS.updateProfile, user).pipe(tap(() => this.getUser()));
   }
 }

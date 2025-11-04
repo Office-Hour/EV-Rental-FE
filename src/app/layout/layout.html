@@ -57,7 +57,7 @@
                   {{ currentUser()?.userName || 'User' }}
                 </div>
                 <div class="text-sm font-medium text-on-surface-variant truncate capitalize">
-                  {{ currentUser()?.role || 'customer' }}
+                  {{ userRole() }}
                 </div>
               </div>
               <button mat-icon-button class="ml-auto text-on-surface hover-primary">

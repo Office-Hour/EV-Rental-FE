@@ -1,0 +1,53 @@
+<div
+  class="flex min-h-screen items-center justify-center bg-surface-container-lowest px-4 py-12 sm:px-6 lg:px-8"
+>
+  <div class="w-full max-w-md space-y-8 text-center">
+    <!-- Icon -->
+    <div
+      class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary-container"
+    >
+      <mat-icon class="text-2xl text-on-primary-container">logout</mat-icon>
+    </div>
+
+    <!-- Header -->
+    <div>
+      <h1 class="text-3xl font-bold tracking-tight text-on-surface">Signed out successfully</h1>
+      <p class="mt-2 text-sm text-on-surface-variant">
+        You have been signed out of your account. Thank you for using our service.
+      </p>
+    </div>
+
+    <!-- Countdown Message -->
+    <div class="rounded-lg bg-surface-container p-6">
+      <p class="text-sm text-on-surface-variant mb-4">
+        You will be redirected to the sign-in page in:
+      </p>
+      <div class="text-4xl font-bold text-primary mb-4">
+        {{ countdown() }}
+      </div>
+      <div class="w-full bg-surface-container-highest rounded-full h-2">
+        <div
+          class="bg-primary h-2 rounded-full transition-all duration-1000 ease-linear"
+          [style.width.%]="(countdown() / 5) * 100"
+        ></div>
+      </div>
+    </div>
+
+    <!-- Manual Redirect Button -->
+    <button
+      matButton="outlined"
+      type="button"
+      class="w-full"
+      (click)="redirectToSignIn()"
+      color="primary"
+    >
+      <mat-icon class="mr-2">login</mat-icon>
+      Sign in again
+    </button>
+
+    <!-- Footer Message -->
+    <p class="text-xs text-on-surface-variant">
+      For security reasons, please close this browser tab if you're on a shared device.
+    </p>
+  </div>
+</div>

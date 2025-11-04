@@ -2,6 +2,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { Booking } from './booking.type';
 import { HttpClient } from '@angular/common/http';
+import { BOOKING_ENDPOINTS } from '../api/api.config';
 
 @Injectable({ providedIn: 'root' })
 export class BookingService {
@@ -31,7 +32,7 @@ export class BookingService {
    */
   getBookings(): Observable<Booking[]> {
     return this._httpClient
-      .get<Booking[]>('api/bookings')
+      .get<Booking[]>(BOOKING_ENDPOINTS.list)
       .pipe(tap((bookings) => this._bookings.set(bookings)));
   }
 }

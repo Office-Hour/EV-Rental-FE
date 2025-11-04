@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { Car } from './car.type';
 import { Observable, tap } from 'rxjs';
+import { CAR_ENDPOINTS } from '../api/api.config';
 
 @Injectable({ providedIn: 'root' })
 export class CarService {
@@ -30,14 +31,16 @@ export class CarService {
    * Get the cars from the API
    */
   getCars(): Observable<Car[]> {
-    return this._httpClient.get<Car[]>('api/cars').pipe(tap((cars) => this._cars.set(cars)));
+    return this._httpClient
+      .get<Car[]>(CAR_ENDPOINTS.list)
+      .pipe(tap((cars) => this._cars.set(cars)));
   }
 
   /**
    * Get the car by id from the API
    */
   getCarById(id: string): Observable<Car> {
-    return this._httpClient.get<Car>(`api/cars/${id}`);
+    return this._httpClient.get<Car>(CAR_ENDPOINTS.get(id as string));
   }
 
   /**

@@ -1,0 +1,101 @@
+<div
+  class="flex min-h-screen items-center justify-center bg-surface-container-lowest px-4 py-12 sm:px-6 lg:px-8"
+>
+  <div class="w-full max-w-md space-y-8">
+    <!-- Header -->
+    <div class="text-center">
+      <h1 class="text-3xl font-bold tracking-tight text-on-surface">Sign in to your account</h1>
+      <p class="mt-2 text-sm text-on-surface-variant">Welcome back! Please enter your details.</p>
+    </div>
+
+    <!-- Sign In Form -->
+    <form [formGroup]="signInForm" (ngSubmit)="signIn()" class="mt-8 space-y-6">
+      <!-- Email Field -->
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Email address</mat-label>
+        <input
+          matInput
+          type="email"
+          formControlName="email"
+          autocomplete="email"
+          placeholder="Enter your email"
+          required
+        />
+        @if (signInForm.get('email')?.invalid && signInForm.get('email')?.touched) {
+          <mat-error>
+            @if (signInForm.get('email')?.hasError('required')) {
+              Email is required
+            } @else if (signInForm.get('email')?.hasError('email')) {
+              Please enter a valid email address
+            }
+          </mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Password Field -->
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Password</mat-label>
+        <input
+          matInput
+          [type]="hidePassword() ? 'password' : 'text'"
+          formControlName="password"
+          autocomplete="current-password"
+          placeholder="Enter your password"
+          required
+        />
+        <button
+          matIconButton
+          matSuffix
+          type="button"
+          (click)="togglePasswordVisibility()"
+          [attr.aria-label]="'Hide password'"
+          [attr.aria-pressed]="hidePassword()"
+        >
+          <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+        @if (signInForm.get('password')?.invalid && signInForm.get('password')?.touched) {
+          <mat-error>
+            @if (signInForm.get('password')?.hasError('required')) {
+              Password is required
+            }
+          </mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Remember Me & Forgot Password -->
+      <div class="flex items-center justify-between">
+        <mat-checkbox formControlName="rememberMe" color="primary"> Remember me </mat-checkbox>
+        <a
+          href="/forgot-password"
+          class="text-sm font-medium text-primary hover:text-primary-container"
+        >
+          Forgot your password?
+        </a>
+      </div>
+
+      <!-- Sign In Button -->
+      <button
+        matButton="filled"
+        type="submit"
+        class="w-full"
+        [disabled]="isLoading() || signInForm.invalid"
+        color="primary"
+      >
+        @if (isLoading()) {
+          <mat-spinner diameter="20" class="mr-2"></mat-spinner>
+          Signing in...
+        } @else {
+          Sign in
+        }
+      </button>
+    </form>
+
+    <!-- Sign Up Link -->
+    <p class="mt-8 text-center text-sm text-on-surface-variant">
+      Don't have an account?
+      <a href="/sign-up" class="font-medium text-primary hover:text-primary-container underline">
+        Sign up for free
+      </a>
+    </p>
+  </div>
+</div>

@@ -1,102 +1,144 @@
-import { Component, ViewEncapsulation } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { Component, ViewEncapsulation, inject, signal } from '@angular/core';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
+import { Router } from '@angular/router';
+import { MatButton } from '@angular/material/button';
+import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
+import { MatInput } from '@angular/material/input';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { AuthService } from '../../../core-logic/auth/auth.service';
+
+/**
+ * Custom validator for password requirements
+ * Must contain at least one uppercase letter (A-Z) and one digit
+ */
+export function passwordRequirementsValidator(): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const value = control.value;
+
+    if (!value) {
+      return null;
+    }
+
+    const hasUpperCase = /[A-Z]/.test(value);
+    const hasDigit = /\d/.test(value);
+
+    const passwordValid = hasUpperCase && hasDigit;
+    return !passwordValid ? { passwordRequirements: { hasUpperCase, hasDigit } } : null;
+  };
+}
 
 @Component({
   selector: 'app-reset-password',
   templateUrl: './reset-password.component.html',
   encapsulation: ViewEncapsulation.None,
-
   imports: [
-    FormsModule,
     ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatIconModule,
-    MatProgressSpinnerModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatError,
+    MatButton,
+    MatIcon,
+    MatProgressSpinner,
   ],
 })
 export class ResetPasswordComponent {
-  // @ViewChild('resetPasswordNgForm') resetPasswordNgForm: NgForm;
-  // alert: { type: FuseAlertType; message: string } = {
-  //   type: 'success',
-  //   message: '',
-  // };
-  // resetPasswordForm: UntypedFormGroup;
-  // showAlert: boolean = false;
-  // /**
-  //  * Constructor
-  //  */
-  // constructor(
-  //   private _authService: AuthService,
-  //   private _formBuilder: UntypedFormBuilder,
-  // ) {}
-  // // -----------------------------------------------------------------------------------------------------
-  // // @ Lifecycle hooks
-  // // -----------------------------------------------------------------------------------------------------
-  // /**
-  //  * On init
-  //  */
-  // ngOnInit(): void {
-  //   // Create the form
-  //   this.resetPasswordForm = this._formBuilder.group(
-  //     {
-  //       password: ['', Validators.required],
-  //       passwordConfirm: ['', Validators.required],
-  //     },
-  //     {
-  //       validators: FuseValidators.mustMatch('password', 'passwordConfirm'),
-  //     },
-  //   );
-  // }
-  // // -----------------------------------------------------------------------------------------------------
-  // // @ Public methods
-  // // -----------------------------------------------------------------------------------------------------
-  // /**
-  //  * Reset password
-  //  */
-  // resetPassword(): void {
-  //   // Return if the form is invalid
-  //   if (this.resetPasswordForm.invalid) {
-  //     return;
-  //   }
-  //   // Disable the form
-  //   this.resetPasswordForm.disable();
-  //   // Hide the alert
-  //   this.showAlert = false;
-  //   // Send the request to the server
-  //   this._authService
-  //     .resetPassword(this.resetPasswordForm.get('password').value)
-  //     .pipe(
-  //       finalize(() => {
-  //         // Re-enable the form
-  //         this.resetPasswordForm.enable();
-  //         // Reset the form
-  //         this.resetPasswordNgForm.resetForm();
-  //         // Show the alert
-  //         this.showAlert = true;
-  //       }),
-  //     )
-  //     .subscribe(
-  //       (response) => {
-  //         // Set the alert
-  //         this.alert = {
-  //           type: 'success',
-  //           message: 'Your password has been reset.',
-  //         };
-  //       },
-  //       (response) => {
-  //         // Set the alert
-  //         this.alert = {
-  //           type: 'error',
-  //           message: 'Something went wrong, please try again.',
-  //         };
-  //       },
-  //     );
-  // }
+  private _formBuilder = inject(FormBuilder);
+  private _authService = inject(AuthService);
+  private _router = inject(Router);
+
+  resetPasswordForm: FormGroup;
+  isLoading = signal(false);
+  hidePassword = signal(true);
+  hideConfirmPassword = signal(true);
+  isPasswordReset = signal(false);
+
+  constructor() {
+    this.resetPasswordForm = this._formBuilder.group(
+      {
+        password: [
+          '',
+          [Validators.required, Validators.minLength(8), passwordRequirementsValidator()],
+        ],
+        confirmPassword: ['', Validators.required],
+      },
+      {
+        validators: this.passwordMatchValidator,
+      },
+    );
+  }
+
+  /**
+   * Custom validator to check if password and confirm password match
+   */
+  passwordMatchValidator(group: AbstractControl): ValidationErrors | null {
+    const password = group.get('password');
+    const confirmPassword = group.get('confirmPassword');
+
+    if (!password || !confirmPassword) {
+      return null;
+    }
+
+    return password.value === confirmPassword.value ? null : { passwordMismatch: true };
+  }
+
+  /**
+   * Reset password
+   */
+  resetPassword(): void {
+    // Return if the form is invalid
+    if (this.resetPasswordForm.invalid) {
+      return;
+    }
+
+    // Set loading state
+    this.isLoading.set(true);
+
+    // Get the new password
+    const newPassword = this.resetPasswordForm.value.password;
+
+    // TODO: Implement resetPassword method in AuthService with token from URL
+    // For now, simulate API call
+    setTimeout(() => {
+      console.log('Password reset to:', newPassword);
+      // Set success state
+      this.isPasswordReset.set(true);
+      this.isLoading.set(false);
+    }, 2000);
+  }
+
+  /**
+   * Get password requirements status
+   */
+  getPasswordRequirements(): { hasMinLength: boolean; hasUpperCase: boolean; hasDigit: boolean } {
+    const password = this.resetPasswordForm.get('password')?.value || '';
+    return {
+      hasMinLength: password.length >= 8,
+      hasUpperCase: /[A-Z]/.test(password),
+      hasDigit: /\d/.test(password),
+    };
+  }
+
+  /**
+   * Toggle password visibility
+   */
+  togglePasswordVisibility(): void {
+    this.hidePassword.update((value) => !value);
+  }
+
+  /**
+   * Toggle confirm password visibility
+   */
+  toggleConfirmPasswordVisibility(): void {
+    this.hideConfirmPassword.update((value) => !value);
+  }
 }
