@@ -10,6 +10,8 @@
     "test": "ng test",
     "test:ci": "ng test --no-watch --no-progress --browsers=ChromeHeadless",
     "lint": "ng lint",
+    "lint:fix": "ng lint --fix",
+    "lint-style": "pnpm exec stylelint \"**/*.{css,scss,html}\" --fix",
     "deploy": "ng deploy --base-href=/EV-Rental-FE/",
     "lint-staged-script": "node ./node_modules/lint-staged/bin/lint-staged.js",
     "generate-openapi": "curl.exe -k https://localhost:7007/openapi/v1.json -o openapi-spec.json && pnpm exec openapi-generator-cli generate -i openapi-spec.json -g typescript-angular -o src/contract -c open-api-config.json"
@@ -45,8 +47,8 @@
     "ngx-lottie": "^20.0.0",
     "ngx-scrollbar": "^18.0.0",
     "perfect-scrollbar": "1.5.6",
-    "postcss": "^8.5.6",
     "rxjs": "~7.8.0",
+    "stylelint-scss": "^6.12.1",
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.16",
     "tslib": "^2.8.1"
@@ -75,7 +77,18 @@
     "karma-jasmine-html-reporter": "~2.1.0",
     "lint-staged": "^16.2.6",
     "lodash-es": "4.17.21",
+    "postcss": "^8.5.6",
+    "postcss-angular": "^2.0.0",
+    "postcss-html": "^1.8.0",
+    "postcss-scss": "^4.0.9",
     "prettier": "3.6.2",
+    "stylelint": "^16.25.0",
+    "stylelint-config-html": "^1.1.0",
+    "stylelint-config-recommended-scss": "^16.0.2",
+    "stylelint-config-sass-guidelines": "^12.1.0",
+    "stylelint-config-standard": "^39.0.1",
+    "stylelint-config-standard-scss": "^16.0.0",
+    "stylelint-config-tailwindcss": "^1.0.0",
     "typescript": "~5.9.3",
     "typescript-eslint": "8.46.2"
   }
