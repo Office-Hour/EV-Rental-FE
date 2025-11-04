@@ -63,7 +63,7 @@ export class LayoutComponent {
 
   // Navigation data cho từng role
   private navigationData = {
-    customer: [
+    renter: [
       { name: 'Thuê xe', href: '/booking', current: false, icon: 'directions_car' },
       { name: 'Đơn thuê của tôi', href: '/orders', current: false, icon: 'list_alt' },
       { name: 'Báo cáo', href: '/reports', current: false, icon: 'analytics' },
@@ -109,14 +109,14 @@ export class LayoutComponent {
     const navigationItems = isAuth
       ? role
         ? this.navigationData[role as keyof typeof this.navigationData] ||
-          this.navigationData.customer
-        : this.navigationData.customer
+          this.navigationData.renter
+        : this.navigationData.renter
       : [];
 
     return this.updateCurrentRoute(navigationItems, currentUrl);
   });
 
-  private updateCurrentRoute(items: typeof this.navigationData.customer, currentUrl: string) {
+  private updateCurrentRoute(items: typeof this.navigationData.renter, currentUrl: string) {
     return items.map((item) => ({
       ...item,
       current: currentUrl.startsWith(item.href),
