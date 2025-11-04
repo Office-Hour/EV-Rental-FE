@@ -8,9 +8,11 @@ import { UserRole } from '../user/user.types';
 import { CarService } from '../car/car.service';
 import { BookingService } from '../booking/booking.service';
 import { AUTH_ENDPOINTS } from '../api/api.config';
+import { AccountService } from '../../../contract';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  private readonly _accountApi: AccountService = inject(AccountService);
   private _httpClient = inject(HttpClient);
   private _userService = inject(UserService);
   private _tokenService = inject(TokenService);
@@ -51,6 +53,38 @@ export class AuthService {
    * @param credentials
    */
   signIn(credentials: SignInRequest): Observable<SignInResponse> {
+    // const result = this._accountApi.apiAccountLoginPost(credentials);
+    // result.subscribe((response) => {
+    //   // Store the tokens in the token service
+    //   this._tokenService.accessToken = {
+    //     token: response.accessToken,
+    //     expiration: new Date(response.accessTokenExpiration),
+    //   };
+    //   // Store the refresh token in the token service
+    //   this._tokenService.refreshToken = {
+    //     token: response.refreshToken,
+    //     expiration: new Date(response.refreshTokenExpiration),
+    //   };
+    //   // Set the isAuthenticated signal to true
+    //   this.isAuthenticated = true;
+    //   // Decode the access token
+    //   const decodedToken = this._tokenService.decodeToken(response.accessToken);
+    //   console.log(decodedToken);
+    //   if (decodedToken.Renter) {
+    //     this._userService.userRole = 'renter';
+    //   } else if (decodedToken.Admin) {
+    //     this._userService.userRole = 'admin';
+    //   } else if (decodedToken.Staff) {
+    //     this._userService.userRole = 'staff';
+    //   }
+    //   // Get the user from the user service
+    //   this._userService.getUser().subscribe();
+    //   // Get the bookings from the booking service
+    //   this._bookingService.getBookings().subscribe();
+    //   // Get the cars from the car service
+    //   this._carService.getCars().subscribe();
+    // });
+
     // Throw error, if the user is already logged in
     if (this.isAuthenticated) {
       return throwError(() => new Error('User is already logged in.'));

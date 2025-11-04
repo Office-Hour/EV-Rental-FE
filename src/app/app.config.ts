@@ -7,12 +7,18 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideCommonUI } from './lib/common-ui/provider';
 import { provideAuth } from './core-logic/auth/auth.provider';
+import { APIS, provideApi } from '../contract';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
     provideRouter(routes),
+    provideApi({
+      basePath: 'https://localhost:4200',
+    }),
+
+    APIS,
 
     //Common UI - MANY PROVIDERS IN HERE
     provideCommonUI(),
