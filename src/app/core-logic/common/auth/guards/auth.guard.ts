@@ -34,6 +34,9 @@ export const AuthGuard: CanActivateFn | CanActivateChildFn = (
       if (requiredRoles && requiredRoles.length > 0) {
         const hasAnyRole = authService.checkUserHasAnyRole(requiredRoles);
         if (!hasAnyRole) {
+          router.navigate(['/error-page'], {
+            state: { errorData: { status: 403, message: 'Forbidden' } },
+          });
           return of(false);
         }
       }
