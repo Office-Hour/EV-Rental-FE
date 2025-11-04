@@ -1,17 +1,10 @@
 import { Routes } from '@angular/router';
-import { LayoutComponent } from './layout/layout';
-import { NoAuthGuard } from './core-logic/auth/guards/noAuth.guard';
 import { AuthGuard } from './core-logic/auth/guards/auth.guard';
+import { NoAuthGuard } from './core-logic/auth/guards/noAuth.guard';
+import { LayoutComponent } from './layout/layout';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'landing' },
-  {
-    path: 'signed-in-redirect',
-    loadComponent: () =>
-      import('./core-logic/auth/guards/auth-redirect.component').then(
-        (m) => m.AuthRedirectComponent,
-      ),
-  },
 
   //Guest routes
   {
@@ -96,7 +89,7 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     canActivateChild: [AuthGuard],
     data: {
-      roles: ['customer', 'admin'],
+      roles: ['renter', 'admin'],
     },
     component: LayoutComponent,
     children: [

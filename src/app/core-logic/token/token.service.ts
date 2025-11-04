@@ -1,11 +1,9 @@
-import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { Token, TokenInfo } from './token.type';
 import { TokenUtils } from './token.utils';
 
 @Injectable({ providedIn: 'root' })
 export class TokenService {
-  private _httpClient = inject(HttpClient);
   private _accessToken = signal<Token>({
     token: '',
     expiration: new Date(),
