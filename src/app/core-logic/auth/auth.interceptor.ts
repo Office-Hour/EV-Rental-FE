@@ -22,6 +22,10 @@ export const authInterceptor = (
   let newReq = req.clone();
 
   // Request
+  //Check if the user is authenticated
+  if (!authService.isAuthenticated) {
+    return next(req);
+  }
   // Check if the access token is expiration
   if (tokenService.isAccessTokenExpiration()) {
     // Invoke access token expiration
@@ -77,7 +81,7 @@ export const authInterceptor = (
         //Show alert message about other errors
         // alertService.show('Other errors');
         // Redirect to the login page
-        router.navigate(['/error-page']);
+        router.navigate(['/error-page'], { state: { errorData: error } });
       }
 
       return throwError(() => error);

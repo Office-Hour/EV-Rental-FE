@@ -98,7 +98,7 @@ export class LayoutComponent {
   // Computed signals
   readonly isAuthenticated = computed(() => this.authService.isAuthenticated);
   readonly currentUser = computed(() => this.userService.user);
-  readonly userRole = computed(() => this.currentUser()?.role || null);
+  readonly userRole = computed(() => this.userService.userRole);
 
   // Navigation computed signal - ensures data is ready before UI loads
   readonly navigation = computed(() => {

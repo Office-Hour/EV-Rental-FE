@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
-import { Token } from './token.type';
+import { Token, TokenInfo } from './token.type';
+import { TokenUtils } from './token.utils';
 
 @Injectable({ providedIn: 'root' })
 export class TokenService {
@@ -13,7 +14,7 @@ export class TokenService {
     token: '',
     expiration: new Date(),
   });
-
+  private _tokenUtils = inject(TokenUtils);
   /**
    * Getter & Setter for access token
    */
@@ -108,5 +109,12 @@ export class TokenService {
   clearAllTokens(): void {
     this.clearAccessToken();
     this.clearRefreshToken();
+  }
+
+  /**
+   * Decode the  token
+   */
+  decodeToken(token: string): TokenInfo {
+    return this._tokenUtils.getTokenInfo(token);
   }
 }

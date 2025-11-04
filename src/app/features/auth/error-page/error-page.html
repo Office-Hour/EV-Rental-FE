@@ -1,6 +1,53 @@
-<div class="p-8 text-center">
-  <h1 class="text-2xl font-bold">Error Page</h1>
-  <p class="mt-2">Error Page</p>
-  <p class="mt-2">Error Page</p>
-  <p class="mt-2">Error Page</p>
+<div
+  class="flex min-h-screen items-center justify-center bg-surface-container-lowest px-4 py-12 sm:px-6 lg:px-8"
+>
+  <div class="w-full max-w-md space-y-8 text-center">
+    <!-- Error Icon -->
+    <div class="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-error-container">
+      <mat-icon class="text-3xl text-on-error-container">{{ errorData.icon }}</mat-icon>
+    </div>
+
+    <!-- Error Code -->
+    <div>
+      <p class="text-sm font-medium text-error">{{ errorData.code }}</p>
+    </div>
+
+    <!-- Error Title -->
+    <div>
+      <h1 class="text-3xl font-bold tracking-tight text-on-surface">{{ errorData.title }}</h1>
+      <p class="mt-2 text-sm text-on-surface-variant max-w-sm mx-auto">
+        {{ errorData.message }}
+      </p>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex flex-col sm:flex-row gap-3 justify-center">
+      <button matButton="filled" type="button" (click)="takeAction()" color="primary">
+        <mat-icon class="mr-2">{{
+          errorData.actionText === 'Try Again' ? 'refresh' : 'home'
+        }}</mat-icon>
+        {{ errorData.actionText }}
+      </button>
+
+      <button matButton="outlined" type="button" (click)="goBack()" color="primary">
+        <mat-icon class="mr-2">arrow_back</mat-icon>
+        Go Back
+      </button>
+    </div>
+
+    <!-- Additional Help -->
+    <div class="mt-8 p-4 rounded-lg bg-surface-container">
+      <p class="text-xs text-on-surface-variant">
+        If you continue to experience issues, please contact our support team for assistance.
+      </p>
+    </div>
+
+    <!-- Error Details (for debugging) -->
+    @if (errorData.code !== 'ERROR') {
+      <div class="mt-4 text-xs text-on-surface-variant">
+        <p>Error Code: {{ errorData.code }}</p>
+        <p class="mt-1">Time: {{ currentTime }}</p>
+      </div>
+    }
+  </div>
 </div>

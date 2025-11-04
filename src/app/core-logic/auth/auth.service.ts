@@ -7,6 +7,7 @@ import { TokenService } from '../token/token.service';
 import { UserRole } from '../user/user.types';
 import { CarService } from '../car/car.service';
 import { BookingService } from '../booking/booking.service';
+import { AUTH_ENDPOINTS } from '../api/api.config';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -41,7 +42,7 @@ export class AuthService {
    * @param password
    */
   resetPassword(password: string): Observable<{ message: string }> {
-    return this._httpClient.post<{ message: string }>('api/Account/change-password', password);
+    return this._httpClient.post<{ message: string }>(AUTH_ENDPOINTS.changePassword, password);
   }
 
   /**
@@ -55,7 +56,7 @@ export class AuthService {
       return throwError(() => new Error('User is already logged in.'));
     }
 
-    return this._httpClient.post<SignInResponse>('api/Account/login', credentials).pipe(
+    return this._httpClient.post<SignInResponse>(AUTH_ENDPOINTS.login, credentials).pipe(
       switchMap((response) => {
         // Store the tokens in the token service
         this._tokenService.accessToken = {
@@ -70,6 +71,17 @@ export class AuthService {
 
         // Set the isAuthenticated signal to true
         this.isAuthenticated = true;
+
+        // Decode the access token
+        const decodedToken = this._tokenService.decodeToken(response.accessToken);
+        console.log(decodedToken);
+        if (decodedToken.Renter) {
+          this._userService.userRole = 'renter';
+        } else if (decodedToken.Admin) {
+          this._userService.userRole = 'admin';
+        } else if (decodedToken.Staff) {
+          this._userService.userRole = 'staff';
+        }
 
         // Get the user from the user service
         this._userService.getUser().subscribe();
@@ -100,6 +112,8 @@ export class AuthService {
     this._bookingService.bookings = [];
     // Clear the cars from the car service
     this._carService.cars = [];
+    // Clear the user role from the user service
+    this._userService.userRole = 'renter';
     // Return the observable
     return of(true);
   }
@@ -110,7 +124,7 @@ export class AuthService {
    * @param user
    */
   signUp(user: SignUpRequest) {
-    return this._httpClient.post('api/Account/register', user).pipe(
+    return this._httpClient.post(AUTH_ENDPOINTS.register, user).pipe(
       tap(() => {
         this.signIn({ email: user.email, password: user.password }).subscribe();
       }),
@@ -123,7 +137,7 @@ export class AuthService {
    */
   invokeAccessTokenExpiration(): Observable<SignInResponse> {
     return this._httpClient
-      .post<SignInResponse>('api/Account/refresh-token', {
+      .post<SignInResponse>(AUTH_ENDPOINTS.refreshToken, {
         refreshToken: this._tokenService.refreshToken.token,
       })
       .pipe(
@@ -144,7 +158,7 @@ export class AuthService {
    * Check if the user has a role
    */
   checkUserRole(role: UserRole) {
-    return this._userService.user?.role === role ? true : false;
+    return this._userService.userRole === role;
   }
 
   checkUserHasAnyRole(roles: UserRole[]): boolean {

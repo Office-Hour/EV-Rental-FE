@@ -1,0 +1,236 @@
+<div
+  class="flex min-h-screen items-center justify-center bg-surface-container-lowest px-4 py-12 sm:px-6 lg:px-8"
+>
+  <div class="w-full max-w-md space-y-8">
+    <!-- Header -->
+    <div class="text-center">
+      <h1 class="text-3xl font-bold tracking-tight text-on-surface">Create your account</h1>
+      <p class="mt-2 text-sm text-on-surface-variant">
+        Join us today! Please fill in your details below.
+      </p>
+    </div>
+
+    <!-- Sign Up Form -->
+    <form [formGroup]="signUpForm" (ngSubmit)="signUp()" class="mt-8 space-y-6">
+      <!-- Username Field -->
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Username</mat-label>
+        <input
+          matInput
+          type="text"
+          formControlName="userName"
+          autocomplete="username"
+          placeholder="Enter your username"
+          required
+        />
+        @if (signUpForm.get('userName')?.invalid && signUpForm.get('userName')?.touched) {
+          <mat-error>
+            @if (signUpForm.get('userName')?.hasError('required')) {
+              Username is required
+            } @else if (signUpForm.get('userName')?.hasError('minlength')) {
+              Username must be at least 3 characters
+            }
+          </mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Email Field -->
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Email address</mat-label>
+        <input
+          matInput
+          type="email"
+          formControlName="email"
+          autocomplete="email"
+          placeholder="Enter your email"
+          required
+        />
+        @if (signUpForm.get('email')?.invalid && signUpForm.get('email')?.touched) {
+          <mat-error>
+            @if (signUpForm.get('email')?.hasError('required')) {
+              Email is required
+            } @else if (signUpForm.get('email')?.hasError('email')) {
+              Please enter a valid email address
+            }
+          </mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Password Field -->
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Password</mat-label>
+        <input
+          matInput
+          [type]="hidePassword() ? 'password' : 'text'"
+          formControlName="password"
+          autocomplete="new-password"
+          placeholder="Create a password"
+          required
+        />
+        <button
+          matIconButton
+          matSuffix
+          type="button"
+          (click)="togglePasswordVisibility()"
+          [attr.aria-label]="'Hide password'"
+          [attr.aria-pressed]="hidePassword()"
+        >
+          <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+        @if (signUpForm.get('password')?.invalid && signUpForm.get('password')?.touched) {
+          <mat-error>
+            @if (signUpForm.get('password')?.hasError('required')) {
+              Password is required
+            } @else if (signUpForm.get('password')?.hasError('minlength')) {
+              Password must be at least 8 characters
+            } @else if (signUpForm.get('password')?.hasError('passwordRequirements')) {
+              Password must contain at least one uppercase letter and one number
+            }
+          </mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Password Requirements -->
+      @if (signUpForm.get('password')?.value) {
+        <div class="rounded-lg bg-surface-container p-4 space-y-2">
+          <p class="text-sm font-medium text-on-surface">Password requirements:</p>
+          <div class="space-y-1">
+            <div class="flex items-center space-x-2 text-sm">
+              <mat-icon
+                class="text-sm"
+                [class.text-error]="!getPasswordRequirements().hasMinLength"
+                [class.text-success]="getPasswordRequirements().hasMinLength"
+              >
+                {{ getPasswordRequirements().hasMinLength ? 'check_circle' : 'cancel' }}
+              </mat-icon>
+              <span
+                [class.text-error]="!getPasswordRequirements().hasMinLength"
+                [class.text-success]="getPasswordRequirements().hasMinLength"
+              >
+                At least 8 characters
+              </span>
+            </div>
+            <div class="flex items-center space-x-2 text-sm">
+              <mat-icon
+                class="text-sm"
+                [class.text-error]="!getPasswordRequirements().hasUpperCase"
+                [class.text-success]="getPasswordRequirements().hasUpperCase"
+              >
+                {{ getPasswordRequirements().hasUpperCase ? 'check_circle' : 'cancel' }}
+              </mat-icon>
+              <span
+                [class.text-error]="!getPasswordRequirements().hasUpperCase"
+                [class.text-success]="getPasswordRequirements().hasUpperCase"
+              >
+                At least one uppercase letter (A-Z)
+              </span>
+            </div>
+            <div class="flex items-center space-x-2 text-sm">
+              <mat-icon
+                class="text-sm"
+                [class.text-error]="!getPasswordRequirements().hasDigit"
+                [class.text.text-success]="getPasswordRequirements().hasDigit"
+              >
+                {{ getPasswordRequirements().hasDigit ? 'check_circle' : 'cancel' }}
+              </mat-icon>
+              <span
+                [class.text-error]="!getPasswordRequirements().hasDigit"
+                [class.text-success]="getPasswordRequirements().hasDigit"
+              >
+                At least one number (0-9)
+              </span>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- Confirm Password Field -->
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Confirm password</mat-label>
+        <input
+          matInput
+          [type]="hideConfirmPassword() ? 'password' : 'text'"
+          formControlName="confirmPassword"
+          autocomplete="new-password"
+          placeholder="Confirm your password"
+          required
+        />
+        <button
+          matIconButton
+          matSuffix
+          type="button"
+          (click)="toggleConfirmPasswordVisibility()"
+          [attr.aria-label]="'Hide password'"
+          [attr.aria-pressed]="hideConfirmPassword()"
+        >
+          <mat-icon>{{ hideConfirmPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+        @if (signUpForm.get('confirmPassword')?.value && getPasswordsMatch()) {
+          <mat-icon matSuffix class="text-success" [attr.aria-label]="'Passwords match'">
+            check_circle
+          </mat-icon>
+        } @else if (signUpForm.get('confirmPassword')?.value && !getPasswordsMatch()) {
+          <mat-icon matSuffix class="text-error" [attr.aria-label]="'Passwords do not match'">
+            cancel
+          </mat-icon>
+        }
+        @if (
+          (signUpForm.get('confirmPassword')?.invalid &&
+            signUpForm.get('confirmPassword')?.touched) ||
+          (signUpForm.get('confirmPassword')?.value &&
+            signUpForm.get('confirmPassword')?.dirty &&
+            !getPasswordsMatch())
+        ) {
+          <mat-error>
+            @if (signUpForm.get('confirmPassword')?.hasError('required')) {
+              Please confirm your password
+            } @else {
+              Passwords do not match
+            }
+          </mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Terms Agreement -->
+      <mat-checkbox formControlName="agreeToTerms" color="primary">
+        <span class="text-sm">
+          I agree to the
+          <a href="/terms-of-service" class="text-primary hover:text-primary-container underline"
+            >Terms of Service</a
+          >
+          and
+          <a href="/privacy-policy" class="text-primary hover:text-primary-container underline"
+            >Privacy Policy</a
+          >
+        </span>
+      </mat-checkbox>
+      @if (signUpForm.get('agreeToTerms')?.invalid && signUpForm.get('agreeToTerms')?.touched) {
+        <p class="text-sm text-error">You must agree to the terms to continue</p>
+      }
+
+      <!-- Sign Up Button -->
+      <button
+        matButton="filled"
+        type="submit"
+        class="w-full"
+        [disabled]="isLoading() || signUpForm.invalid"
+        color="primary"
+      >
+        @if (isLoading()) {
+          <mat-spinner diameter="20" class="mr-2"></mat-spinner>
+          Creating account...
+        } @else {
+          Create account
+        }
+      </button>
+    </form>
+
+    <!-- Sign In Link -->
+    <p class="mt-8 text-center text-sm text-on-surface-variant">
+      Already have an account?
+      <a href="/sign-in" class="font-medium text-primary hover:text-primary-container underline">
+        Sign in here
+      </a>
+    </p>
+  </div>
+</div>

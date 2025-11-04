@@ -5,10 +5,9 @@ export interface User {
   emailConfirmed: boolean;
   phoneNumber: string;
   phoneNumberConfirmed: boolean;
-  role: UserRole;
 }
 
-export type UserRole = 'customer' | 'staff' | 'admin';
+export type UserRole = 'renter' | 'staff' | 'admin';
 
 export interface UpdateUserRequest {
   userName: string;

@@ -5,7 +5,13 @@ import { AuthGuard } from './core-logic/auth/guards/auth.guard';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'landing' },
-  { path: 'signed-in-redirect', pathMatch: 'full', redirectTo: 'booking' },
+  {
+    path: 'signed-in-redirect',
+    loadComponent: () =>
+      import('./core-logic/auth/guards/auth-redirect.component').then(
+        (m) => m.AuthRedirectComponent,
+      ),
+  },
 
   //Guest routes
   {
@@ -96,5 +102,11 @@ export const routes: Routes = [
     children: [
       { path: 'booking', loadChildren: () => import('./features/customer/booking/booking.routes') },
     ],
+  },
+
+  // Wildcard route - catch all unmatched routes and show error page
+  {
+    path: '**',
+    redirectTo: 'error-page?type=404',
   },
 ];
