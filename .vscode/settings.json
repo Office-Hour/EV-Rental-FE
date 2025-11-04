@@ -71,5 +71,7 @@
       "style": "scss",
       "externalTemplate": true
     }
-  }
+  },
+  "stylelint.packageManager": "pnpm",
+  "stylelint.validate": ["css", "postcss", "scss"]
 }

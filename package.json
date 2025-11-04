@@ -49,6 +49,7 @@
     "perfect-scrollbar": "1.5.6",
     "rxjs": "~7.8.0",
     "stylelint-scss": "^6.12.1",
+    "stylelint-selector-bem-pattern": "^4.0.1",
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.16",
     "tslib": "^2.8.1"

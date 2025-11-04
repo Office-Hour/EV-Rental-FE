@@ -9,6 +9,7 @@
     height: 0;
     overflow: hidden;
   }
+
   to {
     height: var(--expand-collapse-height, auto);
     overflow: visible;
@@ -20,6 +21,7 @@
     height: var(--expand-collapse-height, auto);
     overflow: visible;
   }
+
   to {
     height: 0;
     overflow: hidden;

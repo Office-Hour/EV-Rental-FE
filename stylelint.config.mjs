@@ -1,8 +1,9 @@
 import stylelintScss from 'stylelint-scss';
+import stylelintSelectorBemPattern from 'stylelint-selector-bem-pattern';
 
 /** @type {import('stylelint').Config} */
 export default {
-  plugins: stylelintScss,
+  plugins: [stylelintScss, stylelintSelectorBemPattern],
   extends: [
     // 'stylelint-config-html',
     'stylelint-config-tailwindcss',
@@ -13,7 +14,7 @@ export default {
   ],
   overrides: [
     {
-      files: ['**/*.component.ts  '],
+      files: ['**/*.component.ts'],
       customSyntax: 'postcss-angular',
     },
     {
@@ -23,10 +24,39 @@ export default {
     {
       files: ['**/*.scss'],
       customSyntax: 'postcss-scss',
+      rules: {
+        'selector-class-pattern': null,
+        'plugin/selector-bem-pattern': {
+          preset: 'bem',
+        },
+      },
     },
   ],
   ignoreFiles: ['node_modules/**/*', 'dist/**/*'],
   rules: {
     'no-empty-source': null,
+    'max-nesting-depth': 5,
+    'selector-max-compound-selectors': 5,
+    'selector-pseudo-element-no-unknown': [
+      true,
+      {
+        ignorePseudoElements: ['ng-deep'],
+      },
+    ],
+    'scss/at-rule-no-unknown': [
+      true,
+      {
+        ignoreAtRules: [
+          'tailwind',
+          'apply',
+          'variant',
+          'custom-variant',
+          'layer',
+          'utility',
+          'theme',
+          'config',
+        ],
+      },
+    ],
   },
 };

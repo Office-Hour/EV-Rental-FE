@@ -39,6 +39,7 @@ html {
   // Dark mode specific theme adjustments
   @media (prefers-color-scheme: dark) {
     color-scheme: dark;
+
     @include mat.theme($base-theme);
   }
 }
@@ -46,6 +47,7 @@ html {
 // ==================================================
 // BASE STYLES
 // ==================================================
+
 /* Light Theme */
 :root,
 :host {
@@ -88,6 +90,7 @@ html {
     )
   );
 }
+
 // ==================================================
 // BROWSER CUSTOMIZATIONS
 // ==================================================
@@ -99,18 +102,18 @@ html {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--mat-sys-surface-container, rgba(0, 0, 0, 0.1));
+  background: var(--mat-sys-surface-container, rgb(0 0 0 / 10%));
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--mat-sys-primary, rgba(59, 130, 246, 0.5));
+  background: var(--mat-sys-primary, rgb(59 130 246 / 50%));
   border-radius: 4px;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   opacity: 0.6;
 
   &:hover {
-    background: var(--mat-sys-primary, rgba(59, 130, 246, 0.8));
+    background: var(--mat-sys-primary, rgb(59 130 246 / 80%));
     opacity: 1;
     transform: scaleY(1.1);
   }
@@ -118,15 +121,15 @@ html {
 
 // Enhanced focus styles for accessibility
 *:focus {
-  outline: 2px solid var(--mat-sys-primary, rgb(59, 130, 246));
+  outline: 2px solid var(--mat-sys-primary, rgb(59 130 246));
   outline-offset: 2px;
   border-radius: 2px;
 }
 
 // Selection styling
 ::selection {
-  background: var(--mat-sys-primary, rgba(0, 102, 204, 0.2));
-  color: var(--mat-sys-on-primary, #ffffff);
+  background: var(--mat-sys-primary, rgb(0 102 204 / 20%));
+  color: var(--mat-sys-on-primary, #fff);
 }
 
 // ==================================================
@@ -151,6 +154,7 @@ html {
     opacity: 0;
     transform: translateY(0);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -170,19 +174,19 @@ html {
 }
 
 // Responsive typography scale
-@media (max-width: 768px) {
+@media (width <= 768px) {
   :root {
     font-size: 14px;
   }
 }
 
-@media (min-width: 769px) and (max-width: 1024px) {
+@media (width >= 769px) and (width <= 1024px) {
   :root {
     font-size: 15px;
   }
 }
 
-@media (min-width: 1025px) {
+@media (width >= 1025px) {
   :root {
     font-size: 16px;
   }

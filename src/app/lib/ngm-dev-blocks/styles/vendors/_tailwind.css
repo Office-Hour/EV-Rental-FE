@@ -1,3 +1,7 @@
+/* stylelint-disable selector-class-pattern */
+/* stylelint-disable keyframes-name-pattern */
+/* stylelint-disable custom-property-pattern */
+
 /*
 	Installed from https://ui.angular-material.dev/api/registry/
 	Update this file using `@ngm-dev/cli update styles/vendors`
@@ -15,6 +19,7 @@
     background-color: var(--mat-sys-surface);
     color: var(--mat-sys-on-surface);
   }
+
   h1,
   h2,
   h3,
@@ -110,8 +115,8 @@
   /* same as `plain-family` in angular material */
   --font-sans: var(--mat-sys-body-large-font), sans-serif;
   --font-mono:
-    'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono,
-    Courier New, monospace;
+    'JetBrains Mono', ui-monospace, sfmono-regular, menlo, monaco, consolas, liberation mono,
+    courier new, monospace;
   --font-display: var(--mat-sys-display-large-font), sans-serif;
 
   /* angular material radiuses */
@@ -124,6 +129,7 @@
   --radius-mat-card: var(--mat-card-outlined-container-shape, var(--mat-sys-corner-medium));
 
   /* angular material font sizes */
+
   /* body */
   --text-body-small: var(--mat-sys-body-small-size);
   --text-body-small--line-height: var(--mat-sys-body-small-line-height);
@@ -210,13 +216,16 @@
   --font-label-large: var(--mat-sys-label-large-font);
 
   /* animations */
+
   /* fade-in */
-  --animate-fadeIn: fadeIn 300ms ease-in-out forwards var(--animation-delay, 0ms);
+  --animate-fadeIn: fadein 300ms ease-in-out forwards var(--animation-delay, 0ms);
+
   @keyframes fadeIn {
     0% {
       opacity: 0;
       transform: translateY(-5px);
     }
+
     100% {
       opacity: 1;
       transform: translateY(0);
@@ -230,6 +239,7 @@
     0% {
       transform: translateX(0);
     }
+
     100% {
       transform: translateX(calc(-100% - var(--gap, 1rem)));
     }
@@ -241,6 +251,7 @@
     0% {
       transform: translateY(0);
     }
+
     100% {
       transform: translateY(calc(-100% - var(--gap, 1rem)));
     }
@@ -260,7 +271,9 @@
 .mdc-notched-outline__notch {
   border-style: none;
 }
+
 .mat-mdc-icon-button {
   line-height: 1;
 }
+
 /* #endregion */
