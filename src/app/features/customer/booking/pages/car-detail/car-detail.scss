@@ -28,6 +28,10 @@ img {
     }
 
     &-body-cell {
+      .mat-calendar-body-cell-content {
+        border-radius: 0.65rem;
+      }
+
       &.range-middle,
       &.range-edge {
         .mat-calendar-body-cell-content {
@@ -63,10 +67,6 @@ img {
             border-radius: 999px;
           }
         }
-      }
-
-      .mat-calendar-body-cell-content {
-        border-radius: 0.65rem;
       }
     }
   }

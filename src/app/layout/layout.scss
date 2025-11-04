@@ -1,20 +1,22 @@
 // Animations - keeping only essential ones
-@keyframes slideInFromLeft {
+@keyframes slide-in-from-left {
   from {
     opacity: 0;
     transform: translateX(-20px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
   }
 }
 
-@keyframes fadeInUp {
+@keyframes fade-in-up {
   from {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -46,17 +48,17 @@
 
   // Material component animations
   .mat-list-item {
-    animation: slideInFromLeft 0.3s ease-out;
+    animation: slide-in-from-left 0.3s ease-out;
   }
 
   .mat-button {
-    animation: fadeInUp 0.4s ease-out !important;
+    animation: fade-in-up 0.4s ease-out !important;
   }
 
   // Menu styling
   .mat-menu-panel {
     border-radius: 8px !important;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
+    box-shadow: 0 4px 20px rgb(0 0 0 / 15%) !important;
   }
 
   // Dark mode scrollbar
@@ -77,7 +79,7 @@
 // RESPONSIVE DESIGN
 // ==================================================
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   :host ::ng-deep {
     mat-sidenav-container {
       .mat-drawer {
@@ -111,7 +113,7 @@
 
 // Focus styles for better accessibility
 .focus-ring:focus {
-  outline: 2px solid rgb(59, 130, 246);
+  outline: 2px solid rgb(59 130 246);
   outline-offset: 2px;
 }
 
@@ -260,6 +262,7 @@
 // Ring utilities - Focus and interaction states
 .ring-primary {
   transition: all 0.2s ease-in-out;
+
   --tw-ring-color: var(--mat-sys-primary);
 }
 
