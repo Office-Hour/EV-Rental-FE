@@ -119,6 +119,11 @@ html {
   }
 }
 
+// CSS containment for better performance
+* {
+  box-sizing: border-box;
+}
+
 // Enhanced focus styles for accessibility
 *:focus {
   outline: 2px solid var(--mat-sys-primary, rgb(59 130 246));
@@ -135,11 +140,6 @@ html {
 // ==================================================
 // PERFORMANCE OPTIMIZATIONS & BEST PRACTICES
 // ==================================================
-
-// CSS containment for better performance
-* {
-  box-sizing: border-box;
-}
 
 // Optimize repaints and reflows
 .smooth-transform {
