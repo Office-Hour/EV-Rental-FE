@@ -68,12 +68,12 @@
           required
         />
         <button
-          matIconButton
+          mat-icon-button
           matSuffix
           type="button"
           (click)="togglePasswordVisibility()"
-          [attr.aria-label]="'Hide password'"
-          [attr.aria-pressed]="hidePassword()"
+          [attr.aria-label]="hidePassword() ? 'Show password' : 'Hide password'"
+          [attr.aria-pressed]="!hidePassword()"
         >
           <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
         </button>
@@ -129,7 +129,7 @@
               <mat-icon
                 class="text-sm"
                 [class.text-error]="!getPasswordRequirements().hasDigit"
-                [class.text.text-success]="getPasswordRequirements().hasDigit"
+                [class.text-success]="getPasswordRequirements().hasDigit"
               >
                 {{ getPasswordRequirements().hasDigit ? 'check_circle' : 'cancel' }}
               </mat-icon>
@@ -156,12 +156,12 @@
           required
         />
         <button
-          matIconButton
+          mat-icon-button
           matSuffix
           type="button"
           (click)="toggleConfirmPasswordVisibility()"
-          [attr.aria-label]="'Hide password'"
-          [attr.aria-pressed]="hideConfirmPassword()"
+          [attr.aria-label]="hideConfirmPassword() ? 'Show password' : 'Hide password'"
+          [attr.aria-pressed]="!hideConfirmPassword()"
         >
           <mat-icon>{{ hideConfirmPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
         </button>

@@ -1,8 +1,8 @@
 import { Component, ViewEncapsulation, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatCheckbox } from '@angular/material/checkbox';
-import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatError, MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
@@ -17,9 +17,11 @@ import { LoginRequest } from '../../../../contract';
     ReactiveFormsModule,
     MatFormField,
     MatLabel,
+    MatSuffix,
     MatInput,
     MatError,
     MatButton,
+    MatIconButton,
     MatIcon,
     MatCheckbox,
     MatProgressSpinner,

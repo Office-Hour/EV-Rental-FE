@@ -9,9 +9,9 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { MatButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatCheckbox } from '@angular/material/checkbox';
-import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatError, MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
@@ -49,9 +49,11 @@ export function passwordRequirementsValidator(): ValidatorFn {
     MatInput,
     MatError,
     MatButton,
+    MatIconButton,
     MatIcon,
     MatCheckbox,
     MatProgressSpinner,
+    MatSuffix,
   ],
 })
 export class SignUpComponent {
