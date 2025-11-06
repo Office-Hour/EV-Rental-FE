@@ -65,8 +65,6 @@ export class SignInComponent {
     this._authService.signIn(credentials).subscribe({
       next: () => {
         this.isLoading.set(false);
-        // Navigate to role-based redirect
-        this._authService.redirectUser();
       },
       error: (error) => {
         console.error('Sign in error:', error);

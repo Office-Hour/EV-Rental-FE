@@ -82,7 +82,7 @@ export class AuthService {
         }
         // Set the isAuthenticated signal to true
         this.isAuthenticated = true;
-        console.log('Authenticated ', this.isAuthenticated);
+
         // Decode the access token
         const decodedToken = this._tokenService.decodeToken(data.accessToken ?? '');
         if (decodedToken.Renter) {
@@ -94,7 +94,13 @@ export class AuthService {
         }
 
         // Get the user from the user service and chain it
-        return this._userService.getUser().pipe(switchMap(() => of(response)));
+        return this._userService.getUser().pipe(
+          switchMap(() => {
+            // Navigate to role-based redirect
+            this.redirectUser();
+            return of(response);
+          }),
+        );
       }),
     );
   }
