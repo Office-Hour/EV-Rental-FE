@@ -115,8 +115,8 @@
 
         <!-- Desktop Navigation -->
         @if ((isHandset$ | async) === false && !isAuthFlowPage()) {
-          <div class="ml-10">
-            <div class="flex items-baseline space-x-2">
+          <nav class="flex flex-1 justify-center px-6">
+            <div class="flex items-center gap-2">
               @for (item of navigation(); track item) {
                 <a
                   [routerLink]="item.href"
@@ -137,7 +137,7 @@
                 </a>
               }
             </div>
-          </div>
+          </nav>
 
           <!-- Authenticated User Actions -->
           @if (isAuthenticated()) {
@@ -153,7 +153,7 @@
                 mat-icon-button
                 [matMenuTriggerFor]="userMenu"
                 aria-label="User menu"
-                class="p-1! rounded-full ring-2 ring-primary transition-all duration-200"
+                class="rounded-full ring-2 ring-primary transition-all duration-200 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/60"
               >
                 <img
                   [src]="
@@ -161,8 +161,8 @@
                       ? 'https://ui-avatars.com/api/?name=' + currentUser()?.userName
                       : 'https://ui-avatars.com/api/?name=User'
                   "
-                  alt=""
-                  class="rounded-full object-cover ring-2 ring-primary transition-all duration-200"
+                  [attr.alt]="(currentUser()?.userName || 'User') + ' avatar'"
+                  class="size-10 rounded-full object-cover"
                 />
               </button>
             </div>
