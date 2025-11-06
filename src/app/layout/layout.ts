@@ -14,6 +14,18 @@ import { UserService } from '../core-logic/user/user.service';
 import { cx } from '../lib/ngm-dev-blocks/utils/functions/cx';
 import { DeviceService } from '../lib/ngm-dev-blocks/utils/services/device.service';
 
+const AUTH_ROUTE_PATHS = [
+  '/sign-in',
+  '/sign-up',
+  '/forgot-password',
+  '/reset-password',
+  '/confirmation-required',
+  '/error-page',
+  '/sign-out',
+];
+
+const FULL_WIDTH_ROUTE_PATHS = ['/', '/landing', ...AUTH_ROUTE_PATHS];
+
 interface UserNavigationItem {
   name: string;
   href: string;
@@ -50,6 +62,8 @@ export class LayoutComponent {
   private router = inject(Router);
   private deviceService = inject(DeviceService);
   isHandset$ = this.deviceService.isHandset$;
+  private readonly authRoutes = AUTH_ROUTE_PATHS;
+  private readonly fullWidthRoutes = FULL_WIDTH_ROUTE_PATHS;
 
   // Reactive current URL signal - ensure we always have a value
   private currentUrl = toSignal(
@@ -99,6 +113,7 @@ export class LayoutComponent {
   readonly isAuthenticated = computed(() => this.authService.isAuthenticated);
   readonly currentUser = computed(() => this.userService.user);
   readonly userRole = computed(() => this.userService.userRole);
+  private readonly currentPath = computed(() => this.currentUrl().split('?')[0]);
 
   // Navigation computed signal - ensures data is ready before UI loads
   readonly navigation = computed(() => {
@@ -125,10 +140,39 @@ export class LayoutComponent {
 
   readonly userNavigation = computed(() => this.userNavigationData);
   readonly guestNavigation = computed(() => this.guestNavigationData);
+  readonly isFullWidthPage = computed(() =>
+    this.fullWidthRoutes.some((route) => this.currentPath().startsWith(route)),
+  );
+  readonly isAuthFlowPage = computed(() =>
+    this.authRoutes.some((route) => this.currentPath().startsWith(route)),
+  );
+  readonly toolbarContainerClasses = computed(() =>
+    this.cx(
+      'flex-1 w-full flex items-center px-4 sm:px-6 lg:px-8',
+      this.isFullWidthPage() ? '' : 'max-w-7xl mx-auto',
+    ),
+  );
+  readonly contentContainerClasses = computed(() =>
+    this.cx(
+      'bg-surface-variant flex-1 w-full',
+      this.isFullWidthPage() ? '' : 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8',
+      this.isAuthFlowPage() ? 'px-4 sm:px-6 lg:px-8' : '',
+    ),
+  );
+  readonly footerContainerClasses = computed(() =>
+    this.cx(
+      'w-full px-4 py-4 sm:px-6 lg:px-8 flex items-center justify-between',
+      this.isFullWidthPage() ? '' : 'max-w-7xl mx-auto',
+    ),
+  );
 
   protected readonly cx = cx;
 
   toggleMenu(): void {
+    if (this.isAuthFlowPage()) {
+      return;
+    }
+
     this.drawer().toggle();
   }
 

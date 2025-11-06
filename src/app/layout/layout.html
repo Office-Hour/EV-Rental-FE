@@ -1,12 +1,15 @@
 <!-- Main Layout Container -->
 <mat-sidenav-container class="h-screen flex flex-col bg-surface">
   <!-- Mobile Navigation Sidebar -->
-  @if (isHandset$ | async) {
+  @if ((isHandset$ | async) && !isAuthFlowPage()) {
     <mat-sidenav #drawer mode="over">
       <mat-toolbar class="border-b border-outline bg-surface-variant backdrop-blur-sm">
         <div class="logo-container">
-          <img class="logo-text" src="logo-text.webp" alt="Voltera Logo" />
-          <img class="logo-text-dark" src="logo-text-dark.webp" alt="Voltera Logo" />
+          <div class="">
+            <img class="logo-text" src="hoang-logo-text.webp" alt="Voltera Logo" />
+            <img class="logo-text-dark" src="hoang-logo-text-dark.webp" alt="Voltera Logo" />
+          </div>
+          <span class="ml-2 font-semibold text-on-surface text-lg">Voltera</span>
         </div>
         <button
           mat-icon-button
@@ -95,18 +98,23 @@
     <mat-toolbar
       class="px-0! py-2 border-b border-outline bg-surface/80 backdrop-blur-md shadow-lg"
     >
-      <div class="flex-1 w-full max-w-7xl mx-auto flex items-center px-4 sm:px-6 lg:px-8">
+      <div [attr.class]="toolbarContainerClasses()">
         <!-- Logo with hover effect -->
         <a
           class="logo-container flex items-center w-full justify-center cursor-pointer"
-          routerLink="/"
+          routerLink="/landing"
         >
-          <img class="logo-text" src="logo-text.webp" alt="Voltera Logo" />
-          <img class="logo-text-dark" src="logo-text-dark.webp" alt="Voltera Logo" />
+          <div class="logo-container">
+            <div class="">
+              <img class="logo-text" src="hoang-logo-text.webp" alt="Voltera Logo" />
+              <img class="logo-text-dark" src="hoang-logo-text-dark.webp" alt="Voltera Logo" />
+            </div>
+            <span class="ml-12 font-semibold text-on-surface text-lg">Voltera</span>
+          </div>
         </a>
 
         <!-- Desktop Navigation -->
-        @if ((isHandset$ | async) === false) {
+        @if ((isHandset$ | async) === false && !isAuthFlowPage()) {
           <div class="ml-10">
             <div class="flex items-baseline space-x-2">
               @for (item of navigation(); track item) {
@@ -163,9 +171,9 @@
             <div class="flex items-center gap-2 ml-auto">
               @for (item of guestNavigation(); track item) {
                 <a
-                  matButton
+                  mat-stroked-button
                   [routerLink]="item.href"
-                  class="px-4 py-2 font-medium transition-all duration-200 text-on-surface hover-primary cursor-pointer"
+                  class="px-4 py-2 font-medium transition-all duration-200 text-on-surface hover-primary cursor-pointer border border-outline rounded-md hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                 >
                   <mat-icon class="mr-2 text-sm">{{ item.icon }}</mat-icon>
                   {{ item.name }}
@@ -176,7 +184,7 @@
         }
 
         <!-- Mobile Menu Button -->
-        @if (isHandset$ | async) {
+        @if ((isHandset$ | async) && !isAuthFlowPage()) {
           <button
             mat-icon-button
             (click)="toggleMenu()"
@@ -206,13 +214,13 @@
     </mat-menu>
 
     <!-- Main Content Area -->
-    <div class="max-w-7xl mx-auto bg-surface-variant px-4 sm:px-6 lg:px-8 flex-1">
+    <div [attr.class]="contentContainerClasses()">
       <router-outlet />
     </div>
 
     <!-- Footer -->
     <div class="mt-auto bg-surface backdrop-blur-sm border-t border-outline shadow-lg">
-      <div class="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex items-center justify-between">
+      <div [attr.class]="footerContainerClasses()">
         <span class="text-on-surface-variant font-medium">Voltera &copy; 2025</span>
       </div>
     </div>

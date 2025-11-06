@@ -119,13 +119,13 @@
 
 .logo-container {
   position: relative;
-  width: 150px;
+  width: 50px;
   height: auto;
   cursor: pointer;
 
   .logo-text,
   .logo-text-dark {
-    width: 150px;
+    width: 50px;
     height: auto;
     position: absolute;
     top: 50%;
@@ -146,6 +146,11 @@
     .logo-text-dark {
       opacity: 1;
     }
+  }
+
+  &:focus,
+  &:focus-visible {
+    border-width: 0 !important;
   }
 }
 

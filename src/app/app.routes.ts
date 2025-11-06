@@ -11,6 +11,7 @@ export const routes: Routes = [
     path: '',
     canActivate: [NoAuthGuard],
     canActivateChild: [NoAuthGuard],
+    component: LayoutComponent,
     children: [
       {
         path: 'confirmation-required',

@@ -1,58 +1,65 @@
 <!-- Hero Section -->
-<section
-  class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center px-4"
->
-  <div class="max-w-6xl mx-auto text-center">
-    <!-- Logo -->
-    <div class="mb-8">
-      <img class="mx-auto h-16 w-auto" src="logo-text.webp" alt="Voltera" />
-    </div>
+<section id="banner-section" class="relative h-[85vh] sm:h-screen flex justify-center">
+  <img
+    ngSrc="https://upload-static.fgf.vn/gf/homepage/desktop_1920.jpg"
+    alt="Khách thuê xe điện Voltera trên cung đường ven biển"
+    fill
+    priority
+    class="object-cover object-center"
+    sizes="100vw"
+  />
+  <div
+    class="absolute inset-0 bg-linear-to-b from-slate-900/75 via-slate-900/60 to-slate-950/85"
+  ></div>
+  <div class="relative z-10 w-full">
+    <div
+      class="flex flex-col items-center sm:justify-start justify-between mt-9 sm:mt-16 sm:mb-0 h-[75vh] px-4"
+    >
+      <div class="flex flex-col items-center text-center">
+        <!-- Logo
+        <div class="mb-6">
+          <img class="mx-auto h-16 w-auto" src="logo-new-black.svg" alt="Voltera" />
+        </div> -->
 
-    <!-- Main Heading -->
-    <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
-      Thuê Xe Điện
-      <span
-        class="block text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400"
-      >
-        Tương Lai
-      </span>
-    </h1>
-
-    <!-- Subtitle -->
-    <p class="text-xl md:text-2xl text-slate-300 mb-8 max-w-3xl mx-auto leading-relaxed">
-      Trải nghiệm di chuyển xanh với đội xe điện hiện đại. An toàn, tiện lợi và thân thiện với môi
-      trường.
-    </p>
-
-    <!-- CTA Buttons -->
-    <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-      <a
-        routerLink="/sign-up"
-        class="px-8 py-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-semibold rounded-full hover:from-emerald-600 hover:to-teal-600 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
-      >
-        Bắt Đầu Ngay
-      </a>
-      <a
-        href="#features"
-        class="px-8 py-4 border-2 border-slate-400 text-slate-300 font-semibold rounded-full hover:border-emerald-400 hover:text-emerald-400 transition-all duration-300"
-      >
-        Tìm Hiểu Thêm
-      </a>
-    </div>
-
-    <!-- Stats -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-      <div class="text-center">
-        <div class="text-3xl md:text-4xl font-bold text-emerald-400 mb-2">500+</div>
-        <div class="text-slate-400">Chiếc Xe</div>
+        <p class="text-emerald-400 text-2xl sm:text-4xl xl:text-6xl font-semibold leading-tight">
+          Đáp ứng mọi nhu cầu thuê xe
+        </p>
+        <p
+          class="text-center text-slate-100 text-base sm:text-lg xl:text-2xl sm:leading-8 sm:mb-8 max-w-[340px] sm:max-w-2xl"
+        >
+          Cung cấp dịch vụ thuê xe tự lái và có tài xế, phục vụ mọi nhu cầu di chuyển của bạn.
+        </p>
       </div>
-      <div class="text-center">
-        <div class="text-3xl md:text-4xl font-bold text-emerald-400 mb-2">50k+</div>
-        <div class="text-slate-400">Khách Hàng</div>
+
+      <div class="flex sm:flex-row flex-col sm:gap-x-6 w-full sm:w-auto gap-y-4 sm:gap-y-0 sm:mt-4">
+        <a
+          routerLink="/sign-up"
+          class="inline-flex items-center justify-center whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 h-12 px-10 py-3 bg-emerald-400 hover:bg-emerald-300 rounded-full text-sm sm:text-base font-semibold text-slate-900 w-full sm:w-auto"
+        >
+          Thuê xe có tài
+        </a>
+        <a
+          href="#features"
+          class="inline-flex items-center justify-center whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 h-12 px-10 py-3 bg-white text-slate-900 rounded-full border border-slate-200 hover:bg-emerald-400 hover:text-slate-900 text-sm sm:text-base font-semibold w-full sm:w-auto"
+        >
+          Thuê xe tự lái
+        </a>
       </div>
-      <div class="text-center">
-        <div class="text-3xl md:text-4xl font-bold text-emerald-400 mb-2">4.9/5</div>
-        <div class="text-slate-400">Đánh Giá</div>
+
+      <!-- Stats -->
+      <div class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl">
+        <div class="text-center">
+          <div class="text-3xl md:text-4xl font-bold text-emerald-400 mb-1">500+</div>
+          <div class="text-slate-200">Chiếc xe</div>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl md:text-4xl font-bold text-emerald-400 mb-1">50k+</div>
+          <div class="text-slate-200">Khách hàng</div>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl md:text-4xl font-bold text-emerald-400 mb-1">4.9/5</div>
+          <div class="text-slate-200">Đánh giá</div>
+        </div>
       </div>
     </div>
   </div>
@@ -202,7 +209,7 @@
 </section>
 
 <!-- CTA Section -->
-<section class="py-20 bg-gradient-to-r from-emerald-500 to-teal-500">
+<section class="py-20 bg-linear-to-r from-emerald-500 to-teal-500">
   <div class="max-w-4xl mx-auto text-center px-4">
     <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">Sẵn Sàng Trải Nghiệm?</h2>
     <p class="text-xl text-emerald-100 mb-8">
@@ -218,24 +225,27 @@
 </section>
 
 <!-- Footer -->
-<footer class="bg-slate-800 py-12">
+<footer class="bg-gray-100 py-12">
   <div class="max-w-6xl mx-auto px-4">
     <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
       <!-- Company Info -->
       <div class="md:col-span-2">
-        <img class="h-10 w-auto mb-4" src="logo-text.webp" alt="Voltera" />
-        <p class="text-slate-400 mb-4">
-          Voltera - Giải pháp di chuyển xanh với đội xe điện hiện đại, mang đến trải nghiệm lái xe
-          tương lai.
-        </p>
+        <div class="flex items-center">
+          <img class="h-10 w-auto mb-4 pr-1" src="hoang-logo-text.webp" alt="Voltera" />
+          <p class="text-black mb-4">
+            Voltera - Giải pháp di chuyển xanh với đội xe điện hiện đại, mang đến trải nghiệm lái xe
+            tương lai.
+          </p>
+        </div>
+
         <div class="flex space-x-4">
-          <a href="#" class="text-slate-400 hover:text-emerald-400 transition-colors">
+          <a href="#" class="text-black hover:text-emerald-400 transition-colors">
             <mat-icon>facebook</mat-icon>
           </a>
-          <a href="#" class="text-slate-400 hover:text-emerald-400 transition-colors">
+          <a href="#" class="text-black hover:text-emerald-400 transition-colors">
             <mat-icon>instagram</mat-icon>
           </a>
-          <a href="#" class="text-slate-400 hover:text-emerald-400 transition-colors">
+          <a href="#" class="text-black hover:text-emerald-400 transition-colors">
             <mat-icon>twitter</mat-icon>
           </a>
         </div>
@@ -243,42 +253,38 @@
 
       <!-- Quick Links -->
       <div>
-        <h4 class="text-white font-semibold mb-4">Liên Kết</h4>
+        <h4 class="text-black font-semibold mb-4">Liên Kết</h4>
         <ul class="space-y-2">
           <li>
-            <a href="#" class="text-slate-400 hover:text-emerald-400 transition-colors"
-              >Về Chúng Tôi</a
-            >
+            <a href="#" class="text-black hover:text-emerald-400 transition-colors">Về Chúng Tôi</a>
           </li>
           <li>
-            <a href="#" class="text-slate-400 hover:text-emerald-400 transition-colors">Dịch Vụ</a>
+            <a href="#" class="text-black hover:text-emerald-400 transition-colors">Dịch Vụ</a>
           </li>
           <li>
-            <a href="#" class="text-slate-400 hover:text-emerald-400 transition-colors">Giá Cả</a>
+            <a href="#" class="text-black hover:text-emerald-400 transition-colors">Giá Cả</a>
           </li>
           <li>
-            <a href="#" class="text-slate-400 hover:text-emerald-400 transition-colors">Liên Hệ</a>
+            <a href="#" class="text-black hover:text-emerald-400 transition-colors">Liên Hệ</a>
           </li>
         </ul>
       </div>
 
       <!-- Support -->
       <div>
-        <h4 class="text-white font-semibold mb-4">Hỗ Trợ</h4>
+        <h4 class="text-black font-semibold mb-4">Hỗ Trợ</h4>
         <ul class="space-y-2">
           <li>
-            <a href="#" class="text-slate-400 hover:text-emerald-400 transition-colors">Trợ Giúp</a>
+            <a href="#" class="text-black hover:text-emerald-400 transition-colors">Trợ Giúp</a>
           </li>
           <li>
-            <a href="#" class="text-slate-400 hover:text-emerald-400 transition-colors"
-              >Điều Khoản</a
-            >
+            <a href="#" class="text-black hover:text-emerald-400 transition-colors">Điều Khoản</a>
           </li>
           <li>
-            <a href="#" class="text-slate-400 hover:text-emerald-400 transition-colors">Bảo Mật</a>
+            <a href="#" class="text-black hover:text-emerald-400 transition-colors">Bảo Mật</a>
           </li>
           <li>
-            <a href="#" class="text-slate-400 hover:text-emerald-400 transition-colors">FAQ</a>
+            <a href="#" class="text-black hover:text-emerald-400 transition-colors">FAQ</a>
           </li>
         </ul>
       </div>
@@ -288,8 +294,8 @@
     <div
       class="border-t border-slate-700 pt-8 flex flex-col md:flex-row justify-between items-center"
     >
-      <p class="text-slate-400 text-sm">© 2025 Voltera. Tất cả quyền được bảo lưu.</p>
-      <p class="text-slate-400 text-sm mt-2 md:mt-0">Made with ❤️ for sustainable mobility</p>
+      <p class="text-black text-sm">© 2025 Voltera. Tất cả quyền được bảo lưu.</p>
+      <p class="text-black text-sm mt-2 md:mt-0">Made with ❤️ for sustainable mobility</p>
     </div>
   </div>
 </footer>
