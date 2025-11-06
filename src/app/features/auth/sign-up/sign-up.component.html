@@ -195,11 +195,15 @@
       <mat-checkbox formControlName="agreeToTerms" color="primary">
         <span class="text-sm">
           I agree to the
-          <a href="/terms-of-service" class="text-primary hover:text-primary-container underline"
+          <a
+            routerLink="/terms-of-service"
+            class="text-primary hover:text-primary-container underline"
             >Terms of Service</a
           >
           and
-          <a href="/privacy-policy" class="text-primary hover:text-primary-container underline"
+          <a
+            routerLink="/privacy-policy"
+            class="text-primary hover:text-primary-container underline"
             >Privacy Policy</a
           >
         </span>
@@ -228,7 +232,10 @@
     <!-- Sign In Link -->
     <p class="mt-8 text-center text-sm text-on-surface-variant">
       Already have an account?
-      <a href="/sign-in" class="font-medium text-primary hover:text-primary-container underline">
+      <a
+        routerLink="/sign-in"
+        class="font-medium text-primary hover:text-primary-container underline"
+      >
         Sign in here
       </a>
     </p>

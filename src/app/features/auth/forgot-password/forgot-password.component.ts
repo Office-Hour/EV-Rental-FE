@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatButton } from '@angular/material/button';
 import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
@@ -21,6 +21,7 @@ import { AuthService } from '../../../core-logic/auth/auth.service';
     MatButton,
     MatIcon,
     MatProgressSpinner,
+    RouterLink,
   ],
 })
 export class ForgotPasswordComponent {

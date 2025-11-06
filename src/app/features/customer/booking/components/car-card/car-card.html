@@ -1,4 +1,4 @@
-<a href="/detail-card/{{ car().id }}" class="car-card">
+<a [routerLink]="['/detail-card', car().id]" class="car-card">
   <!-- Hover Overlay -->
   <div class="car-card__overlay">
     <div class="car-card__icon">

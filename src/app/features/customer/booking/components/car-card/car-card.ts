@@ -1,6 +1,7 @@
 ﻿import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
+import { RouterLink } from '@angular/router';
 
 export type CarCardBadgeTone = 'accent' | 'success' | 'danger' | 'neutral';
 
@@ -33,7 +34,7 @@ export interface CarCardData {
 
 @Component({
   selector: 'app-car-card',
-  imports: [NgOptimizedImage, MatIconModule],
+  imports: [NgOptimizedImage, MatIconModule, RouterLink],
   templateUrl: './car-card.html',
   styleUrl: './car-card.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

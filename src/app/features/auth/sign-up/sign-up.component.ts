@@ -8,7 +8,7 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatError, MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
@@ -54,6 +54,7 @@ export function passwordRequirementsValidator(): ValidatorFn {
     MatCheckbox,
     MatProgressSpinner,
     MatSuffix,
+    RouterLink,
   ],
 })
 export class SignUpComponent {
