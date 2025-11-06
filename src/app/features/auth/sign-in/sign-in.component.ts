@@ -6,6 +6,7 @@ import { MatError, MatFormField, MatLabel, MatSuffix } from '@angular/material/f
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../core-logic/auth/auth.service';
 import { LoginRequest } from '../../../../contract';
 
@@ -25,6 +26,7 @@ import { LoginRequest } from '../../../../contract';
     MatIcon,
     MatCheckbox,
     MatProgressSpinner,
+    RouterLink,
   ],
 })
 export class SignInComponent {

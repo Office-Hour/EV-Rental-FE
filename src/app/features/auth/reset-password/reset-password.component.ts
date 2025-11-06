@@ -8,7 +8,7 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatError, MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
@@ -51,6 +51,7 @@ export function passwordRequirementsValidator(): ValidatorFn {
     MatIcon,
     MatProgressSpinner,
     MatSuffix,
+    RouterLink,
   ],
 })
 export class ResetPasswordComponent {

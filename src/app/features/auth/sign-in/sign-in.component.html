@@ -66,7 +66,7 @@
       <div class="flex items-center justify-between">
         <mat-checkbox formControlName="rememberMe" color="primary"> Remember me </mat-checkbox>
         <a
-          href="/forgot-password"
+          routerLink="/forgot-password"
           class="text-sm font-medium text-primary hover:text-primary-container"
         >
           Forgot your password?
@@ -93,7 +93,10 @@
     <!-- Sign Up Link -->
     <p class="mt-8 text-center text-sm text-on-surface-variant">
       Don't have an account?
-      <a href="/sign-up" class="font-medium text-primary hover:text-primary-container underline">
+      <a
+        routerLink="/sign-up"
+        class="font-medium text-primary hover:text-primary-container underline"
+      >
         Sign up for free
       </a>
     </p>

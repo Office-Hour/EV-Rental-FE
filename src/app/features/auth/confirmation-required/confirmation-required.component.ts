@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation, inject, signal } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
@@ -8,7 +8,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
   selector: 'app-confirmation-required',
   templateUrl: './confirmation-required.component.html',
   encapsulation: ViewEncapsulation.None,
-  imports: [MatButton, MatIcon, MatProgressSpinner],
+  imports: [MatButton, MatIcon, MatProgressSpinner, RouterLink],
 })
 export class ConfirmationRequiredComponent {
   private _router = inject(Router);
