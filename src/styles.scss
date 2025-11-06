@@ -56,7 +56,7 @@ html {
       // Core brand colors
       primary: oklch(0.765 0.177 163.22),
       on-primary: #1a1a1a,
-      primary-container: #fff27a,
+      primary-container: oklch(84.5% 0.143 164.978),
       on-primary-container: #221a00,
 
       // Supporting colors
@@ -129,6 +129,13 @@ html {
   outline: 2px solid var(--mat-sys-primary, rgb(59 130 246));
   outline-offset: 2px;
   border-radius: 2px;
+}
+
+// Keep button content aligned when mixing text with spinners or icons
+.mat-mdc-button-base .mdc-button__label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 // Selection styling
