@@ -12,5 +12,5 @@ import { ESignPayloadDto } from './eSignPayloadDto';
 
 export interface SignContractRequest {
   createSignaturePayloadDto?: CreateSignaturePayloadDto;
-  eSignPayload?: ESignPayloadDto | null;
+  eSignPayload?: ESignPayloadDto;
 }

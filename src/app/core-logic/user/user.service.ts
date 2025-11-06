@@ -1,6 +1,6 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { Observable, switchMap, tap } from 'rxjs';
-import { AccountService, ApiResponseOfUserInfoDto, UserInfoDto } from '../../../contract';
+import { AccountService, UserInfoDto, UserInfoDtoApiResponse } from '../../../contract';
 import { UpdateUserRequest, UserRole } from './user.types';
 
 @Injectable({ providedIn: 'root' })
@@ -39,10 +39,10 @@ export class UserService {
   /**
    * Get the user from the API
    */
-  getUser(): Observable<ApiResponseOfUserInfoDto> {
+  getUser(): Observable<UserInfoDtoApiResponse> {
     return this._accountService.apiAccountProfileGet().pipe(
-      tap((response: ApiResponseOfUserInfoDto) => {
-        const data: UserInfoDto = response.data ?? {};
+      tap((response: UserInfoDtoApiResponse) => {
+        const data: UserInfoDto = response.data ?? ({} as UserInfoDto);
         if (data) {
           this._user.set(data);
         }

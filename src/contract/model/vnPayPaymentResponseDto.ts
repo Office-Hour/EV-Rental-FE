@@ -9,8 +9,8 @@
  */
 
 export interface VnPayPaymentResponseDto {
-  paymentUrl?: string;
-  orderId?: string;
+  paymentUrl?: string | null;
+  orderId?: string | null;
   amount?: number;
   createdAt?: string;
 }

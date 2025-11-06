@@ -11,5 +11,5 @@ import { ErrorDetail } from './errorDetail';
 
 export interface ErrorMessage {
   message?: string | null;
-  errorDetails?: Array<ErrorDetail>;
+  errorDetails?: Array<ErrorDetail> | null;
 }

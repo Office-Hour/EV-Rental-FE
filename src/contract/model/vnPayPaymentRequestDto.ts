@@ -9,11 +9,11 @@
  */
 
 export interface VnPayPaymentRequestDto {
-  orderId?: string;
+  orderId?: string | null;
   amount?: number;
-  orderDescription?: string;
+  orderDescription?: string | null;
   bankCode?: string | null;
-  locale?: string;
-  orderType?: string;
-  ipAddress?: string;
+  locale?: string | null;
+  orderType?: string | null;
+  ipAddress?: string | null;
 }

@@ -25,15 +25,7 @@ import { Observable } from 'rxjs';
 // @ts-ignore
 import { ApiResponse } from '../model/apiResponse';
 // @ts-ignore
-import { ApiResponseOfDepositFeeDto } from '../model/apiResponseOfDepositFeeDto';
-// @ts-ignore
-import { ApiResponseOfPagedResultOfBookingDetailsDto } from '../model/apiResponseOfPagedResultOfBookingDetailsDto';
-// @ts-ignore
-import { ApiResponseOfPagedResultOfVehicleDto } from '../model/apiResponseOfPagedResultOfVehicleDto';
-// @ts-ignore
-import { ApiResponseOfRenterProfileDto } from '../model/apiResponseOfRenterProfileDto';
-// @ts-ignore
-import { ApiResponseOfVehicleDetailsDto } from '../model/apiResponseOfVehicleDetailsDto';
+import { BookingDetailsDtoPagedResultApiResponse } from '../model/bookingDetailsDtoPagedResultApiResponse';
 // @ts-ignore
 import { CancelCheckinRequest } from '../model/cancelCheckinRequest';
 // @ts-ignore
@@ -41,11 +33,19 @@ import { CheckinBookingRequest } from '../model/checkinBookingRequest';
 // @ts-ignore
 import { CreateBookingRequest } from '../model/createBookingRequest';
 // @ts-ignore
+import { DepositFeeDtoApiResponse } from '../model/depositFeeDtoApiResponse';
+// @ts-ignore
 import { ErrorMessage } from '../model/errorMessage';
+// @ts-ignore
+import { RenterProfileDtoApiResponse } from '../model/renterProfileDtoApiResponse';
 // @ts-ignore
 import { RequestCancelCheckinRequest } from '../model/requestCancelCheckinRequest';
 // @ts-ignore
 import { UploadKycRequest } from '../model/uploadKycRequest';
+// @ts-ignore
+import { VehicleDetailsDtoApiResponse } from '../model/vehicleDetailsDtoApiResponse';
+// @ts-ignore
+import { VehicleDtoPagedResultApiResponse } from '../model/vehicleDtoPagedResultApiResponse';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS } from '../variables';
@@ -71,7 +71,7 @@ export class BookingService extends BaseService {
    * @param reportProgress flag to report request and response progress.
    */
   public apiBookingCancelPost(
-    cancelCheckinRequest: CancelCheckinRequest,
+    cancelCheckinRequest?: CancelCheckinRequest,
     observe?: 'body',
     reportProgress?: boolean,
     options?: {
@@ -79,9 +79,9 @@ export class BookingService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<ApiResponseOfDepositFeeDto>;
+  ): Observable<DepositFeeDtoApiResponse>;
   public apiBookingCancelPost(
-    cancelCheckinRequest: CancelCheckinRequest,
+    cancelCheckinRequest?: CancelCheckinRequest,
     observe?: 'response',
     reportProgress?: boolean,
     options?: {
@@ -89,9 +89,9 @@ export class BookingService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpResponse<ApiResponseOfDepositFeeDto>>;
+  ): Observable<HttpResponse<DepositFeeDtoApiResponse>>;
   public apiBookingCancelPost(
-    cancelCheckinRequest: CancelCheckinRequest,
+    cancelCheckinRequest?: CancelCheckinRequest,
     observe?: 'events',
     reportProgress?: boolean,
     options?: {
@@ -99,9 +99,9 @@ export class BookingService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpEvent<ApiResponseOfDepositFeeDto>>;
+  ): Observable<HttpEvent<DepositFeeDtoApiResponse>>;
   public apiBookingCancelPost(
-    cancelCheckinRequest: CancelCheckinRequest,
+    cancelCheckinRequest?: CancelCheckinRequest,
     observe: any = 'body',
     reportProgress: boolean = false,
     options?: {
@@ -110,12 +110,6 @@ export class BookingService extends BaseService {
       transferCache?: boolean;
     },
   ): Observable<any> {
-    if (cancelCheckinRequest === null || cancelCheckinRequest === undefined) {
-      throw new Error(
-        'Required parameter cancelCheckinRequest was null or undefined when calling apiBookingCancelPost.',
-      );
-    }
-
     let localVarHeaders = this.defaultHeaders;
 
     // authentication (Bearer) required
@@ -157,20 +151,16 @@ export class BookingService extends BaseService {
 
     let localVarPath = `/api/Booking/cancel`;
     const { basePath, withCredentials } = this.configuration;
-    return this.httpClient.request<ApiResponseOfDepositFeeDto>(
-      'post',
-      `${basePath}${localVarPath}`,
-      {
-        context: localVarHttpContext,
-        body: cancelCheckinRequest,
-        responseType: <any>responseType_,
-        ...(withCredentials ? { withCredentials } : {}),
-        headers: localVarHeaders,
-        observe: observe,
-        ...(localVarTransferCache !== undefined ? { transferCache: localVarTransferCache } : {}),
-        reportProgress: reportProgress,
-      },
-    );
+    return this.httpClient.request<DepositFeeDtoApiResponse>('post', `${basePath}${localVarPath}`, {
+      context: localVarHttpContext,
+      body: cancelCheckinRequest,
+      responseType: <any>responseType_,
+      ...(withCredentials ? { withCredentials } : {}),
+      headers: localVarHeaders,
+      observe: observe,
+      ...(localVarTransferCache !== undefined ? { transferCache: localVarTransferCache } : {}),
+      reportProgress: reportProgress,
+    });
   }
 
   /**
@@ -180,7 +170,7 @@ export class BookingService extends BaseService {
    * @param reportProgress flag to report request and response progress.
    */
   public apiBookingCheckinPost(
-    checkinBookingRequest: CheckinBookingRequest,
+    checkinBookingRequest?: CheckinBookingRequest,
     observe?: 'body',
     reportProgress?: boolean,
     options?: {
@@ -190,7 +180,7 @@ export class BookingService extends BaseService {
     },
   ): Observable<ApiResponse>;
   public apiBookingCheckinPost(
-    checkinBookingRequest: CheckinBookingRequest,
+    checkinBookingRequest?: CheckinBookingRequest,
     observe?: 'response',
     reportProgress?: boolean,
     options?: {
@@ -200,7 +190,7 @@ export class BookingService extends BaseService {
     },
   ): Observable<HttpResponse<ApiResponse>>;
   public apiBookingCheckinPost(
-    checkinBookingRequest: CheckinBookingRequest,
+    checkinBookingRequest?: CheckinBookingRequest,
     observe?: 'events',
     reportProgress?: boolean,
     options?: {
@@ -210,7 +200,7 @@ export class BookingService extends BaseService {
     },
   ): Observable<HttpEvent<ApiResponse>>;
   public apiBookingCheckinPost(
-    checkinBookingRequest: CheckinBookingRequest,
+    checkinBookingRequest?: CheckinBookingRequest,
     observe: any = 'body',
     reportProgress: boolean = false,
     options?: {
@@ -219,12 +209,6 @@ export class BookingService extends BaseService {
       transferCache?: boolean;
     },
   ): Observable<any> {
-    if (checkinBookingRequest === null || checkinBookingRequest === undefined) {
-      throw new Error(
-        'Required parameter checkinBookingRequest was null or undefined when calling apiBookingCheckinPost.',
-      );
-    }
-
     let localVarHeaders = this.defaultHeaders;
 
     // authentication (Bearer) required
@@ -297,7 +281,7 @@ export class BookingService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<ApiResponseOfPagedResultOfBookingDetailsDto>;
+  ): Observable<BookingDetailsDtoPagedResultApiResponse>;
   public apiBookingGet(
     renterId?: string,
     pageNumber?: number,
@@ -309,7 +293,7 @@ export class BookingService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpResponse<ApiResponseOfPagedResultOfBookingDetailsDto>>;
+  ): Observable<HttpResponse<BookingDetailsDtoPagedResultApiResponse>>;
   public apiBookingGet(
     renterId?: string,
     pageNumber?: number,
@@ -321,7 +305,7 @@ export class BookingService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpEvent<ApiResponseOfPagedResultOfBookingDetailsDto>>;
+  ): Observable<HttpEvent<BookingDetailsDtoPagedResultApiResponse>>;
   public apiBookingGet(
     renterId?: string,
     pageNumber?: number,
@@ -384,7 +368,7 @@ export class BookingService extends BaseService {
 
     let localVarPath = `/api/Booking`;
     const { basePath, withCredentials } = this.configuration;
-    return this.httpClient.request<ApiResponseOfPagedResultOfBookingDetailsDto>(
+    return this.httpClient.request<BookingDetailsDtoPagedResultApiResponse>(
       'get',
       `${basePath}${localVarPath}`,
       {
@@ -407,7 +391,7 @@ export class BookingService extends BaseService {
    * @param reportProgress flag to report request and response progress.
    */
   public apiBookingPost(
-    createBookingRequest: CreateBookingRequest,
+    createBookingRequest?: CreateBookingRequest,
     observe?: 'body',
     reportProgress?: boolean,
     options?: {
@@ -417,7 +401,7 @@ export class BookingService extends BaseService {
     },
   ): Observable<ApiResponse>;
   public apiBookingPost(
-    createBookingRequest: CreateBookingRequest,
+    createBookingRequest?: CreateBookingRequest,
     observe?: 'response',
     reportProgress?: boolean,
     options?: {
@@ -427,7 +411,7 @@ export class BookingService extends BaseService {
     },
   ): Observable<HttpResponse<ApiResponse>>;
   public apiBookingPost(
-    createBookingRequest: CreateBookingRequest,
+    createBookingRequest?: CreateBookingRequest,
     observe?: 'events',
     reportProgress?: boolean,
     options?: {
@@ -437,7 +421,7 @@ export class BookingService extends BaseService {
     },
   ): Observable<HttpEvent<ApiResponse>>;
   public apiBookingPost(
-    createBookingRequest: CreateBookingRequest,
+    createBookingRequest?: CreateBookingRequest,
     observe: any = 'body',
     reportProgress: boolean = false,
     options?: {
@@ -446,12 +430,6 @@ export class BookingService extends BaseService {
       transferCache?: boolean;
     },
   ): Observable<any> {
-    if (createBookingRequest === null || createBookingRequest === undefined) {
-      throw new Error(
-        'Required parameter createBookingRequest was null or undefined when calling apiBookingPost.',
-      );
-    }
-
     let localVarHeaders = this.defaultHeaders;
 
     // authentication (Bearer) required
@@ -520,7 +498,7 @@ export class BookingService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<ApiResponseOfRenterProfileDto>;
+  ): Observable<RenterProfileDtoApiResponse>;
   public apiBookingRenterProfileGet(
     userId?: string,
     observe?: 'response',
@@ -530,7 +508,7 @@ export class BookingService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpResponse<ApiResponseOfRenterProfileDto>>;
+  ): Observable<HttpResponse<RenterProfileDtoApiResponse>>;
   public apiBookingRenterProfileGet(
     userId?: string,
     observe?: 'events',
@@ -540,7 +518,7 @@ export class BookingService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpEvent<ApiResponseOfRenterProfileDto>>;
+  ): Observable<HttpEvent<RenterProfileDtoApiResponse>>;
   public apiBookingRenterProfileGet(
     userId?: string,
     observe: any = 'body',
@@ -587,7 +565,7 @@ export class BookingService extends BaseService {
 
     let localVarPath = `/api/Booking/renter-profile`;
     const { basePath, withCredentials } = this.configuration;
-    return this.httpClient.request<ApiResponseOfRenterProfileDto>(
+    return this.httpClient.request<RenterProfileDtoApiResponse>(
       'get',
       `${basePath}${localVarPath}`,
       {
@@ -610,7 +588,7 @@ export class BookingService extends BaseService {
    * @param reportProgress flag to report request and response progress.
    */
   public apiBookingRequestCancelPost(
-    requestCancelCheckinRequest: RequestCancelCheckinRequest,
+    requestCancelCheckinRequest?: RequestCancelCheckinRequest,
     observe?: 'body',
     reportProgress?: boolean,
     options?: {
@@ -620,7 +598,7 @@ export class BookingService extends BaseService {
     },
   ): Observable<ApiResponse>;
   public apiBookingRequestCancelPost(
-    requestCancelCheckinRequest: RequestCancelCheckinRequest,
+    requestCancelCheckinRequest?: RequestCancelCheckinRequest,
     observe?: 'response',
     reportProgress?: boolean,
     options?: {
@@ -630,7 +608,7 @@ export class BookingService extends BaseService {
     },
   ): Observable<HttpResponse<ApiResponse>>;
   public apiBookingRequestCancelPost(
-    requestCancelCheckinRequest: RequestCancelCheckinRequest,
+    requestCancelCheckinRequest?: RequestCancelCheckinRequest,
     observe?: 'events',
     reportProgress?: boolean,
     options?: {
@@ -640,7 +618,7 @@ export class BookingService extends BaseService {
     },
   ): Observable<HttpEvent<ApiResponse>>;
   public apiBookingRequestCancelPost(
-    requestCancelCheckinRequest: RequestCancelCheckinRequest,
+    requestCancelCheckinRequest?: RequestCancelCheckinRequest,
     observe: any = 'body',
     reportProgress: boolean = false,
     options?: {
@@ -649,12 +627,6 @@ export class BookingService extends BaseService {
       transferCache?: boolean;
     },
   ): Observable<any> {
-    if (requestCancelCheckinRequest === null || requestCancelCheckinRequest === undefined) {
-      throw new Error(
-        'Required parameter requestCancelCheckinRequest was null or undefined when calling apiBookingRequestCancelPost.',
-      );
-    }
-
     let localVarHeaders = this.defaultHeaders;
 
     // authentication (Bearer) required
@@ -715,7 +687,7 @@ export class BookingService extends BaseService {
    * @param reportProgress flag to report request and response progress.
    */
   public apiBookingUploadKycPost(
-    uploadKycRequest: UploadKycRequest,
+    uploadKycRequest?: UploadKycRequest,
     observe?: 'body',
     reportProgress?: boolean,
     options?: {
@@ -725,7 +697,7 @@ export class BookingService extends BaseService {
     },
   ): Observable<ApiResponse>;
   public apiBookingUploadKycPost(
-    uploadKycRequest: UploadKycRequest,
+    uploadKycRequest?: UploadKycRequest,
     observe?: 'response',
     reportProgress?: boolean,
     options?: {
@@ -735,7 +707,7 @@ export class BookingService extends BaseService {
     },
   ): Observable<HttpResponse<ApiResponse>>;
   public apiBookingUploadKycPost(
-    uploadKycRequest: UploadKycRequest,
+    uploadKycRequest?: UploadKycRequest,
     observe?: 'events',
     reportProgress?: boolean,
     options?: {
@@ -745,7 +717,7 @@ export class BookingService extends BaseService {
     },
   ): Observable<HttpEvent<ApiResponse>>;
   public apiBookingUploadKycPost(
-    uploadKycRequest: UploadKycRequest,
+    uploadKycRequest?: UploadKycRequest,
     observe: any = 'body',
     reportProgress: boolean = false,
     options?: {
@@ -754,12 +726,6 @@ export class BookingService extends BaseService {
       transferCache?: boolean;
     },
   ): Observable<any> {
-    if (uploadKycRequest === null || uploadKycRequest === undefined) {
-      throw new Error(
-        'Required parameter uploadKycRequest was null or undefined when calling apiBookingUploadKycPost.',
-      );
-    }
-
     let localVarHeaders = this.defaultHeaders;
 
     // authentication (Bearer) required
@@ -838,7 +804,7 @@ export class BookingService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<ApiResponseOfPagedResultOfVehicleDto>;
+  ): Observable<VehicleDtoPagedResultApiResponse>;
   public apiBookingVehiclesByStationGet(
     stationId?: string,
     vehicleId?: string,
@@ -853,7 +819,7 @@ export class BookingService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpResponse<ApiResponseOfPagedResultOfVehicleDto>>;
+  ): Observable<HttpResponse<VehicleDtoPagedResultApiResponse>>;
   public apiBookingVehiclesByStationGet(
     stationId?: string,
     vehicleId?: string,
@@ -868,7 +834,7 @@ export class BookingService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpEvent<ApiResponseOfPagedResultOfVehicleDto>>;
+  ): Observable<HttpEvent<VehicleDtoPagedResultApiResponse>>;
   public apiBookingVehiclesByStationGet(
     stationId?: string,
     vehicleId?: string,
@@ -918,6 +884,14 @@ export class BookingService extends BaseService {
 
     let localVarHeaders = this.defaultHeaders;
 
+    // authentication (Bearer) required
+    localVarHeaders = this.configuration.addCredentialToHeaders(
+      'Bearer',
+      'Authorization',
+      localVarHeaders,
+      'Bearer ',
+    );
+
     const localVarHttpHeaderAcceptSelected: string | undefined =
       options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept(['application/json']);
     if (localVarHttpHeaderAcceptSelected !== undefined) {
@@ -941,7 +915,7 @@ export class BookingService extends BaseService {
 
     let localVarPath = `/api/Booking/vehicles/by-station`;
     const { basePath, withCredentials } = this.configuration;
-    return this.httpClient.request<ApiResponseOfPagedResultOfVehicleDto>(
+    return this.httpClient.request<VehicleDtoPagedResultApiResponse>(
       'get',
       `${basePath}${localVarPath}`,
       {
@@ -972,7 +946,7 @@ export class BookingService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<ApiResponseOfVehicleDetailsDto>;
+  ): Observable<VehicleDetailsDtoApiResponse>;
   public apiBookingVehiclesVehicleIdGet(
     vehicleId: string,
     observe?: 'response',
@@ -982,7 +956,7 @@ export class BookingService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpResponse<ApiResponseOfVehicleDetailsDto>>;
+  ): Observable<HttpResponse<VehicleDetailsDtoApiResponse>>;
   public apiBookingVehiclesVehicleIdGet(
     vehicleId: string,
     observe?: 'events',
@@ -992,7 +966,7 @@ export class BookingService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpEvent<ApiResponseOfVehicleDetailsDto>>;
+  ): Observable<HttpEvent<VehicleDetailsDtoApiResponse>>;
   public apiBookingVehiclesVehicleIdGet(
     vehicleId: string,
     observe: any = 'body',
@@ -1010,6 +984,14 @@ export class BookingService extends BaseService {
     }
 
     let localVarHeaders = this.defaultHeaders;
+
+    // authentication (Bearer) required
+    localVarHeaders = this.configuration.addCredentialToHeaders(
+      'Bearer',
+      'Authorization',
+      localVarHeaders,
+      'Bearer ',
+    );
 
     const localVarHttpHeaderAcceptSelected: string | undefined =
       options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept(['application/json']);
@@ -1034,7 +1016,7 @@ export class BookingService extends BaseService {
 
     let localVarPath = `/api/Booking/vehicles/${this.configuration.encodeParam({ name: 'vehicleId', value: vehicleId, in: 'path', style: 'simple', explode: false, dataType: 'string', dataFormat: 'uuid' })}`;
     const { basePath, withCredentials } = this.configuration;
-    return this.httpClient.request<ApiResponseOfVehicleDetailsDto>(
+    return this.httpClient.request<VehicleDetailsDtoApiResponse>(
       'get',
       `${basePath}${localVarPath}`,
       {

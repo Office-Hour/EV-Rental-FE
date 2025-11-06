@@ -4,11 +4,6 @@
     "title": "EV Rental API",
     "version": "v1"
   },
-  "servers": [
-    {
-      "url": "http://swd-be-webapi-production.politerock-c1f6f715.japaneast.azurecontainerapps.io/"
-    }
-  ],
   "paths": {
     "/api/Account/login": {
       "post": {
@@ -32,8 +27,7 @@
                 "$ref": "#/components/schemas/LoginRequest"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -41,7 +35,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResponseOfAuthDto"
+                  "$ref": "#/components/schemas/AuthDtoApiResponse"
                 }
               }
             }
@@ -81,8 +75,7 @@
                 "$ref": "#/components/schemas/RegisterRequest"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -130,8 +123,7 @@
                 "$ref": "#/components/schemas/LogoutRequest"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -164,12 +156,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "Bearer": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/Account/invoke-token": {
@@ -194,8 +181,7 @@
                 "$ref": "#/components/schemas/InvokeTokenRequest"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -203,7 +189,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResponseOfAuthDto"
+                  "$ref": "#/components/schemas/AuthDtoApiResponse"
                 }
               }
             }
@@ -242,7 +228,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResponseOfUserInfoDto"
+                  "$ref": "#/components/schemas/UserInfoDtoApiResponse"
                 }
               }
             }
@@ -267,12 +253,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "Bearer": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/Account/update-profile": {
@@ -297,8 +278,7 @@
                 "$ref": "#/components/schemas/UpdateProfileRequest"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -331,12 +311,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "Bearer": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/Account/change-password": {
@@ -361,8 +336,7 @@
                 "$ref": "#/components/schemas/ChangePasswordRequest"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -395,12 +369,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "Bearer": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/Booking/request-cancel": {
@@ -425,8 +394,7 @@
                 "$ref": "#/components/schemas/RequestCancelCheckinRequest"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -469,12 +437,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "Bearer": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/Booking/cancel": {
@@ -499,8 +462,7 @@
                 "$ref": "#/components/schemas/CancelCheckinRequest"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -508,7 +470,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResponseOfDepositFeeDto"
+                  "$ref": "#/components/schemas/DepositFeeDtoApiResponse"
                 }
               }
             }
@@ -543,12 +505,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "Bearer": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/Booking/renter-profile": {
@@ -562,8 +519,7 @@
             "in": "query",
             "schema": {
               "type": "string",
-              "format": "uuid",
-              "default": null
+              "format": "uuid"
             }
           }
         ],
@@ -573,7 +529,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResponseOfRenterProfileDto"
+                  "$ref": "#/components/schemas/RenterProfileDtoApiResponse"
                 }
               }
             }
@@ -598,12 +554,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "Bearer": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/Booking": {
@@ -645,7 +596,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResponseOfPagedResultOfBookingDetailsDto"
+                  "$ref": "#/components/schemas/BookingDetailsDtoPagedResultApiResponse"
                 }
               }
             }
@@ -670,12 +621,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "Bearer": [ ]
-          }
-        ]
+        }
       },
       "post": {
         "tags": [
@@ -698,8 +644,7 @@
                 "$ref": "#/components/schemas/CreateBookingRequest"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -732,12 +677,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "Bearer": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/Booking/vehicles/{vehicleId}": {
@@ -762,7 +702,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResponseOfVehicleDetailsDto"
+                  "$ref": "#/components/schemas/VehicleDetailsDtoApiResponse"
                 }
               }
             }
@@ -841,7 +781,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResponseOfPagedResultOfVehicleDto"
+                  "$ref": "#/components/schemas/VehicleDtoPagedResultApiResponse"
                 }
               }
             }
@@ -881,8 +821,7 @@
                 "$ref": "#/components/schemas/UploadKycRequest"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -915,12 +854,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "Bearer": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/Booking/checkin": {
@@ -945,8 +879,7 @@
                 "$ref": "#/components/schemas/CheckinBookingRequest"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -979,12 +912,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "Bearer": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/Payment/create": {
@@ -1009,8 +937,7 @@
                 "$ref": "#/components/schemas/VnPayPaymentRequestDto"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -1018,7 +945,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResponseOfVnPayPaymentResponseDto"
+                  "$ref": "#/components/schemas/VnPayPaymentResponseDtoApiResponse"
                 }
               }
             }
@@ -1043,12 +970,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "Bearer": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/Payment/return": {
@@ -1062,7 +984,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResponseOfVnPayReturnDto"
+                  "$ref": "#/components/schemas/VnPayReturnDtoApiResponse"
                 }
               }
             }
@@ -1138,8 +1060,7 @@
                 "$ref": "#/components/schemas/VnPayQueryRequestDto"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -1147,7 +1068,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResponseOfVnPayQueryResponseDto"
+                  "$ref": "#/components/schemas/VnPayQueryResponseDtoApiResponse"
                 }
               }
             }
@@ -1172,12 +1093,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "Bearer": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/Payment/refund": {
@@ -1202,8 +1118,7 @@
                 "$ref": "#/components/schemas/VnPayRefundRequestDto"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -1211,7 +1126,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResponseOfVnPayRefundResponseDto"
+                  "$ref": "#/components/schemas/VnPayRefundResponseDtoApiResponse"
                 }
               }
             }
@@ -1236,12 +1151,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "Bearer": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/Rental": {
@@ -1266,8 +1176,7 @@
                 "$ref": "#/components/schemas/CreateRentalRequest"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -1275,7 +1184,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResponseOfGuid"
+                  "$ref": "#/components/schemas/GuidApiResponse"
                 }
               }
             }
@@ -1290,12 +1199,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "Bearer": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/Rental/contract": {
@@ -1320,8 +1224,7 @@
                 "$ref": "#/components/schemas/CreateContractRequest"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -1329,7 +1232,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResponseOfGuid"
+                  "$ref": "#/components/schemas/GuidApiResponse"
                 }
               }
             }
@@ -1344,12 +1247,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "Bearer": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/Rental/by-renter": {
@@ -1391,17 +1289,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResponseOfPagedResultOfRentalDto"
+                  "$ref": "#/components/schemas/RentalDtoPagedResultApiResponse"
                 }
               }
             }
           }
-        },
-        "security": [
-          {
-            "Bearer": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/Rental/{rentalId}": {
@@ -1426,7 +1319,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResponseOfRentalDetailsDto"
+                  "$ref": "#/components/schemas/RentalDetailsDtoApiResponse"
                 }
               }
             }
@@ -1441,12 +1334,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "Bearer": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/Rental/inspection": {
@@ -1471,8 +1359,7 @@
                 "$ref": "#/components/schemas/ReceiveInspectionRequest"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -1480,7 +1367,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResponseOfGuid"
+                  "$ref": "#/components/schemas/GuidApiResponse"
                 }
               }
             }
@@ -1505,12 +1392,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "Bearer": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/Rental/contract/sign": {
@@ -1535,8 +1417,7 @@
                 "$ref": "#/components/schemas/SignContractRequest"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -1544,7 +1425,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResponseOfGuid"
+                  "$ref": "#/components/schemas/GuidApiResponse"
                 }
               }
             }
@@ -1569,12 +1450,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "Bearer": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/Rental/vehicle/receive": {
@@ -1599,15 +1475,11 @@
                 "$ref": "#/components/schemas/ReceiveVehicleRequest"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "204": {
-            "description": "No Content",
-            "content": {
-              "application/json": { }
-            }
+            "description": "No Content"
           },
           "400": {
             "description": "Bad Request",
@@ -1629,12 +1501,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "Bearer": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/Rental/contract/{contractId}": {
@@ -1659,7 +1526,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResponseOfContractDetailsDto"
+                  "$ref": "#/components/schemas/ContractDetailsDtoApiResponse"
                 }
               }
             }
@@ -1674,12 +1541,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "Bearer": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/Staff/bookings": {
@@ -1693,7 +1555,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResponseOfListOfBookingDetailsDto"
+                  "$ref": "#/components/schemas/BookingDetailsDtoListApiResponse"
                 }
               }
             }
@@ -1718,12 +1580,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "Bearer": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/Staff/renters": {
@@ -1737,7 +1594,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResponseOfListOfRenterProfileDto"
+                  "$ref": "#/components/schemas/RenterProfileDtoListApiResponse"
                 }
               }
             }
@@ -1762,12 +1619,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "Bearer": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/Staff/rentals": {
@@ -1781,7 +1633,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResponseOfListOfRentalDetailsDto"
+                  "$ref": "#/components/schemas/RentalDetailsDtoListApiResponse"
                 }
               }
             }
@@ -1806,12 +1658,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "Bearer": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/Stations": {
@@ -1857,7 +1704,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResponseOfPagedResultOfStationDto"
+                  "$ref": "#/components/schemas/StationDtoPagedResultApiResponse"
                 }
               }
             }
@@ -1915,7 +1762,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResponseOfStationDetailsDto"
+                  "$ref": "#/components/schemas/StationDetailsDtoApiResponse"
                 }
               }
             }
@@ -1942,15 +1789,39 @@
           "isSuccess": {
             "type": "boolean"
           },
-          "data": { },
+          "data": {
+            "nullable": true
+          },
           "message": {
             "type": "string",
-            "default": "Operation success",
             "nullable": true
           }
-        }
+        },
+        "additionalProperties": false
       },
-      "ApiResponseOfAuthDto": {
+      "AuthDto": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "nullable": true
+          },
+          "accessTokenExpiration": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "refreshToken": {
+            "type": "string",
+            "nullable": true
+          },
+          "refreshTokenExpiration": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AuthDtoApiResponse": {
         "type": "object",
         "properties": {
           "isSuccess": {
@@ -1963,325 +1834,8 @@
             "type": "string",
             "nullable": true
           }
-        }
-      },
-      "ApiResponseOfContractDetailsDto": {
-        "type": "object",
-        "properties": {
-          "isSuccess": {
-            "type": "boolean"
-          },
-          "data": {
-            "$ref": "#/components/schemas/ContractDetailsDto"
-          },
-          "message": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "ApiResponseOfDepositFeeDto": {
-        "type": "object",
-        "properties": {
-          "isSuccess": {
-            "type": "boolean"
-          },
-          "data": {
-            "$ref": "#/components/schemas/DepositFeeDto"
-          },
-          "message": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "ApiResponseOfGuid": {
-        "type": "object",
-        "properties": {
-          "isSuccess": {
-            "type": "boolean"
-          },
-          "data": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "message": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "ApiResponseOfListOfBookingDetailsDto": {
-        "type": "object",
-        "properties": {
-          "isSuccess": {
-            "type": "boolean"
-          },
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BookingDetailsDto"
-            },
-            "nullable": true
-          },
-          "message": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "ApiResponseOfListOfRentalDetailsDto": {
-        "type": "object",
-        "properties": {
-          "isSuccess": {
-            "type": "boolean"
-          },
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RentalDetailsDto2"
-            },
-            "nullable": true
-          },
-          "message": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "ApiResponseOfListOfRenterProfileDto": {
-        "type": "object",
-        "properties": {
-          "isSuccess": {
-            "type": "boolean"
-          },
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RenterProfileDto2"
-            },
-            "nullable": true
-          },
-          "message": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "ApiResponseOfPagedResultOfBookingDetailsDto": {
-        "type": "object",
-        "properties": {
-          "isSuccess": {
-            "type": "boolean"
-          },
-          "data": {
-            "$ref": "#/components/schemas/PagedResultOfBookingDetailsDto"
-          },
-          "message": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "ApiResponseOfPagedResultOfRentalDto": {
-        "type": "object",
-        "properties": {
-          "isSuccess": {
-            "type": "boolean"
-          },
-          "data": {
-            "$ref": "#/components/schemas/PagedResultOfRentalDto"
-          },
-          "message": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "ApiResponseOfPagedResultOfStationDto": {
-        "type": "object",
-        "properties": {
-          "isSuccess": {
-            "type": "boolean"
-          },
-          "data": {
-            "$ref": "#/components/schemas/PagedResultOfStationDto"
-          },
-          "message": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "ApiResponseOfPagedResultOfVehicleDto": {
-        "type": "object",
-        "properties": {
-          "isSuccess": {
-            "type": "boolean"
-          },
-          "data": {
-            "$ref": "#/components/schemas/PagedResultOfVehicleDto"
-          },
-          "message": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "ApiResponseOfRentalDetailsDto": {
-        "type": "object",
-        "properties": {
-          "isSuccess": {
-            "type": "boolean"
-          },
-          "data": {
-            "$ref": "#/components/schemas/RentalDetailsDto"
-          },
-          "message": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "ApiResponseOfRenterProfileDto": {
-        "type": "object",
-        "properties": {
-          "isSuccess": {
-            "type": "boolean"
-          },
-          "data": {
-            "$ref": "#/components/schemas/RenterProfileDto"
-          },
-          "message": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "ApiResponseOfStationDetailsDto": {
-        "type": "object",
-        "properties": {
-          "isSuccess": {
-            "type": "boolean"
-          },
-          "data": {
-            "$ref": "#/components/schemas/StationDetailsDto"
-          },
-          "message": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "ApiResponseOfUserInfoDto": {
-        "type": "object",
-        "properties": {
-          "isSuccess": {
-            "type": "boolean"
-          },
-          "data": {
-            "$ref": "#/components/schemas/UserInfoDto"
-          },
-          "message": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "ApiResponseOfVehicleDetailsDto": {
-        "type": "object",
-        "properties": {
-          "isSuccess": {
-            "type": "boolean"
-          },
-          "data": {
-            "$ref": "#/components/schemas/VehicleDetailsDto"
-          },
-          "message": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "ApiResponseOfVnPayPaymentResponseDto": {
-        "type": "object",
-        "properties": {
-          "isSuccess": {
-            "type": "boolean"
-          },
-          "data": {
-            "$ref": "#/components/schemas/VnPayPaymentResponseDto"
-          },
-          "message": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "ApiResponseOfVnPayQueryResponseDto": {
-        "type": "object",
-        "properties": {
-          "isSuccess": {
-            "type": "boolean"
-          },
-          "data": {
-            "$ref": "#/components/schemas/VnPayQueryResponseDto"
-          },
-          "message": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "ApiResponseOfVnPayRefundResponseDto": {
-        "type": "object",
-        "properties": {
-          "isSuccess": {
-            "type": "boolean"
-          },
-          "data": {
-            "$ref": "#/components/schemas/VnPayRefundResponseDto"
-          },
-          "message": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "ApiResponseOfVnPayReturnDto": {
-        "type": "object",
-        "properties": {
-          "isSuccess": {
-            "type": "boolean"
-          },
-          "data": {
-            "$ref": "#/components/schemas/VnPayReturnDto"
-          },
-          "message": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "AuthDto": {
-        "type": "object",
-        "properties": {
-          "accessToken": {
-            "type": "string"
-          },
-          "accessTokenExpiration": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "refreshToken": {
-            "type": "string"
-          },
-          "refreshTokenExpiration": {
-            "type": "string",
-            "format": "date-time"
-          }
         },
-        "nullable": true
+        "additionalProperties": false
       },
       "BookingBriefDto": {
         "type": "object",
@@ -2302,7 +1856,8 @@
             "type": "string",
             "format": "uuid"
           }
-        }
+        },
+        "additionalProperties": false
       },
       "BookingDetailsDto": {
         "type": "object",
@@ -2351,13 +1906,88 @@
             "type": "string",
             "nullable": true
           }
-        }
+        },
+        "additionalProperties": false
+      },
+      "BookingDetailsDtoListApiResponse": {
+        "type": "object",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BookingDetailsDto"
+            },
+            "nullable": true
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "BookingDetailsDtoPagedResult": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BookingDetailsDto"
+            },
+            "nullable": true
+          },
+          "total": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "BookingDetailsDtoPagedResultApiResponse": {
+        "type": "object",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/BookingDetailsDtoPagedResult"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
       },
       "BookingStatus": {
-        "type": "integer"
+        "enum": [
+          "Pending_Verification",
+          "Verified",
+          "Cancelled"
+        ],
+        "type": "string",
+        "description": "Possible values: Pending_Verification, Verified, Cancelled."
       },
       "BookingVerificationStatus": {
-        "type": "integer"
+        "enum": [
+          "Pending",
+          "Approved",
+          "Rejected_Mismatch",
+          "Rejected_Other"
+        ],
+        "type": "string",
+        "description": "Possible values: Pending, Approved, Rejected_Mismatch, Rejected_Other."
       },
       "CancelCheckinRequest": {
         "type": "object",
@@ -2367,29 +1997,36 @@
             "format": "uuid"
           },
           "cancelReason": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "cancelCheckinCode": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "renterBankAccount": {
             "$ref": "#/components/schemas/RenterBankAccountDto"
           }
-        }
+        },
+        "additionalProperties": false
       },
       "ChangePasswordRequest": {
         "type": "object",
         "properties": {
           "oldPassword": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "newPassword": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "confirmPassword": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
-        }
+        },
+        "additionalProperties": false
       },
       "CheckinBookingRequest": {
         "type": "object",
@@ -2409,7 +2046,8 @@
             "type": "string",
             "nullable": true
           }
-        }
+        },
+        "additionalProperties": false
       },
       "ContractDetailsDto": {
         "type": "object",
@@ -2442,10 +2080,12 @@
             "nullable": true
           },
           "documentUrl": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "documentHash": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "auditTrailUrl": {
             "type": "string",
@@ -2456,7 +2096,23 @@
             "format": "date-time"
           }
         },
-        "nullable": true
+        "additionalProperties": false
+      },
+      "ContractDetailsDtoApiResponse": {
+        "type": "object",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ContractDetailsDto"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
       },
       "ContractDto": {
         "type": "object",
@@ -2476,10 +2132,19 @@
             "type": "string",
             "format": "date-time"
           }
-        }
+        },
+        "additionalProperties": false
       },
       "ContractStatus": {
-        "type": "integer"
+        "enum": [
+          "Issued",
+          "Partially_Signed",
+          "Signed",
+          "Voided",
+          "Expired"
+        ],
+        "type": "string",
+        "description": "Possible values: Issued, Partially_Signed, Signed, Voided, Expired."
       },
       "CreateBookingRequest": {
         "type": "object",
@@ -2501,7 +2166,8 @@
             "format": "date-time"
           },
           "depositDescription": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "depositAmount": {
             "type": "number",
@@ -2525,7 +2191,8 @@
             "type": "string",
             "nullable": true
           }
-        }
+        },
+        "additionalProperties": false
       },
       "CreateContractRequest": {
         "type": "object",
@@ -2537,7 +2204,8 @@
           "provider": {
             "$ref": "#/components/schemas/EsignProvider"
           }
-        }
+        },
+        "additionalProperties": false
       },
       "CreateRentalRequest": {
         "type": "object",
@@ -2558,7 +2226,8 @@
             "type": "string",
             "format": "date-time"
           }
-        }
+        },
+        "additionalProperties": false
       },
       "CreateSignaturePayloadDto": {
         "type": "object",
@@ -2568,10 +2237,12 @@
             "format": "uuid"
           },
           "documentUrl": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "documentHash": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "role": {
             "$ref": "#/components/schemas/PartyRole"
@@ -2586,10 +2257,16 @@
             "type": "string",
             "format": "date-time"
           }
-        }
+        },
+        "additionalProperties": false
       },
       "Currency": {
-        "type": "integer"
+        "enum": [
+          "USD",
+          "VND"
+        ],
+        "type": "string",
+        "description": "Possible values: USD, VND."
       },
       "DepositFeeDto": {
         "type": "object",
@@ -2598,7 +2275,8 @@
             "$ref": "#/components/schemas/FeeType"
           },
           "description": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "amount": {
             "type": "number",
@@ -2623,39 +2301,23 @@
             "nullable": true
           }
         },
-        "nullable": true
+        "additionalProperties": false
       },
-      "ErrorDetail": {
+      "DepositFeeDtoApiResponse": {
         "type": "object",
         "properties": {
-          "errorMessage": {
-            "type": "string",
-            "nullable": true
+          "isSuccess": {
+            "type": "boolean"
           },
-          "errorCode": {
-            "type": "string",
-            "nullable": true
+          "data": {
+            "$ref": "#/components/schemas/DepositFeeDto"
           },
-          "errorField": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "ErrorMessage": {
-        "type": "object",
-        "properties": {
           "message": {
             "type": "string",
             "nullable": true
-          },
-          "errorDetails": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ErrorDetail"
-            }
           }
-        }
+        },
+        "additionalProperties": false
       },
       "ESignPayloadDto": {
         "type": "object",
@@ -2701,169 +2363,147 @@
             "nullable": true
           }
         },
-        "nullable": true
+        "additionalProperties": false
+      },
+      "ErrorDetail": {
+        "type": "object",
+        "properties": {
+          "errorMessage": {
+            "type": "string",
+            "nullable": true
+          },
+          "errorCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "errorField": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ErrorMessage": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "errorDetails": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorDetail"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
       },
       "EsignProvider": {
-        "type": "integer"
+        "enum": [
+          "Native",
+          "Docusign",
+          "Adobesign",
+          "Signnow",
+          "Other"
+        ],
+        "type": "string",
+        "description": "Possible values: Native, Docusign, Adobesign, Signnow, Other."
       },
       "FeeType": {
-        "type": "integer"
+        "enum": [
+          "Deposit",
+          "Rental_Charge",
+          "Surcharge",
+          "Damage",
+          "Other"
+        ],
+        "type": "string",
+        "description": "Possible values: Deposit, Rental_Charge, Surcharge, Damage, Other."
+      },
+      "GuidApiResponse": {
+        "type": "object",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean"
+          },
+          "data": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
       },
       "InvokeTokenRequest": {
         "type": "object",
         "properties": {
           "refreshToken": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
-        }
+        },
+        "additionalProperties": false
       },
       "KycType": {
-        "type": "integer"
+        "enum": [
+          "National_ID",
+          "Driver_License",
+          "Passport",
+          "Other"
+        ],
+        "type": "string",
+        "description": "Possible values: National_ID, Driver_License, Passport, Other."
       },
       "LoginRequest": {
         "type": "object",
         "properties": {
           "email": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "password": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
-        }
+        },
+        "additionalProperties": false
       },
       "LogoutRequest": {
         "type": "object",
         "properties": {
           "refreshToken": {
-            "type": "string"
-          }
-        }
-      },
-      "PagedResultOfBookingDetailsDto": {
-        "required": [
-          "items",
-          "total",
-          "page",
-          "pageSize"
-        ],
-        "type": "object",
-        "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BookingDetailsDto"
-            }
-          },
-          "total": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "page": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32"
+            "type": "string",
+            "nullable": true
           }
         },
-        "nullable": true
-      },
-      "PagedResultOfRentalDto": {
-        "required": [
-          "items",
-          "total",
-          "page",
-          "pageSize"
-        ],
-        "type": "object",
-        "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RentalDto"
-            }
-          },
-          "total": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "page": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "nullable": true
-      },
-      "PagedResultOfStationDto": {
-        "required": [
-          "items",
-          "total",
-          "page",
-          "pageSize"
-        ],
-        "type": "object",
-        "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/StationDto"
-            }
-          },
-          "total": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "page": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "nullable": true
-      },
-      "PagedResultOfVehicleDto": {
-        "required": [
-          "items",
-          "total",
-          "page",
-          "pageSize"
-        ],
-        "type": "object",
-        "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/VehicleDto"
-            }
-          },
-          "total": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "page": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "nullable": true
+        "additionalProperties": false
       },
       "PartyRole": {
-        "type": "integer"
+        "enum": [
+          "Renter",
+          "Staff",
+          "Other"
+        ],
+        "type": "string",
+        "description": "Possible values: Renter, Staff, Other."
       },
       "PaymentMethod": {
-        "type": "integer"
+        "enum": [
+          "Unknown",
+          "Cash",
+          "Card",
+          "Ewallet",
+          "Bank_Transfer",
+          "VNPay_QR",
+          "International_Card"
+        ],
+        "type": "string",
+        "description": "Possible values: Unknown, Cash, Card, Ewallet, Bank_Transfer, VNPay_QR, International_Card."
       },
       "ReceiveInspectionRequest": {
         "type": "object",
@@ -2885,9 +2525,11 @@
             "format": "uuid"
           },
           "url": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
-        }
+        },
+        "additionalProperties": false
       },
       "ReceiveVehicleRequest": {
         "type": "object",
@@ -2904,24 +2546,30 @@
             "type": "string",
             "format": "uuid"
           }
-        }
+        },
+        "additionalProperties": false
       },
       "RegisterRequest": {
         "type": "object",
         "properties": {
           "userName": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "email": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "password": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "confirmPassword": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
-        }
+        },
+        "additionalProperties": false
       },
       "RentalDetailsDto": {
         "type": "object",
@@ -2971,62 +2619,47 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/ContractDto"
-            }
+            },
+            "nullable": true
           }
         },
-        "nullable": true
+        "additionalProperties": false
       },
-      "RentalDetailsDto2": {
+      "RentalDetailsDtoApiResponse": {
         "type": "object",
         "properties": {
-          "rentalId": {
-            "type": "string",
-            "format": "uuid"
+          "isSuccess": {
+            "type": "boolean"
           },
-          "bookingId": {
-            "type": "string",
-            "format": "uuid"
+          "data": {
+            "$ref": "#/components/schemas/RentalDetailsDto"
           },
-          "vehicleId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "startTime": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "endTime": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "status": {
-            "$ref": "#/components/schemas/RentalStatus"
-          },
-          "score": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "comment": {
+          "message": {
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RentalDetailsDtoListApiResponse": {
+        "type": "object",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean"
           },
-          "ratedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "booking": {
-            "$ref": "#/components/schemas/BookingBriefDto"
-          },
-          "vehicle": {
-            "$ref": "#/components/schemas/VehicleDto"
-          },
-          "contracts": {
+          "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ContractDto"
-            }
+              "$ref": "#/components/schemas/RentalDetailsDto"
+            },
+            "nullable": true
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
           }
-        }
+        },
+        "additionalProperties": false
       },
       "RentalDto": {
         "type": "object",
@@ -3066,25 +2699,78 @@
             "type": "string",
             "format": "date-time"
           }
-        }
+        },
+        "additionalProperties": false
+      },
+      "RentalDtoPagedResult": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RentalDto"
+            },
+            "nullable": true
+          },
+          "total": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RentalDtoPagedResultApiResponse": {
+        "type": "object",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/RentalDtoPagedResult"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
       },
       "RentalStatus": {
-        "type": "integer"
+        "enum": [
+          "Reserved",
+          "In_Progress",
+          "Completed",
+          "Late",
+          "Cancelled"
+        ],
+        "type": "string",
+        "description": "Possible values: Reserved, In_Progress, Completed, Late, Cancelled."
       },
       "RenterBankAccountDto": {
         "type": "object",
         "properties": {
           "bankName": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "accountNumber": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "accountHolderName": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
         },
-        "nullable": true
+        "additionalProperties": false
       },
       "RenterProfileDto": {
         "type": "object",
@@ -3111,33 +2797,43 @@
             "format": "int32"
           }
         },
-        "nullable": true
+        "additionalProperties": false
       },
-      "RenterProfileDto2": {
+      "RenterProfileDtoApiResponse": {
         "type": "object",
         "properties": {
-          "renterId": {
-            "type": "string",
-            "format": "uuid"
+          "isSuccess": {
+            "type": "boolean"
           },
-          "driverLicenseNo": {
-            "type": "string",
-            "nullable": true
+          "data": {
+            "$ref": "#/components/schemas/RenterProfileDto"
           },
-          "dateOfBirth": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "address": {
+          "message": {
             "type": "string",
             "nullable": true
-          },
-          "riskScore": {
-            "type": "integer",
-            "format": "int32"
           }
-        }
+        },
+        "additionalProperties": false
+      },
+      "RenterProfileDtoListApiResponse": {
+        "type": "object",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RenterProfileDto"
+            },
+            "nullable": true
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
       },
       "RequestCancelCheckinRequest": {
         "type": "object",
@@ -3146,13 +2842,8 @@
             "type": "string",
             "format": "uuid"
           }
-        }
-      },
-      "SignatureEvent": {
-        "type": "integer"
-      },
-      "SignatureType": {
-        "type": "integer"
+        },
+        "additionalProperties": false
       },
       "SignContractRequest": {
         "type": "object",
@@ -3163,7 +2854,26 @@
           "eSignPayload": {
             "$ref": "#/components/schemas/ESignPayloadDto"
           }
-        }
+        },
+        "additionalProperties": false
+      },
+      "SignatureEvent": {
+        "enum": [
+          "Pickup",
+          "Dropoff"
+        ],
+        "type": "string",
+        "description": "Possible values: Pickup, Dropoff."
+      },
+      "SignatureType": {
+        "enum": [
+          "Drawn",
+          "Typed",
+          "Digital_Cert",
+          "OnPaper"
+        ],
+        "type": "string",
+        "description": "Possible values: Drawn, Typed, Digital_Cert, OnPaper."
       },
       "StationDetailsDto": {
         "type": "object",
@@ -3173,10 +2883,12 @@
             "format": "uuid"
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "address": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "capacity": {
             "type": "integer",
@@ -3186,10 +2898,27 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/VehicleDto"
-            }
+            },
+            "nullable": true
           }
         },
-        "nullable": true
+        "additionalProperties": false
+      },
+      "StationDetailsDtoApiResponse": {
+        "type": "object",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/StationDetailsDto"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
       },
       "StationDto": {
         "type": "object",
@@ -3199,10 +2928,12 @@
             "format": "uuid"
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "address": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "latitude": {
             "type": "number",
@@ -3218,7 +2949,49 @@
             "type": "integer",
             "format": "int32"
           }
-        }
+        },
+        "additionalProperties": false
+      },
+      "StationDtoPagedResult": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StationDto"
+            },
+            "nullable": true
+          },
+          "total": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "StationDtoPagedResultApiResponse": {
+        "type": "object",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/StationDtoPagedResult"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
       },
       "UpdateProfileRequest": {
         "type": "object",
@@ -3235,7 +3008,8 @@
             "type": "string",
             "nullable": true
           }
-        }
+        },
+        "additionalProperties": false
       },
       "UploadKycRequest": {
         "type": "object",
@@ -3244,9 +3018,11 @@
             "$ref": "#/components/schemas/KycType"
           },
           "documentNumber": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
-        }
+        },
+        "additionalProperties": false
       },
       "UserInfoDto": {
         "type": "object",
@@ -3274,10 +3050,32 @@
             "type": "boolean"
           }
         },
-        "nullable": true
+        "additionalProperties": false
+      },
+      "UserInfoDtoApiResponse": {
+        "type": "object",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/UserInfoDto"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
       },
       "VehicleAtStationStatus": {
-        "type": "integer"
+        "enum": [
+          "Maintenance",
+          "Available",
+          "Booked"
+        ],
+        "type": "string",
+        "description": "Possible values: Maintenance, Available, Booked."
       },
       "VehicleDetailsDto": {
         "type": "object",
@@ -3287,10 +3085,12 @@
             "format": "uuid"
           },
           "make": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "model": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "modelYear": {
             "type": "integer",
@@ -3325,10 +3125,27 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/BookingBriefDto"
-            }
+            },
+            "nullable": true
           }
         },
-        "nullable": true
+        "additionalProperties": false
+      },
+      "VehicleDetailsDtoApiResponse": {
+        "type": "object",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/VehicleDetailsDto"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
       },
       "VehicleDto": {
         "type": "object",
@@ -3361,55 +3178,108 @@
           "status": {
             "$ref": "#/components/schemas/VehicleAtStationStatus"
           }
-        }
+        },
+        "additionalProperties": false
+      },
+      "VehicleDtoPagedResult": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VehicleDto"
+            },
+            "nullable": true
+          },
+          "total": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "VehicleDtoPagedResultApiResponse": {
+        "type": "object",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/VehicleDtoPagedResult"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
       },
       "VnPayIpnResponseDto": {
         "type": "object",
         "properties": {
           "rspCode": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "message": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
-        }
+        },
+        "additionalProperties": false
       },
       "VnPayPaymentRequestDto": {
         "type": "object",
         "properties": {
           "orderId": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "amount": {
             "type": "number",
             "format": "double"
           },
           "orderDescription": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "bankCode": {
             "type": "string",
             "nullable": true
           },
           "locale": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "orderType": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "ipAddress": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
-        }
+        },
+        "additionalProperties": false
       },
       "VnPayPaymentResponseDto": {
         "type": "object",
         "properties": {
           "paymentUrl": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "orderId": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "amount": {
             "type": "number",
@@ -3420,120 +3290,194 @@
             "format": "date-time"
           }
         },
-        "nullable": true
+        "additionalProperties": false
+      },
+      "VnPayPaymentResponseDtoApiResponse": {
+        "type": "object",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/VnPayPaymentResponseDto"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
       },
       "VnPayQueryRequestDto": {
         "type": "object",
         "properties": {
           "orderId": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "transactionDate": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "ipAddress": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
-        }
+        },
+        "additionalProperties": false
       },
       "VnPayQueryResponseDto": {
         "type": "object",
         "properties": {
           "responseId": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "command": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "responseCode": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "message": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "txnRef": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "amount": {
             "type": "integer",
             "format": "int64"
           },
           "bankCode": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "payDate": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "transactionNo": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "transactionStatus": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
         },
-        "nullable": true
+        "additionalProperties": false
+      },
+      "VnPayQueryResponseDtoApiResponse": {
+        "type": "object",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/VnPayQueryResponseDto"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
       },
       "VnPayRefundRequestDto": {
         "type": "object",
         "properties": {
           "orderId": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "transactionDate": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "amount": {
             "type": "number",
             "format": "double"
           },
           "transactionType": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "transactionNo": {
             "type": "string",
             "nullable": true
           },
           "createdBy": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "ipAddress": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
-        }
+        },
+        "additionalProperties": false
       },
       "VnPayRefundResponseDto": {
         "type": "object",
         "properties": {
           "responseId": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "command": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "responseCode": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "message": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "txnRef": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "amount": {
             "type": "integer",
             "format": "int64"
           },
           "transactionNo": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
         },
-        "nullable": true
+        "additionalProperties": false
+      },
+      "VnPayRefundResponseDtoApiResponse": {
+        "type": "object",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/VnPayRefundResponseDto"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
       },
       "VnPayReturnDto": {
         "type": "object",
         "properties": {
           "orderId": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "transactionId": {
             "type": "integer",
@@ -3544,19 +3488,24 @@
             "format": "double"
           },
           "bankCode": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "bankTranNo": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "cardType": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "responseCode": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "transactionStatus": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "payDate": {
             "type": "string",
@@ -3569,39 +3518,41 @@
             "type": "boolean"
           },
           "orderInfo": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
         },
-        "nullable": true
+        "additionalProperties": false
+      },
+      "VnPayReturnDtoApiResponse": {
+        "type": "object",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/VnPayReturnDto"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
       }
     },
     "securitySchemes": {
       "Bearer": {
         "type": "http",
-        "description": "Paste your JWT here. Example: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+        "description": "JWT Authorization header using the Bearer scheme. Example: \"Bearer {token}\"",
         "scheme": "bearer",
         "bearerFormat": "JWT"
       }
     }
   },
-  "tags": [
+  "security": [
     {
-      "name": "Account"
-    },
-    {
-      "name": "Booking"
-    },
-    {
-      "name": "Payment"
-    },
-    {
-      "name": "Rental"
-    },
-    {
-      "name": "Staff"
-    },
-    {
-      "name": "Stations"
+      "Bearer": [ ]
     }
   ]
 }

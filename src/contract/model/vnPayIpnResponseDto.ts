@@ -9,6 +9,6 @@
  */
 
 export interface VnPayIpnResponseDto {
-  rspCode?: string;
-  message?: string;
+  rspCode?: string | null;
+  message?: string | null;
 }

@@ -1,13 +1,14 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
 import {
-  ApiResponseOfPagedResultOfStationDto,
-  ApiResponseOfStationDetailsDto,
-  ApiResponseOfVehicleDetailsDto,
   BookingService,
   StationDetailsDto,
+  StationDetailsDtoApiResponse,
+  StationDto,
+  StationDtoPagedResultApiResponse,
   StationsService,
   VehicleDetailsDto,
+  VehicleDetailsDtoApiResponse,
 } from '../../../contract';
 import { Station } from './station.type';
 
@@ -24,10 +25,10 @@ export class StationService {
    * Getter & Setter for the stations signal
    */
   get stations(): Station[] {
-    return this._stations();
+    return [...this._stations()];
   }
   set stations(stations: Station[]) {
-    this._stations.set(stations);
+    this._stations.set([...stations]);
   }
 
   /**
@@ -51,7 +52,9 @@ export class StationService {
   getVehicleDetails(vehicleId: string): Observable<VehicleDetailsDto> {
     return this._bookingService
       .apiBookingVehiclesVehicleIdGet(vehicleId)
-      .pipe(map((response: ApiResponseOfVehicleDetailsDto) => response.data ?? {}));
+      .pipe(
+        map((response: VehicleDetailsDtoApiResponse) => response.data ?? ({} as VehicleDetailsDto)),
+      );
   }
 
   /**
@@ -60,7 +63,9 @@ export class StationService {
   getStationById(id: string): Observable<StationDetailsDto> {
     return this._stationsService
       .apiStationsStationIdGet(id)
-      .pipe(map((response: ApiResponseOfStationDetailsDto) => response.data ?? {}));
+      .pipe(
+        map((response: StationDetailsDtoApiResponse) => response.data ?? ({} as StationDetailsDto)),
+      );
   }
 
   /**
@@ -68,62 +73,73 @@ export class StationService {
    */
   getStations(): Observable<Station[]> {
     return this._stationsService.apiStationsGet().pipe(
-      switchMap((response: ApiResponseOfPagedResultOfStationDto) => {
+      switchMap((response: StationDtoPagedResultApiResponse) => {
         // Update pagination signals
         this._total.set(response.data?.total ?? 0);
         this._page.set(response.data?.page ?? 1);
         this._pageSize.set(response.data?.pageSize ?? 10);
 
-        const stationIds = (response.data?.items ?? []).map((item) => item.id ?? '');
+        const stationItems = response.data?.items ?? [];
+        const stationIds = stationItems
+          .map((item: StationDto | null) => item?.id ?? '')
+          .filter((id): id is string => id.length > 0);
 
-        // Get detailed info for all stations in parallel
-        const stationDetailsRequests = stationIds.map((id) => this.getStationById(id));
+        if (stationIds.length === 0) {
+          const emptyStations: Station[] = [];
+          this._stations.set(emptyStations);
+          return of(emptyStations);
+        }
+
+        const stationDetailsRequests = stationIds.map((id: string) => this.getStationById(id));
 
         return forkJoin(stationDetailsRequests).pipe(
-          switchMap((stationDetails: StationDetailsDto[]) => {
-            // For each station, get vehicle details in parallel
-            const vehicleDetailRequests = stationDetails.flatMap((station) =>
-              (station.vehicles ?? []).map((vehicle) =>
-                this.getVehicleDetails(vehicle.vehicleId ?? ''),
-              ),
-            );
-
-            if (vehicleDetailRequests.length === 0) {
-              // No vehicles to fetch, return stations with empty vehicle arrays
-              const stations = stationDetails.map((station: StationDetailsDto) => ({
-                id: station.id ?? '',
-                name: station.name ?? '',
-                address: station.address ?? '',
-                capacity: station.capacity ?? 0,
-                vehicles: [],
-              }));
-              return of(stations).pipe(tap((stations: Station[]) => this._stations.set(stations)));
+          switchMap((stationDetailsList: StationDetailsDto[]) => {
+            if (stationDetailsList.length === 0) {
+              const emptyStations: Station[] = [];
+              this._stations.set(emptyStations);
+              return of(emptyStations);
             }
 
-            return forkJoin(vehicleDetailRequests).pipe(
-              map((vehicleDetails: VehicleDetailsDto[]) => {
-                let vehicleIndex = 0;
+            const stationsWithVehicles$ = stationDetailsList.map((stationDetail) => {
+              const vehicleIds = (stationDetail.vehicles ?? [])
+                .map((vehicle) => vehicle.vehicleId ?? '')
+                .filter((vehicleId): vehicleId is string => vehicleId.length > 0);
 
-                return stationDetails.map((station: StationDetailsDto) => {
-                  const stationVehicles = station.vehicles ?? [];
-                  const stationVehicleDetails = stationVehicles.map(
-                    () => vehicleDetails[vehicleIndex++],
-                  );
+              if (vehicleIds.length === 0) {
+                const station = this._mapStationWithVehicles(stationDetail, []);
+                return of(station);
+              }
 
-                  return {
-                    id: station.id ?? '',
-                    name: station.name ?? '',
-                    address: station.address ?? '',
-                    capacity: station.capacity ?? 0,
-                    vehicles: stationVehicleDetails,
-                  };
-                });
-              }),
+              const vehicleDetailRequests = vehicleIds.map((vehicleId) =>
+                this.getVehicleDetails(vehicleId),
+              );
+
+              return forkJoin(vehicleDetailRequests).pipe(
+                map((vehicleDetails: VehicleDetailsDto[]) =>
+                  this._mapStationWithVehicles(stationDetail, vehicleDetails),
+                ),
+              );
+            });
+
+            return forkJoin(stationsWithVehicles$).pipe(
               tap((stations: Station[]) => this._stations.set(stations)),
             );
           }),
         );
       }),
     );
+  }
+
+  private _mapStationWithVehicles(
+    stationDetail: StationDetailsDto,
+    vehicleDetails: VehicleDetailsDto[],
+  ): Station {
+    return {
+      id: stationDetail.id ?? '',
+      name: stationDetail.name ?? '',
+      address: stationDetail.address ?? '',
+      capacity: stationDetail.capacity ?? 0,
+      vehicles: [...vehicleDetails],
+    };
   }
 }

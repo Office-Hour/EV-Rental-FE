@@ -7,6 +7,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { RentalStatus } from './rentalStatus';
 
 export interface RentalDto {
   rentalId?: string;
@@ -14,8 +15,9 @@ export interface RentalDto {
   vehicleId?: string;
   startTime?: string;
   endTime?: string;
-  status?: number;
+  status?: RentalStatus;
   score?: number;
   comment?: string | null;
   ratedAt?: string;
 }
+export namespace RentalDto {}

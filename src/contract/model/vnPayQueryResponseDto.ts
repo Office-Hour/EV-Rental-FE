@@ -9,14 +9,14 @@
  */
 
 export interface VnPayQueryResponseDto {
-  responseId?: string;
-  command?: string;
-  responseCode?: string;
-  message?: string;
-  txnRef?: string;
+  responseId?: string | null;
+  command?: string | null;
+  responseCode?: string | null;
+  message?: string | null;
+  txnRef?: string | null;
   amount?: number;
-  bankCode?: string;
-  payDate?: string;
-  transactionNo?: string;
-  transactionStatus?: string;
+  bankCode?: string | null;
+  payDate?: string | null;
+  transactionNo?: string | null;
+  transactionStatus?: string | null;
 }

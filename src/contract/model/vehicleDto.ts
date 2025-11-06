@@ -7,6 +7,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { VehicleAtStationStatus } from './vehicleAtStationStatus';
 
 export interface VehicleDto {
   vehicleAtStationId?: string;
@@ -15,5 +16,6 @@ export interface VehicleDto {
   startTime?: string;
   endTime?: string | null;
   currentBatteryCapacityKwh?: number;
-  status?: number;
+  status?: VehicleAtStationStatus;
 }
+export namespace VehicleDto {}

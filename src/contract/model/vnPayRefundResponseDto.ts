@@ -9,11 +9,11 @@
  */
 
 export interface VnPayRefundResponseDto {
-  responseId?: string;
-  command?: string;
-  responseCode?: string;
-  message?: string;
-  txnRef?: string;
+  responseId?: string | null;
+  command?: string | null;
+  responseCode?: string | null;
+  message?: string | null;
+  txnRef?: string | null;
   amount?: number;
-  transactionNo?: string;
+  transactionNo?: string | null;
 }

@@ -11,8 +11,8 @@ import { VehicleDto } from './vehicleDto';
 
 export interface StationDetailsDto {
   id?: string;
-  name?: string;
-  address?: string;
+  name?: string | null;
+  address?: string | null;
   capacity?: number;
-  vehicles?: Array<VehicleDto>;
+  vehicles?: Array<VehicleDto> | null;
 }

@@ -25,9 +25,7 @@ import { Observable } from 'rxjs';
 // @ts-ignore
 import { ApiResponse } from '../model/apiResponse';
 // @ts-ignore
-import { ApiResponseOfAuthDto } from '../model/apiResponseOfAuthDto';
-// @ts-ignore
-import { ApiResponseOfUserInfoDto } from '../model/apiResponseOfUserInfoDto';
+import { AuthDtoApiResponse } from '../model/authDtoApiResponse';
 // @ts-ignore
 import { ChangePasswordRequest } from '../model/changePasswordRequest';
 // @ts-ignore
@@ -42,6 +40,8 @@ import { LogoutRequest } from '../model/logoutRequest';
 import { RegisterRequest } from '../model/registerRequest';
 // @ts-ignore
 import { UpdateProfileRequest } from '../model/updateProfileRequest';
+// @ts-ignore
+import { UserInfoDtoApiResponse } from '../model/userInfoDtoApiResponse';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS } from '../variables';
@@ -67,7 +67,7 @@ export class AccountService extends BaseService {
    * @param reportProgress flag to report request and response progress.
    */
   public apiAccountChangePasswordPost(
-    changePasswordRequest: ChangePasswordRequest,
+    changePasswordRequest?: ChangePasswordRequest,
     observe?: 'body',
     reportProgress?: boolean,
     options?: {
@@ -77,7 +77,7 @@ export class AccountService extends BaseService {
     },
   ): Observable<ApiResponse>;
   public apiAccountChangePasswordPost(
-    changePasswordRequest: ChangePasswordRequest,
+    changePasswordRequest?: ChangePasswordRequest,
     observe?: 'response',
     reportProgress?: boolean,
     options?: {
@@ -87,7 +87,7 @@ export class AccountService extends BaseService {
     },
   ): Observable<HttpResponse<ApiResponse>>;
   public apiAccountChangePasswordPost(
-    changePasswordRequest: ChangePasswordRequest,
+    changePasswordRequest?: ChangePasswordRequest,
     observe?: 'events',
     reportProgress?: boolean,
     options?: {
@@ -97,7 +97,7 @@ export class AccountService extends BaseService {
     },
   ): Observable<HttpEvent<ApiResponse>>;
   public apiAccountChangePasswordPost(
-    changePasswordRequest: ChangePasswordRequest,
+    changePasswordRequest?: ChangePasswordRequest,
     observe: any = 'body',
     reportProgress: boolean = false,
     options?: {
@@ -106,12 +106,6 @@ export class AccountService extends BaseService {
       transferCache?: boolean;
     },
   ): Observable<any> {
-    if (changePasswordRequest === null || changePasswordRequest === undefined) {
-      throw new Error(
-        'Required parameter changePasswordRequest was null or undefined when calling apiAccountChangePasswordPost.',
-      );
-    }
-
     let localVarHeaders = this.defaultHeaders;
 
     // authentication (Bearer) required
@@ -172,7 +166,7 @@ export class AccountService extends BaseService {
    * @param reportProgress flag to report request and response progress.
    */
   public apiAccountInvokeTokenPost(
-    invokeTokenRequest: InvokeTokenRequest,
+    invokeTokenRequest?: InvokeTokenRequest,
     observe?: 'body',
     reportProgress?: boolean,
     options?: {
@@ -180,9 +174,9 @@ export class AccountService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<ApiResponseOfAuthDto>;
+  ): Observable<AuthDtoApiResponse>;
   public apiAccountInvokeTokenPost(
-    invokeTokenRequest: InvokeTokenRequest,
+    invokeTokenRequest?: InvokeTokenRequest,
     observe?: 'response',
     reportProgress?: boolean,
     options?: {
@@ -190,9 +184,9 @@ export class AccountService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpResponse<ApiResponseOfAuthDto>>;
+  ): Observable<HttpResponse<AuthDtoApiResponse>>;
   public apiAccountInvokeTokenPost(
-    invokeTokenRequest: InvokeTokenRequest,
+    invokeTokenRequest?: InvokeTokenRequest,
     observe?: 'events',
     reportProgress?: boolean,
     options?: {
@@ -200,9 +194,9 @@ export class AccountService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpEvent<ApiResponseOfAuthDto>>;
+  ): Observable<HttpEvent<AuthDtoApiResponse>>;
   public apiAccountInvokeTokenPost(
-    invokeTokenRequest: InvokeTokenRequest,
+    invokeTokenRequest?: InvokeTokenRequest,
     observe: any = 'body',
     reportProgress: boolean = false,
     options?: {
@@ -211,13 +205,15 @@ export class AccountService extends BaseService {
       transferCache?: boolean;
     },
   ): Observable<any> {
-    if (invokeTokenRequest === null || invokeTokenRequest === undefined) {
-      throw new Error(
-        'Required parameter invokeTokenRequest was null or undefined when calling apiAccountInvokeTokenPost.',
-      );
-    }
-
     let localVarHeaders = this.defaultHeaders;
+
+    // authentication (Bearer) required
+    localVarHeaders = this.configuration.addCredentialToHeaders(
+      'Bearer',
+      'Authorization',
+      localVarHeaders,
+      'Bearer ',
+    );
 
     const localVarHttpHeaderAcceptSelected: string | undefined =
       options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept(['application/json']);
@@ -250,7 +246,7 @@ export class AccountService extends BaseService {
 
     let localVarPath = `/api/Account/invoke-token`;
     const { basePath, withCredentials } = this.configuration;
-    return this.httpClient.request<ApiResponseOfAuthDto>('post', `${basePath}${localVarPath}`, {
+    return this.httpClient.request<AuthDtoApiResponse>('post', `${basePath}${localVarPath}`, {
       context: localVarHttpContext,
       body: invokeTokenRequest,
       responseType: <any>responseType_,
@@ -269,7 +265,7 @@ export class AccountService extends BaseService {
    * @param reportProgress flag to report request and response progress.
    */
   public apiAccountLoginPost(
-    loginRequest: LoginRequest,
+    loginRequest?: LoginRequest,
     observe?: 'body',
     reportProgress?: boolean,
     options?: {
@@ -277,9 +273,9 @@ export class AccountService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<ApiResponseOfAuthDto>;
+  ): Observable<AuthDtoApiResponse>;
   public apiAccountLoginPost(
-    loginRequest: LoginRequest,
+    loginRequest?: LoginRequest,
     observe?: 'response',
     reportProgress?: boolean,
     options?: {
@@ -287,9 +283,9 @@ export class AccountService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpResponse<ApiResponseOfAuthDto>>;
+  ): Observable<HttpResponse<AuthDtoApiResponse>>;
   public apiAccountLoginPost(
-    loginRequest: LoginRequest,
+    loginRequest?: LoginRequest,
     observe?: 'events',
     reportProgress?: boolean,
     options?: {
@@ -297,9 +293,9 @@ export class AccountService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpEvent<ApiResponseOfAuthDto>>;
+  ): Observable<HttpEvent<AuthDtoApiResponse>>;
   public apiAccountLoginPost(
-    loginRequest: LoginRequest,
+    loginRequest?: LoginRequest,
     observe: any = 'body',
     reportProgress: boolean = false,
     options?: {
@@ -308,13 +304,15 @@ export class AccountService extends BaseService {
       transferCache?: boolean;
     },
   ): Observable<any> {
-    if (loginRequest === null || loginRequest === undefined) {
-      throw new Error(
-        'Required parameter loginRequest was null or undefined when calling apiAccountLoginPost.',
-      );
-    }
-
     let localVarHeaders = this.defaultHeaders;
+
+    // authentication (Bearer) required
+    localVarHeaders = this.configuration.addCredentialToHeaders(
+      'Bearer',
+      'Authorization',
+      localVarHeaders,
+      'Bearer ',
+    );
 
     const localVarHttpHeaderAcceptSelected: string | undefined =
       options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept(['application/json']);
@@ -347,7 +345,7 @@ export class AccountService extends BaseService {
 
     let localVarPath = `/api/Account/login`;
     const { basePath, withCredentials } = this.configuration;
-    return this.httpClient.request<ApiResponseOfAuthDto>('post', `${basePath}${localVarPath}`, {
+    return this.httpClient.request<AuthDtoApiResponse>('post', `${basePath}${localVarPath}`, {
       context: localVarHttpContext,
       body: loginRequest,
       responseType: <any>responseType_,
@@ -366,7 +364,7 @@ export class AccountService extends BaseService {
    * @param reportProgress flag to report request and response progress.
    */
   public apiAccountLogoutPost(
-    logoutRequest: LogoutRequest,
+    logoutRequest?: LogoutRequest,
     observe?: 'body',
     reportProgress?: boolean,
     options?: {
@@ -376,7 +374,7 @@ export class AccountService extends BaseService {
     },
   ): Observable<ApiResponse>;
   public apiAccountLogoutPost(
-    logoutRequest: LogoutRequest,
+    logoutRequest?: LogoutRequest,
     observe?: 'response',
     reportProgress?: boolean,
     options?: {
@@ -386,7 +384,7 @@ export class AccountService extends BaseService {
     },
   ): Observable<HttpResponse<ApiResponse>>;
   public apiAccountLogoutPost(
-    logoutRequest: LogoutRequest,
+    logoutRequest?: LogoutRequest,
     observe?: 'events',
     reportProgress?: boolean,
     options?: {
@@ -396,7 +394,7 @@ export class AccountService extends BaseService {
     },
   ): Observable<HttpEvent<ApiResponse>>;
   public apiAccountLogoutPost(
-    logoutRequest: LogoutRequest,
+    logoutRequest?: LogoutRequest,
     observe: any = 'body',
     reportProgress: boolean = false,
     options?: {
@@ -405,12 +403,6 @@ export class AccountService extends BaseService {
       transferCache?: boolean;
     },
   ): Observable<any> {
-    if (logoutRequest === null || logoutRequest === undefined) {
-      throw new Error(
-        'Required parameter logoutRequest was null or undefined when calling apiAccountLogoutPost.',
-      );
-    }
-
     let localVarHeaders = this.defaultHeaders;
 
     // authentication (Bearer) required
@@ -477,7 +469,7 @@ export class AccountService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<ApiResponseOfUserInfoDto>;
+  ): Observable<UserInfoDtoApiResponse>;
   public apiAccountProfileGet(
     observe?: 'response',
     reportProgress?: boolean,
@@ -486,7 +478,7 @@ export class AccountService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpResponse<ApiResponseOfUserInfoDto>>;
+  ): Observable<HttpResponse<UserInfoDtoApiResponse>>;
   public apiAccountProfileGet(
     observe?: 'events',
     reportProgress?: boolean,
@@ -495,7 +487,7 @@ export class AccountService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpEvent<ApiResponseOfUserInfoDto>>;
+  ): Observable<HttpEvent<UserInfoDtoApiResponse>>;
   public apiAccountProfileGet(
     observe: any = 'body',
     reportProgress: boolean = false,
@@ -538,7 +530,7 @@ export class AccountService extends BaseService {
 
     let localVarPath = `/api/Account/profile`;
     const { basePath, withCredentials } = this.configuration;
-    return this.httpClient.request<ApiResponseOfUserInfoDto>('get', `${basePath}${localVarPath}`, {
+    return this.httpClient.request<UserInfoDtoApiResponse>('get', `${basePath}${localVarPath}`, {
       context: localVarHttpContext,
       responseType: <any>responseType_,
       ...(withCredentials ? { withCredentials } : {}),
@@ -556,7 +548,7 @@ export class AccountService extends BaseService {
    * @param reportProgress flag to report request and response progress.
    */
   public apiAccountRegisterPost(
-    registerRequest: RegisterRequest,
+    registerRequest?: RegisterRequest,
     observe?: 'body',
     reportProgress?: boolean,
     options?: {
@@ -566,7 +558,7 @@ export class AccountService extends BaseService {
     },
   ): Observable<ApiResponse>;
   public apiAccountRegisterPost(
-    registerRequest: RegisterRequest,
+    registerRequest?: RegisterRequest,
     observe?: 'response',
     reportProgress?: boolean,
     options?: {
@@ -576,7 +568,7 @@ export class AccountService extends BaseService {
     },
   ): Observable<HttpResponse<ApiResponse>>;
   public apiAccountRegisterPost(
-    registerRequest: RegisterRequest,
+    registerRequest?: RegisterRequest,
     observe?: 'events',
     reportProgress?: boolean,
     options?: {
@@ -586,7 +578,7 @@ export class AccountService extends BaseService {
     },
   ): Observable<HttpEvent<ApiResponse>>;
   public apiAccountRegisterPost(
-    registerRequest: RegisterRequest,
+    registerRequest?: RegisterRequest,
     observe: any = 'body',
     reportProgress: boolean = false,
     options?: {
@@ -595,13 +587,15 @@ export class AccountService extends BaseService {
       transferCache?: boolean;
     },
   ): Observable<any> {
-    if (registerRequest === null || registerRequest === undefined) {
-      throw new Error(
-        'Required parameter registerRequest was null or undefined when calling apiAccountRegisterPost.',
-      );
-    }
-
     let localVarHeaders = this.defaultHeaders;
+
+    // authentication (Bearer) required
+    localVarHeaders = this.configuration.addCredentialToHeaders(
+      'Bearer',
+      'Authorization',
+      localVarHeaders,
+      'Bearer ',
+    );
 
     const localVarHttpHeaderAcceptSelected: string | undefined =
       options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept(['application/json']);
@@ -653,7 +647,7 @@ export class AccountService extends BaseService {
    * @param reportProgress flag to report request and response progress.
    */
   public apiAccountUpdateProfilePut(
-    updateProfileRequest: UpdateProfileRequest,
+    updateProfileRequest?: UpdateProfileRequest,
     observe?: 'body',
     reportProgress?: boolean,
     options?: {
@@ -663,7 +657,7 @@ export class AccountService extends BaseService {
     },
   ): Observable<ApiResponse>;
   public apiAccountUpdateProfilePut(
-    updateProfileRequest: UpdateProfileRequest,
+    updateProfileRequest?: UpdateProfileRequest,
     observe?: 'response',
     reportProgress?: boolean,
     options?: {
@@ -673,7 +667,7 @@ export class AccountService extends BaseService {
     },
   ): Observable<HttpResponse<ApiResponse>>;
   public apiAccountUpdateProfilePut(
-    updateProfileRequest: UpdateProfileRequest,
+    updateProfileRequest?: UpdateProfileRequest,
     observe?: 'events',
     reportProgress?: boolean,
     options?: {
@@ -683,7 +677,7 @@ export class AccountService extends BaseService {
     },
   ): Observable<HttpEvent<ApiResponse>>;
   public apiAccountUpdateProfilePut(
-    updateProfileRequest: UpdateProfileRequest,
+    updateProfileRequest?: UpdateProfileRequest,
     observe: any = 'body',
     reportProgress: boolean = false,
     options?: {
@@ -692,12 +686,6 @@ export class AccountService extends BaseService {
       transferCache?: boolean;
     },
   ): Observable<any> {
-    if (updateProfileRequest === null || updateProfileRequest === undefined) {
-      throw new Error(
-        'Required parameter updateProfileRequest was null or undefined when calling apiAccountUpdateProfilePut.',
-      );
-    }
-
     let localVarHeaders = this.defaultHeaders;
 
     // authentication (Bearer) required

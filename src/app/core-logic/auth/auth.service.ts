@@ -4,8 +4,8 @@ import { Router } from '@angular/router';
 import {
   AccountService,
   ApiResponse,
-  ApiResponseOfAuthDto,
   AuthDto,
+  AuthDtoApiResponse,
   ChangePasswordRequest,
   LoginRequest,
   LogoutRequest,
@@ -70,7 +70,7 @@ export class AuthService {
     }
 
     return this._accountService.apiAccountLoginPost(credentials).pipe(
-      switchMap((response: ApiResponseOfAuthDto) => {
+      switchMap((response: AuthDtoApiResponse) => {
         const data: AuthDto = response.data ?? {};
         if (data) {
           // Store the tokens in the token service
@@ -151,7 +151,7 @@ export class AuthService {
     return this._accountService
       .apiAccountInvokeTokenPost({ refreshToken: this._tokenService.refreshToken.token ?? '' })
       .pipe(
-        switchMap((response: ApiResponseOfAuthDto) => {
+        switchMap((response: AuthDtoApiResponse) => {
           const data: AuthDto = response.data ?? {};
           if (data) {
             this._tokenService.accessToken = {

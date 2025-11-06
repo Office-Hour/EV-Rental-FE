@@ -10,8 +10,8 @@
 
 export interface StationDto {
   id?: string;
-  name?: string;
-  address?: string;
+  name?: string | null;
+  address?: string | null;
   latitude?: number | null;
   longitude?: number | null;
   capacity?: number;

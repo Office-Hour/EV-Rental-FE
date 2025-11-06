@@ -9,11 +9,11 @@
  */
 
 export interface VnPayRefundRequestDto {
-  orderId?: string;
-  transactionDate?: string;
+  orderId?: string | null;
+  transactionDate?: string | null;
   amount?: number;
-  transactionType?: string;
+  transactionType?: string | null;
   transactionNo?: string | null;
-  createdBy?: string;
-  ipAddress?: string;
+  createdBy?: string | null;
+  ipAddress?: string | null;
 }

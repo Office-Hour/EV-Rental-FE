@@ -9,16 +9,16 @@
  */
 
 export interface VnPayReturnDto {
-  orderId?: string;
+  orderId?: string | null;
   transactionId?: number;
   amount?: number;
-  bankCode?: string;
-  bankTranNo?: string;
-  cardType?: string;
-  responseCode?: string;
-  transactionStatus?: string;
+  bankCode?: string | null;
+  bankTranNo?: string | null;
+  cardType?: string | null;
+  responseCode?: string | null;
+  transactionStatus?: string | null;
   payDate?: string;
   isSuccess?: boolean;
   isValidSignature?: boolean;
-  orderInfo?: string;
+  orderInfo?: string | null;
 }

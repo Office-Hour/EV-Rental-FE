@@ -10,6 +10,7 @@
 import { BookingBriefDto } from './bookingBriefDto';
 import { ContractDto } from './contractDto';
 import { VehicleDto } from './vehicleDto';
+import { RentalStatus } from './rentalStatus';
 
 export interface RentalDetailsDto {
   rentalId?: string;
@@ -17,11 +18,12 @@ export interface RentalDetailsDto {
   vehicleId?: string;
   startTime?: string;
   endTime?: string;
-  status?: number;
+  status?: RentalStatus;
   score?: number;
   comment?: string | null;
   ratedAt?: string;
   booking?: BookingBriefDto;
   vehicle?: VehicleDto;
-  contracts?: Array<ContractDto>;
+  contracts?: Array<ContractDto> | null;
 }
+export namespace RentalDetailsDto {}

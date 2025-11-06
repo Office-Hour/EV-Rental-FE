@@ -7,8 +7,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { KycType } from './kycType';
 
 export interface UploadKycRequest {
-  type?: number;
-  documentNumber?: string;
+  type?: KycType;
+  documentNumber?: string | null;
 }
+export namespace UploadKycRequest {}

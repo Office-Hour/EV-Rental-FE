@@ -7,8 +7,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { EsignProvider } from './esignProvider';
 
 export interface CreateContractRequest {
   rentalId?: string;
-  provider?: number;
+  provider?: EsignProvider;
 }
+export namespace CreateContractRequest {}
