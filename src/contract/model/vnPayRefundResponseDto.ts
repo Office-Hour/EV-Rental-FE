@@ -8,10 +8,12 @@
  * Do not edit the class manually.
  */
 
-export interface ReceiveInspectionRequest {
-  rentalId?: string;
-  currentBatteryCapacityKwh?: number;
-  inspectedAt?: string;
-  inspectorStaffId?: string;
-  url?: string;
+export interface VnPayRefundResponseDto {
+  responseId?: string;
+  command?: string;
+  responseCode?: string;
+  message?: string;
+  txnRef?: string;
+  amount?: number;
+  transactionNo?: string;
 }

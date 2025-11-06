@@ -8,13 +8,12 @@
  * Do not edit the class manually.
  */
 
-export interface DepositFeeDto {
-  type?: number;
-  description?: string;
+export interface VnPayRefundRequestDto {
+  orderId?: string;
+  transactionDate?: string;
   amount?: number;
-  currency?: number;
-  method?: number;
-  amountPaid?: number;
-  createdAt?: string;
-  providerReference?: string | null;
+  transactionType?: string;
+  transactionNo?: string | null;
+  createdBy?: string;
+  ipAddress?: string;
 }

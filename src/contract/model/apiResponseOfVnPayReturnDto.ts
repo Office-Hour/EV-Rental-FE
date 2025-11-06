@@ -7,11 +7,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { VnPayReturnDto } from './vnPayReturnDto';
 
-export interface ReceiveInspectionRequest {
-  rentalId?: string;
-  currentBatteryCapacityKwh?: number;
-  inspectedAt?: string;
-  inspectorStaffId?: string;
-  url?: string;
+export interface ApiResponseOfVnPayReturnDto {
+  isSuccess?: boolean;
+  data?: VnPayReturnDto | null;
+  message?: string | null;
 }

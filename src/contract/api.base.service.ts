@@ -12,7 +12,8 @@ import { CustomHttpParameterCodec } from './encoder';
 import { Configuration } from './configuration';
 
 export class BaseService {
-  protected basePath = 'https://localhost:7007';
+  protected basePath =
+    'http://swd-be-webapi-production.politerock-c1f6f715.japaneast.azurecontainerapps.io';
   public defaultHeaders = new HttpHeaders();
   public configuration: Configuration;
   public encoder: HttpParameterCodec;

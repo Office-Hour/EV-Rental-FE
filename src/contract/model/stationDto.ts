@@ -12,5 +12,7 @@ export interface StationDto {
   id?: string;
   name?: string;
   address?: string;
+  latitude?: number | null;
+  longitude?: number | null;
   capacity?: number;
 }

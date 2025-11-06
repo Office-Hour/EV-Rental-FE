@@ -19,5 +19,6 @@ export interface VehicleDetailsDto {
   currentBatteryCapacityKwh?: number;
   rentalPricePerHour?: number;
   rentalPricePerDay?: number | null;
+  depositPrice?: number;
   upcomingBookings?: Array<BookingBriefDto>;
 }

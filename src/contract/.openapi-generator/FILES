@@ -5,7 +5,9 @@ api.module.ts
 api/account.service.ts
 api/api.ts
 api/booking.service.ts
+api/payment.service.ts
 api/rental.service.ts
+api/staff.service.ts
 api/stations.service.ts
 configuration.ts
 encoder.ts
@@ -16,6 +18,9 @@ model/apiResponseOfAuthDto.ts
 model/apiResponseOfContractDetailsDto.ts
 model/apiResponseOfDepositFeeDto.ts
 model/apiResponseOfGuid.ts
+model/apiResponseOfListOfBookingDetailsDto.ts
+model/apiResponseOfListOfRentalDetailsDto.ts
+model/apiResponseOfListOfRenterProfileDto.ts
 model/apiResponseOfPagedResultOfBookingDetailsDto.ts
 model/apiResponseOfPagedResultOfRentalDto.ts
 model/apiResponseOfPagedResultOfStationDto.ts
@@ -25,6 +30,10 @@ model/apiResponseOfRenterProfileDto.ts
 model/apiResponseOfStationDetailsDto.ts
 model/apiResponseOfUserInfoDto.ts
 model/apiResponseOfVehicleDetailsDto.ts
+model/apiResponseOfVnPayPaymentResponseDto.ts
+model/apiResponseOfVnPayQueryResponseDto.ts
+model/apiResponseOfVnPayRefundResponseDto.ts
+model/apiResponseOfVnPayReturnDto.ts
 model/authDto.ts
 model/bookingBriefDto.ts
 model/bookingDetailsDto.ts
@@ -53,9 +62,11 @@ model/receiveInspectionRequest.ts
 model/receiveVehicleRequest.ts
 model/registerRequest.ts
 model/rentalDetailsDto.ts
+model/rentalDetailsDto2.ts
 model/rentalDto.ts
 model/renterBankAccountDto.ts
 model/renterProfileDto.ts
+model/renterProfileDto2.ts
 model/requestCancelCheckinRequest.ts
 model/signContractRequest.ts
 model/stationDetailsDto.ts
@@ -65,6 +76,14 @@ model/uploadKycRequest.ts
 model/userInfoDto.ts
 model/vehicleDetailsDto.ts
 model/vehicleDto.ts
+model/vnPayIpnResponseDto.ts
+model/vnPayPaymentRequestDto.ts
+model/vnPayPaymentResponseDto.ts
+model/vnPayQueryRequestDto.ts
+model/vnPayQueryResponseDto.ts
+model/vnPayRefundRequestDto.ts
+model/vnPayRefundResponseDto.ts
+model/vnPayReturnDto.ts
 param.ts
 provide-api.ts
 variables.ts

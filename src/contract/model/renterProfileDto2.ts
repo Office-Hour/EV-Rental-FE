@@ -8,10 +8,10 @@
  * Do not edit the class manually.
  */
 
-export interface ReceiveInspectionRequest {
-  rentalId?: string;
-  currentBatteryCapacityKwh?: number;
-  inspectedAt?: string;
-  inspectorStaffId?: string;
-  url?: string;
+export interface RenterProfileDto2 {
+  renterId?: string;
+  driverLicenseNo?: string | null;
+  dateOfBirth?: string | null;
+  address?: string | null;
+  riskScore?: number;
 }
