@@ -23,13 +23,7 @@ import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
 // @ts-ignore
-import { ApiResponseOfContractDetailsDto } from '../model/apiResponseOfContractDetailsDto';
-// @ts-ignore
-import { ApiResponseOfGuid } from '../model/apiResponseOfGuid';
-// @ts-ignore
-import { ApiResponseOfPagedResultOfRentalDto } from '../model/apiResponseOfPagedResultOfRentalDto';
-// @ts-ignore
-import { ApiResponseOfRentalDetailsDto } from '../model/apiResponseOfRentalDetailsDto';
+import { ContractDetailsDtoApiResponse } from '../model/contractDetailsDtoApiResponse';
 // @ts-ignore
 import { CreateContractRequest } from '../model/createContractRequest';
 // @ts-ignore
@@ -37,9 +31,15 @@ import { CreateRentalRequest } from '../model/createRentalRequest';
 // @ts-ignore
 import { ErrorMessage } from '../model/errorMessage';
 // @ts-ignore
+import { GuidApiResponse } from '../model/guidApiResponse';
+// @ts-ignore
 import { ReceiveInspectionRequest } from '../model/receiveInspectionRequest';
 // @ts-ignore
 import { ReceiveVehicleRequest } from '../model/receiveVehicleRequest';
+// @ts-ignore
+import { RentalDetailsDtoApiResponse } from '../model/rentalDetailsDtoApiResponse';
+// @ts-ignore
+import { RentalDtoPagedResultApiResponse } from '../model/rentalDtoPagedResultApiResponse';
 // @ts-ignore
 import { SignContractRequest } from '../model/signContractRequest';
 
@@ -79,7 +79,7 @@ export class RentalService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<ApiResponseOfPagedResultOfRentalDto>;
+  ): Observable<RentalDtoPagedResultApiResponse>;
   public apiRentalByRenterGet(
     renterId?: string,
     pageNumber?: number,
@@ -91,7 +91,7 @@ export class RentalService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpResponse<ApiResponseOfPagedResultOfRentalDto>>;
+  ): Observable<HttpResponse<RentalDtoPagedResultApiResponse>>;
   public apiRentalByRenterGet(
     renterId?: string,
     pageNumber?: number,
@@ -103,7 +103,7 @@ export class RentalService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpEvent<ApiResponseOfPagedResultOfRentalDto>>;
+  ): Observable<HttpEvent<RentalDtoPagedResultApiResponse>>;
   public apiRentalByRenterGet(
     renterId?: string,
     pageNumber?: number,
@@ -166,7 +166,7 @@ export class RentalService extends BaseService {
 
     let localVarPath = `/api/Rental/by-renter`;
     const { basePath, withCredentials } = this.configuration;
-    return this.httpClient.request<ApiResponseOfPagedResultOfRentalDto>(
+    return this.httpClient.request<RentalDtoPagedResultApiResponse>(
       'get',
       `${basePath}${localVarPath}`,
       {
@@ -197,7 +197,7 @@ export class RentalService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<ApiResponseOfContractDetailsDto>;
+  ): Observable<ContractDetailsDtoApiResponse>;
   public apiRentalContractContractIdGet(
     contractId: string,
     observe?: 'response',
@@ -207,7 +207,7 @@ export class RentalService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpResponse<ApiResponseOfContractDetailsDto>>;
+  ): Observable<HttpResponse<ContractDetailsDtoApiResponse>>;
   public apiRentalContractContractIdGet(
     contractId: string,
     observe?: 'events',
@@ -217,7 +217,7 @@ export class RentalService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpEvent<ApiResponseOfContractDetailsDto>>;
+  ): Observable<HttpEvent<ContractDetailsDtoApiResponse>>;
   public apiRentalContractContractIdGet(
     contractId: string,
     observe: any = 'body',
@@ -267,7 +267,7 @@ export class RentalService extends BaseService {
 
     let localVarPath = `/api/Rental/contract/${this.configuration.encodeParam({ name: 'contractId', value: contractId, in: 'path', style: 'simple', explode: false, dataType: 'string', dataFormat: 'uuid' })}`;
     const { basePath, withCredentials } = this.configuration;
-    return this.httpClient.request<ApiResponseOfContractDetailsDto>(
+    return this.httpClient.request<ContractDetailsDtoApiResponse>(
       'get',
       `${basePath}${localVarPath}`,
       {
@@ -289,7 +289,7 @@ export class RentalService extends BaseService {
    * @param reportProgress flag to report request and response progress.
    */
   public apiRentalContractPost(
-    createContractRequest: CreateContractRequest,
+    createContractRequest?: CreateContractRequest,
     observe?: 'body',
     reportProgress?: boolean,
     options?: {
@@ -297,9 +297,9 @@ export class RentalService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<ApiResponseOfGuid>;
+  ): Observable<GuidApiResponse>;
   public apiRentalContractPost(
-    createContractRequest: CreateContractRequest,
+    createContractRequest?: CreateContractRequest,
     observe?: 'response',
     reportProgress?: boolean,
     options?: {
@@ -307,9 +307,9 @@ export class RentalService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpResponse<ApiResponseOfGuid>>;
+  ): Observable<HttpResponse<GuidApiResponse>>;
   public apiRentalContractPost(
-    createContractRequest: CreateContractRequest,
+    createContractRequest?: CreateContractRequest,
     observe?: 'events',
     reportProgress?: boolean,
     options?: {
@@ -317,9 +317,9 @@ export class RentalService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpEvent<ApiResponseOfGuid>>;
+  ): Observable<HttpEvent<GuidApiResponse>>;
   public apiRentalContractPost(
-    createContractRequest: CreateContractRequest,
+    createContractRequest?: CreateContractRequest,
     observe: any = 'body',
     reportProgress: boolean = false,
     options?: {
@@ -328,12 +328,6 @@ export class RentalService extends BaseService {
       transferCache?: boolean;
     },
   ): Observable<any> {
-    if (createContractRequest === null || createContractRequest === undefined) {
-      throw new Error(
-        'Required parameter createContractRequest was null or undefined when calling apiRentalContractPost.',
-      );
-    }
-
     let localVarHeaders = this.defaultHeaders;
 
     // authentication (Bearer) required
@@ -375,7 +369,7 @@ export class RentalService extends BaseService {
 
     let localVarPath = `/api/Rental/contract`;
     const { basePath, withCredentials } = this.configuration;
-    return this.httpClient.request<ApiResponseOfGuid>('post', `${basePath}${localVarPath}`, {
+    return this.httpClient.request<GuidApiResponse>('post', `${basePath}${localVarPath}`, {
       context: localVarHttpContext,
       body: createContractRequest,
       responseType: <any>responseType_,
@@ -394,7 +388,7 @@ export class RentalService extends BaseService {
    * @param reportProgress flag to report request and response progress.
    */
   public apiRentalContractSignPost(
-    signContractRequest: SignContractRequest,
+    signContractRequest?: SignContractRequest,
     observe?: 'body',
     reportProgress?: boolean,
     options?: {
@@ -402,9 +396,9 @@ export class RentalService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<ApiResponseOfGuid>;
+  ): Observable<GuidApiResponse>;
   public apiRentalContractSignPost(
-    signContractRequest: SignContractRequest,
+    signContractRequest?: SignContractRequest,
     observe?: 'response',
     reportProgress?: boolean,
     options?: {
@@ -412,9 +406,9 @@ export class RentalService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpResponse<ApiResponseOfGuid>>;
+  ): Observable<HttpResponse<GuidApiResponse>>;
   public apiRentalContractSignPost(
-    signContractRequest: SignContractRequest,
+    signContractRequest?: SignContractRequest,
     observe?: 'events',
     reportProgress?: boolean,
     options?: {
@@ -422,9 +416,9 @@ export class RentalService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpEvent<ApiResponseOfGuid>>;
+  ): Observable<HttpEvent<GuidApiResponse>>;
   public apiRentalContractSignPost(
-    signContractRequest: SignContractRequest,
+    signContractRequest?: SignContractRequest,
     observe: any = 'body',
     reportProgress: boolean = false,
     options?: {
@@ -433,12 +427,6 @@ export class RentalService extends BaseService {
       transferCache?: boolean;
     },
   ): Observable<any> {
-    if (signContractRequest === null || signContractRequest === undefined) {
-      throw new Error(
-        'Required parameter signContractRequest was null or undefined when calling apiRentalContractSignPost.',
-      );
-    }
-
     let localVarHeaders = this.defaultHeaders;
 
     // authentication (Bearer) required
@@ -480,7 +468,7 @@ export class RentalService extends BaseService {
 
     let localVarPath = `/api/Rental/contract/sign`;
     const { basePath, withCredentials } = this.configuration;
-    return this.httpClient.request<ApiResponseOfGuid>('post', `${basePath}${localVarPath}`, {
+    return this.httpClient.request<GuidApiResponse>('post', `${basePath}${localVarPath}`, {
       context: localVarHttpContext,
       body: signContractRequest,
       responseType: <any>responseType_,
@@ -499,7 +487,7 @@ export class RentalService extends BaseService {
    * @param reportProgress flag to report request and response progress.
    */
   public apiRentalInspectionPost(
-    receiveInspectionRequest: ReceiveInspectionRequest,
+    receiveInspectionRequest?: ReceiveInspectionRequest,
     observe?: 'body',
     reportProgress?: boolean,
     options?: {
@@ -507,9 +495,9 @@ export class RentalService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<ApiResponseOfGuid>;
+  ): Observable<GuidApiResponse>;
   public apiRentalInspectionPost(
-    receiveInspectionRequest: ReceiveInspectionRequest,
+    receiveInspectionRequest?: ReceiveInspectionRequest,
     observe?: 'response',
     reportProgress?: boolean,
     options?: {
@@ -517,9 +505,9 @@ export class RentalService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpResponse<ApiResponseOfGuid>>;
+  ): Observable<HttpResponse<GuidApiResponse>>;
   public apiRentalInspectionPost(
-    receiveInspectionRequest: ReceiveInspectionRequest,
+    receiveInspectionRequest?: ReceiveInspectionRequest,
     observe?: 'events',
     reportProgress?: boolean,
     options?: {
@@ -527,9 +515,9 @@ export class RentalService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpEvent<ApiResponseOfGuid>>;
+  ): Observable<HttpEvent<GuidApiResponse>>;
   public apiRentalInspectionPost(
-    receiveInspectionRequest: ReceiveInspectionRequest,
+    receiveInspectionRequest?: ReceiveInspectionRequest,
     observe: any = 'body',
     reportProgress: boolean = false,
     options?: {
@@ -538,12 +526,6 @@ export class RentalService extends BaseService {
       transferCache?: boolean;
     },
   ): Observable<any> {
-    if (receiveInspectionRequest === null || receiveInspectionRequest === undefined) {
-      throw new Error(
-        'Required parameter receiveInspectionRequest was null or undefined when calling apiRentalInspectionPost.',
-      );
-    }
-
     let localVarHeaders = this.defaultHeaders;
 
     // authentication (Bearer) required
@@ -585,7 +567,7 @@ export class RentalService extends BaseService {
 
     let localVarPath = `/api/Rental/inspection`;
     const { basePath, withCredentials } = this.configuration;
-    return this.httpClient.request<ApiResponseOfGuid>('post', `${basePath}${localVarPath}`, {
+    return this.httpClient.request<GuidApiResponse>('post', `${basePath}${localVarPath}`, {
       context: localVarHttpContext,
       body: receiveInspectionRequest,
       responseType: <any>responseType_,
@@ -604,7 +586,7 @@ export class RentalService extends BaseService {
    * @param reportProgress flag to report request and response progress.
    */
   public apiRentalPost(
-    createRentalRequest: CreateRentalRequest,
+    createRentalRequest?: CreateRentalRequest,
     observe?: 'body',
     reportProgress?: boolean,
     options?: {
@@ -612,9 +594,9 @@ export class RentalService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<ApiResponseOfGuid>;
+  ): Observable<GuidApiResponse>;
   public apiRentalPost(
-    createRentalRequest: CreateRentalRequest,
+    createRentalRequest?: CreateRentalRequest,
     observe?: 'response',
     reportProgress?: boolean,
     options?: {
@@ -622,9 +604,9 @@ export class RentalService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpResponse<ApiResponseOfGuid>>;
+  ): Observable<HttpResponse<GuidApiResponse>>;
   public apiRentalPost(
-    createRentalRequest: CreateRentalRequest,
+    createRentalRequest?: CreateRentalRequest,
     observe?: 'events',
     reportProgress?: boolean,
     options?: {
@@ -632,9 +614,9 @@ export class RentalService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpEvent<ApiResponseOfGuid>>;
+  ): Observable<HttpEvent<GuidApiResponse>>;
   public apiRentalPost(
-    createRentalRequest: CreateRentalRequest,
+    createRentalRequest?: CreateRentalRequest,
     observe: any = 'body',
     reportProgress: boolean = false,
     options?: {
@@ -643,12 +625,6 @@ export class RentalService extends BaseService {
       transferCache?: boolean;
     },
   ): Observable<any> {
-    if (createRentalRequest === null || createRentalRequest === undefined) {
-      throw new Error(
-        'Required parameter createRentalRequest was null or undefined when calling apiRentalPost.',
-      );
-    }
-
     let localVarHeaders = this.defaultHeaders;
 
     // authentication (Bearer) required
@@ -690,7 +666,7 @@ export class RentalService extends BaseService {
 
     let localVarPath = `/api/Rental`;
     const { basePath, withCredentials } = this.configuration;
-    return this.httpClient.request<ApiResponseOfGuid>('post', `${basePath}${localVarPath}`, {
+    return this.httpClient.request<GuidApiResponse>('post', `${basePath}${localVarPath}`, {
       context: localVarHttpContext,
       body: createRentalRequest,
       responseType: <any>responseType_,
@@ -717,7 +693,7 @@ export class RentalService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<ApiResponseOfRentalDetailsDto>;
+  ): Observable<RentalDetailsDtoApiResponse>;
   public apiRentalRentalIdGet(
     rentalId: string,
     observe?: 'response',
@@ -727,7 +703,7 @@ export class RentalService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpResponse<ApiResponseOfRentalDetailsDto>>;
+  ): Observable<HttpResponse<RentalDetailsDtoApiResponse>>;
   public apiRentalRentalIdGet(
     rentalId: string,
     observe?: 'events',
@@ -737,7 +713,7 @@ export class RentalService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpEvent<ApiResponseOfRentalDetailsDto>>;
+  ): Observable<HttpEvent<RentalDetailsDtoApiResponse>>;
   public apiRentalRentalIdGet(
     rentalId: string,
     observe: any = 'body',
@@ -787,7 +763,7 @@ export class RentalService extends BaseService {
 
     let localVarPath = `/api/Rental/${this.configuration.encodeParam({ name: 'rentalId', value: rentalId, in: 'path', style: 'simple', explode: false, dataType: 'string', dataFormat: 'uuid' })}`;
     const { basePath, withCredentials } = this.configuration;
-    return this.httpClient.request<ApiResponseOfRentalDetailsDto>(
+    return this.httpClient.request<RentalDetailsDtoApiResponse>(
       'get',
       `${basePath}${localVarPath}`,
       {
@@ -809,7 +785,7 @@ export class RentalService extends BaseService {
    * @param reportProgress flag to report request and response progress.
    */
   public apiRentalVehicleReceivePost(
-    receiveVehicleRequest: ReceiveVehicleRequest,
+    receiveVehicleRequest?: ReceiveVehicleRequest,
     observe?: 'body',
     reportProgress?: boolean,
     options?: {
@@ -819,7 +795,7 @@ export class RentalService extends BaseService {
     },
   ): Observable<any>;
   public apiRentalVehicleReceivePost(
-    receiveVehicleRequest: ReceiveVehicleRequest,
+    receiveVehicleRequest?: ReceiveVehicleRequest,
     observe?: 'response',
     reportProgress?: boolean,
     options?: {
@@ -829,7 +805,7 @@ export class RentalService extends BaseService {
     },
   ): Observable<HttpResponse<any>>;
   public apiRentalVehicleReceivePost(
-    receiveVehicleRequest: ReceiveVehicleRequest,
+    receiveVehicleRequest?: ReceiveVehicleRequest,
     observe?: 'events',
     reportProgress?: boolean,
     options?: {
@@ -839,7 +815,7 @@ export class RentalService extends BaseService {
     },
   ): Observable<HttpEvent<any>>;
   public apiRentalVehicleReceivePost(
-    receiveVehicleRequest: ReceiveVehicleRequest,
+    receiveVehicleRequest?: ReceiveVehicleRequest,
     observe: any = 'body',
     reportProgress: boolean = false,
     options?: {
@@ -848,12 +824,6 @@ export class RentalService extends BaseService {
       transferCache?: boolean;
     },
   ): Observable<any> {
-    if (receiveVehicleRequest === null || receiveVehicleRequest === undefined) {
-      throw new Error(
-        'Required parameter receiveVehicleRequest was null or undefined when calling apiRentalVehicleReceivePost.',
-      );
-    }
-
     let localVarHeaders = this.defaultHeaders;
 
     // authentication (Bearer) required

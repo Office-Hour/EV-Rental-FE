@@ -7,10 +7,12 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { BookingVerificationStatus } from './bookingVerificationStatus';
 
 export interface CheckinBookingRequest {
   bookingId?: string;
   verifiedByStaffId?: string;
-  bookingVerificationStatus?: number;
+  bookingVerificationStatus?: BookingVerificationStatus;
   cancelReason?: string | null;
 }
+export namespace CheckinBookingRequest {}

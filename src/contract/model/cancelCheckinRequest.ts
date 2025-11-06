@@ -11,7 +11,7 @@ import { RenterBankAccountDto } from './renterBankAccountDto';
 
 export interface CancelCheckinRequest {
   bookingId?: string;
-  cancelReason?: string;
-  cancelCheckinCode?: string;
-  renterBankAccount?: RenterBankAccountDto | null;
+  cancelReason?: string | null;
+  cancelCheckinCode?: string | null;
+  renterBankAccount?: RenterBankAccountDto;
 }

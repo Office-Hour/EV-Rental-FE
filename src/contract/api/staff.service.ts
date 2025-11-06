@@ -23,13 +23,13 @@ import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
 // @ts-ignore
-import { ApiResponseOfListOfBookingDetailsDto } from '../model/apiResponseOfListOfBookingDetailsDto';
-// @ts-ignore
-import { ApiResponseOfListOfRentalDetailsDto } from '../model/apiResponseOfListOfRentalDetailsDto';
-// @ts-ignore
-import { ApiResponseOfListOfRenterProfileDto } from '../model/apiResponseOfListOfRenterProfileDto';
+import { BookingDetailsDtoListApiResponse } from '../model/bookingDetailsDtoListApiResponse';
 // @ts-ignore
 import { ErrorMessage } from '../model/errorMessage';
+// @ts-ignore
+import { RentalDetailsDtoListApiResponse } from '../model/rentalDetailsDtoListApiResponse';
+// @ts-ignore
+import { RenterProfileDtoListApiResponse } from '../model/renterProfileDtoListApiResponse';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS } from '../variables';
@@ -61,7 +61,7 @@ export class StaffService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<ApiResponseOfListOfBookingDetailsDto>;
+  ): Observable<BookingDetailsDtoListApiResponse>;
   public apiStaffBookingsGet(
     observe?: 'response',
     reportProgress?: boolean,
@@ -70,7 +70,7 @@ export class StaffService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpResponse<ApiResponseOfListOfBookingDetailsDto>>;
+  ): Observable<HttpResponse<BookingDetailsDtoListApiResponse>>;
   public apiStaffBookingsGet(
     observe?: 'events',
     reportProgress?: boolean,
@@ -79,7 +79,7 @@ export class StaffService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpEvent<ApiResponseOfListOfBookingDetailsDto>>;
+  ): Observable<HttpEvent<BookingDetailsDtoListApiResponse>>;
   public apiStaffBookingsGet(
     observe: any = 'body',
     reportProgress: boolean = false,
@@ -122,7 +122,7 @@ export class StaffService extends BaseService {
 
     let localVarPath = `/api/Staff/bookings`;
     const { basePath, withCredentials } = this.configuration;
-    return this.httpClient.request<ApiResponseOfListOfBookingDetailsDto>(
+    return this.httpClient.request<BookingDetailsDtoListApiResponse>(
       'get',
       `${basePath}${localVarPath}`,
       {
@@ -150,7 +150,7 @@ export class StaffService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<ApiResponseOfListOfRentalDetailsDto>;
+  ): Observable<RentalDetailsDtoListApiResponse>;
   public apiStaffRentalsGet(
     observe?: 'response',
     reportProgress?: boolean,
@@ -159,7 +159,7 @@ export class StaffService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpResponse<ApiResponseOfListOfRentalDetailsDto>>;
+  ): Observable<HttpResponse<RentalDetailsDtoListApiResponse>>;
   public apiStaffRentalsGet(
     observe?: 'events',
     reportProgress?: boolean,
@@ -168,7 +168,7 @@ export class StaffService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpEvent<ApiResponseOfListOfRentalDetailsDto>>;
+  ): Observable<HttpEvent<RentalDetailsDtoListApiResponse>>;
   public apiStaffRentalsGet(
     observe: any = 'body',
     reportProgress: boolean = false,
@@ -211,7 +211,7 @@ export class StaffService extends BaseService {
 
     let localVarPath = `/api/Staff/rentals`;
     const { basePath, withCredentials } = this.configuration;
-    return this.httpClient.request<ApiResponseOfListOfRentalDetailsDto>(
+    return this.httpClient.request<RentalDetailsDtoListApiResponse>(
       'get',
       `${basePath}${localVarPath}`,
       {
@@ -239,7 +239,7 @@ export class StaffService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<ApiResponseOfListOfRenterProfileDto>;
+  ): Observable<RenterProfileDtoListApiResponse>;
   public apiStaffRentersGet(
     observe?: 'response',
     reportProgress?: boolean,
@@ -248,7 +248,7 @@ export class StaffService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpResponse<ApiResponseOfListOfRenterProfileDto>>;
+  ): Observable<HttpResponse<RenterProfileDtoListApiResponse>>;
   public apiStaffRentersGet(
     observe?: 'events',
     reportProgress?: boolean,
@@ -257,7 +257,7 @@ export class StaffService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpEvent<ApiResponseOfListOfRenterProfileDto>>;
+  ): Observable<HttpEvent<RenterProfileDtoListApiResponse>>;
   public apiStaffRentersGet(
     observe: any = 'body',
     reportProgress: boolean = false,
@@ -300,7 +300,7 @@ export class StaffService extends BaseService {
 
     let localVarPath = `/api/Staff/renters`;
     const { basePath, withCredentials } = this.configuration;
-    return this.httpClient.request<ApiResponseOfListOfRenterProfileDto>(
+    return this.httpClient.request<RenterProfileDtoListApiResponse>(
       'get',
       `${basePath}${localVarPath}`,
       {

@@ -23,11 +23,11 @@ import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
 // @ts-ignore
-import { ApiResponseOfPagedResultOfStationDto } from '../model/apiResponseOfPagedResultOfStationDto';
-// @ts-ignore
-import { ApiResponseOfStationDetailsDto } from '../model/apiResponseOfStationDetailsDto';
-// @ts-ignore
 import { ErrorMessage } from '../model/errorMessage';
+// @ts-ignore
+import { StationDetailsDtoApiResponse } from '../model/stationDetailsDtoApiResponse';
+// @ts-ignore
+import { StationDtoPagedResultApiResponse } from '../model/stationDtoPagedResultApiResponse';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS } from '../variables';
@@ -67,7 +67,7 @@ export class StationsService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<ApiResponseOfPagedResultOfStationDto>;
+  ): Observable<StationDtoPagedResultApiResponse>;
   public apiStationsGet(
     name?: string,
     address?: string,
@@ -80,7 +80,7 @@ export class StationsService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpResponse<ApiResponseOfPagedResultOfStationDto>>;
+  ): Observable<HttpResponse<StationDtoPagedResultApiResponse>>;
   public apiStationsGet(
     name?: string,
     address?: string,
@@ -93,7 +93,7 @@ export class StationsService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpEvent<ApiResponseOfPagedResultOfStationDto>>;
+  ): Observable<HttpEvent<StationDtoPagedResultApiResponse>>;
   public apiStationsGet(
     name?: string,
     address?: string,
@@ -123,6 +123,14 @@ export class StationsService extends BaseService {
 
     let localVarHeaders = this.defaultHeaders;
 
+    // authentication (Bearer) required
+    localVarHeaders = this.configuration.addCredentialToHeaders(
+      'Bearer',
+      'Authorization',
+      localVarHeaders,
+      'Bearer ',
+    );
+
     const localVarHttpHeaderAcceptSelected: string | undefined =
       options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept(['application/json']);
     if (localVarHttpHeaderAcceptSelected !== undefined) {
@@ -146,7 +154,7 @@ export class StationsService extends BaseService {
 
     let localVarPath = `/api/Stations`;
     const { basePath, withCredentials } = this.configuration;
-    return this.httpClient.request<ApiResponseOfPagedResultOfStationDto>(
+    return this.httpClient.request<StationDtoPagedResultApiResponse>(
       'get',
       `${basePath}${localVarPath}`,
       {
@@ -181,7 +189,7 @@ export class StationsService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<ApiResponseOfStationDetailsDto>;
+  ): Observable<StationDetailsDtoApiResponse>;
   public apiStationsStationIdGet(
     stationId: string,
     pageNumber?: number,
@@ -193,7 +201,7 @@ export class StationsService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpResponse<ApiResponseOfStationDetailsDto>>;
+  ): Observable<HttpResponse<StationDetailsDtoApiResponse>>;
   public apiStationsStationIdGet(
     stationId: string,
     pageNumber?: number,
@@ -205,7 +213,7 @@ export class StationsService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpEvent<ApiResponseOfStationDetailsDto>>;
+  ): Observable<HttpEvent<StationDetailsDtoApiResponse>>;
   public apiStationsStationIdGet(
     stationId: string,
     pageNumber?: number,
@@ -238,6 +246,14 @@ export class StationsService extends BaseService {
 
     let localVarHeaders = this.defaultHeaders;
 
+    // authentication (Bearer) required
+    localVarHeaders = this.configuration.addCredentialToHeaders(
+      'Bearer',
+      'Authorization',
+      localVarHeaders,
+      'Bearer ',
+    );
+
     const localVarHttpHeaderAcceptSelected: string | undefined =
       options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept(['application/json']);
     if (localVarHttpHeaderAcceptSelected !== undefined) {
@@ -261,7 +277,7 @@ export class StationsService extends BaseService {
 
     let localVarPath = `/api/Stations/${this.configuration.encodeParam({ name: 'stationId', value: stationId, in: 'path', style: 'simple', explode: false, dataType: 'string', dataFormat: 'uuid' })}`;
     const { basePath, withCredentials } = this.configuration;
-    return this.httpClient.request<ApiResponseOfStationDetailsDto>(
+    return this.httpClient.request<StationDetailsDtoApiResponse>(
       'get',
       `${basePath}${localVarPath}`,
       {

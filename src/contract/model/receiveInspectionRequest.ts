@@ -13,5 +13,5 @@ export interface ReceiveInspectionRequest {
   currentBatteryCapacityKwh?: number;
   inspectedAt?: string;
   inspectorStaffId?: string;
-  url?: string;
+  url?: string | null;
 }

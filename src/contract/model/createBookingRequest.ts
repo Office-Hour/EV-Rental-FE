@@ -7,17 +7,20 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { Currency } from './currency';
+import { PaymentMethod } from './paymentMethod';
 
 export interface CreateBookingRequest {
   renterId?: string;
   vehicleAtStationId?: string;
   startTime?: string;
   endTime?: string;
-  depositDescription?: string;
+  depositDescription?: string | null;
   depositAmount?: number;
-  depositCurrency?: number;
-  paymentMethod?: number;
+  depositCurrency?: Currency;
+  paymentMethod?: PaymentMethod;
   amountPaid?: number;
   paidAt?: string;
   providerReference?: string | null;
 }
+export namespace CreateBookingRequest {}

@@ -9,7 +9,7 @@
  */
 
 export interface RenterBankAccountDto {
-  bankName?: string;
-  accountNumber?: string;
-  accountHolderName?: string;
+  bankName?: string | null;
+  accountNumber?: string | null;
+  accountHolderName?: string | null;
 }

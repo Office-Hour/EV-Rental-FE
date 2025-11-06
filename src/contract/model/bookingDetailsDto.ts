@@ -7,6 +7,8 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { BookingVerificationStatus } from './bookingVerificationStatus';
+import { BookingStatus } from './bookingStatus';
 
 export interface BookingDetailsDto {
   bookingId?: string;
@@ -15,9 +17,10 @@ export interface BookingDetailsDto {
   bookingCreatedAt?: string;
   startTime?: string;
   endTime?: string;
-  status?: number;
-  verificationStatus?: number;
+  status?: BookingStatus;
+  verificationStatus?: BookingVerificationStatus;
   verifiedByStaffId?: string | null;
   verifiedAt?: string | null;
   cancelReason?: string | null;
 }
+export namespace BookingDetailsDto {}

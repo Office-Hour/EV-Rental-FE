@@ -9,7 +9,7 @@
  */
 
 export interface VnPayQueryRequestDto {
-  orderId?: string;
-  transactionDate?: string;
-  ipAddress?: string;
+  orderId?: string | null;
+  transactionDate?: string | null;
+  ipAddress?: string | null;
 }

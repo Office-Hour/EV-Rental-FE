@@ -7,17 +7,20 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { ContractStatus } from './contractStatus';
+import { EsignProvider } from './esignProvider';
 
 export interface ContractDetailsDto {
   contractId?: string;
   rentalId?: string;
-  status?: number;
+  status?: ContractStatus;
   issuedAt?: string;
   completedAt?: string | null;
-  provider?: number;
+  provider?: EsignProvider;
   providerEnvelopeId?: string | null;
-  documentUrl?: string;
-  documentHash?: string;
+  documentUrl?: string | null;
+  documentHash?: string | null;
   auditTrailUrl?: string | null;
   updatedAt?: string;
 }
+export namespace ContractDetailsDto {}

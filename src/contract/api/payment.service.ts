@@ -23,23 +23,23 @@ import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
 // @ts-ignore
-import { ApiResponseOfVnPayPaymentResponseDto } from '../model/apiResponseOfVnPayPaymentResponseDto';
-// @ts-ignore
-import { ApiResponseOfVnPayQueryResponseDto } from '../model/apiResponseOfVnPayQueryResponseDto';
-// @ts-ignore
-import { ApiResponseOfVnPayRefundResponseDto } from '../model/apiResponseOfVnPayRefundResponseDto';
-// @ts-ignore
-import { ApiResponseOfVnPayReturnDto } from '../model/apiResponseOfVnPayReturnDto';
-// @ts-ignore
 import { ErrorMessage } from '../model/errorMessage';
 // @ts-ignore
 import { VnPayIpnResponseDto } from '../model/vnPayIpnResponseDto';
 // @ts-ignore
 import { VnPayPaymentRequestDto } from '../model/vnPayPaymentRequestDto';
 // @ts-ignore
+import { VnPayPaymentResponseDtoApiResponse } from '../model/vnPayPaymentResponseDtoApiResponse';
+// @ts-ignore
 import { VnPayQueryRequestDto } from '../model/vnPayQueryRequestDto';
 // @ts-ignore
+import { VnPayQueryResponseDtoApiResponse } from '../model/vnPayQueryResponseDtoApiResponse';
+// @ts-ignore
 import { VnPayRefundRequestDto } from '../model/vnPayRefundRequestDto';
+// @ts-ignore
+import { VnPayRefundResponseDtoApiResponse } from '../model/vnPayRefundResponseDtoApiResponse';
+// @ts-ignore
+import { VnPayReturnDtoApiResponse } from '../model/vnPayReturnDtoApiResponse';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS } from '../variables';
@@ -65,7 +65,7 @@ export class PaymentService extends BaseService {
    * @param reportProgress flag to report request and response progress.
    */
   public apiPaymentCreatePost(
-    vnPayPaymentRequestDto: VnPayPaymentRequestDto,
+    vnPayPaymentRequestDto?: VnPayPaymentRequestDto,
     observe?: 'body',
     reportProgress?: boolean,
     options?: {
@@ -73,9 +73,9 @@ export class PaymentService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<ApiResponseOfVnPayPaymentResponseDto>;
+  ): Observable<VnPayPaymentResponseDtoApiResponse>;
   public apiPaymentCreatePost(
-    vnPayPaymentRequestDto: VnPayPaymentRequestDto,
+    vnPayPaymentRequestDto?: VnPayPaymentRequestDto,
     observe?: 'response',
     reportProgress?: boolean,
     options?: {
@@ -83,9 +83,9 @@ export class PaymentService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpResponse<ApiResponseOfVnPayPaymentResponseDto>>;
+  ): Observable<HttpResponse<VnPayPaymentResponseDtoApiResponse>>;
   public apiPaymentCreatePost(
-    vnPayPaymentRequestDto: VnPayPaymentRequestDto,
+    vnPayPaymentRequestDto?: VnPayPaymentRequestDto,
     observe?: 'events',
     reportProgress?: boolean,
     options?: {
@@ -93,9 +93,9 @@ export class PaymentService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpEvent<ApiResponseOfVnPayPaymentResponseDto>>;
+  ): Observable<HttpEvent<VnPayPaymentResponseDtoApiResponse>>;
   public apiPaymentCreatePost(
-    vnPayPaymentRequestDto: VnPayPaymentRequestDto,
+    vnPayPaymentRequestDto?: VnPayPaymentRequestDto,
     observe: any = 'body',
     reportProgress: boolean = false,
     options?: {
@@ -104,12 +104,6 @@ export class PaymentService extends BaseService {
       transferCache?: boolean;
     },
   ): Observable<any> {
-    if (vnPayPaymentRequestDto === null || vnPayPaymentRequestDto === undefined) {
-      throw new Error(
-        'Required parameter vnPayPaymentRequestDto was null or undefined when calling apiPaymentCreatePost.',
-      );
-    }
-
     let localVarHeaders = this.defaultHeaders;
 
     // authentication (Bearer) required
@@ -151,7 +145,7 @@ export class PaymentService extends BaseService {
 
     let localVarPath = `/api/Payment/create`;
     const { basePath, withCredentials } = this.configuration;
-    return this.httpClient.request<ApiResponseOfVnPayPaymentResponseDto>(
+    return this.httpClient.request<VnPayPaymentResponseDtoApiResponse>(
       'post',
       `${basePath}${localVarPath}`,
       {
@@ -209,6 +203,14 @@ export class PaymentService extends BaseService {
     },
   ): Observable<any> {
     let localVarHeaders = this.defaultHeaders;
+
+    // authentication (Bearer) required
+    localVarHeaders = this.configuration.addCredentialToHeaders(
+      'Bearer',
+      'Authorization',
+      localVarHeaders,
+      'Bearer ',
+    );
 
     const localVarHttpHeaderAcceptSelected: string | undefined =
       options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept(['application/json']);
@@ -287,6 +289,14 @@ export class PaymentService extends BaseService {
   ): Observable<any> {
     let localVarHeaders = this.defaultHeaders;
 
+    // authentication (Bearer) required
+    localVarHeaders = this.configuration.addCredentialToHeaders(
+      'Bearer',
+      'Authorization',
+      localVarHeaders,
+      'Bearer ',
+    );
+
     const localVarHttpHeaderAcceptSelected: string | undefined =
       options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept(['application/json']);
     if (localVarHttpHeaderAcceptSelected !== undefined) {
@@ -328,7 +338,7 @@ export class PaymentService extends BaseService {
    * @param reportProgress flag to report request and response progress.
    */
   public apiPaymentQueryPost(
-    vnPayQueryRequestDto: VnPayQueryRequestDto,
+    vnPayQueryRequestDto?: VnPayQueryRequestDto,
     observe?: 'body',
     reportProgress?: boolean,
     options?: {
@@ -336,9 +346,9 @@ export class PaymentService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<ApiResponseOfVnPayQueryResponseDto>;
+  ): Observable<VnPayQueryResponseDtoApiResponse>;
   public apiPaymentQueryPost(
-    vnPayQueryRequestDto: VnPayQueryRequestDto,
+    vnPayQueryRequestDto?: VnPayQueryRequestDto,
     observe?: 'response',
     reportProgress?: boolean,
     options?: {
@@ -346,9 +356,9 @@ export class PaymentService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpResponse<ApiResponseOfVnPayQueryResponseDto>>;
+  ): Observable<HttpResponse<VnPayQueryResponseDtoApiResponse>>;
   public apiPaymentQueryPost(
-    vnPayQueryRequestDto: VnPayQueryRequestDto,
+    vnPayQueryRequestDto?: VnPayQueryRequestDto,
     observe?: 'events',
     reportProgress?: boolean,
     options?: {
@@ -356,9 +366,9 @@ export class PaymentService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpEvent<ApiResponseOfVnPayQueryResponseDto>>;
+  ): Observable<HttpEvent<VnPayQueryResponseDtoApiResponse>>;
   public apiPaymentQueryPost(
-    vnPayQueryRequestDto: VnPayQueryRequestDto,
+    vnPayQueryRequestDto?: VnPayQueryRequestDto,
     observe: any = 'body',
     reportProgress: boolean = false,
     options?: {
@@ -367,12 +377,6 @@ export class PaymentService extends BaseService {
       transferCache?: boolean;
     },
   ): Observable<any> {
-    if (vnPayQueryRequestDto === null || vnPayQueryRequestDto === undefined) {
-      throw new Error(
-        'Required parameter vnPayQueryRequestDto was null or undefined when calling apiPaymentQueryPost.',
-      );
-    }
-
     let localVarHeaders = this.defaultHeaders;
 
     // authentication (Bearer) required
@@ -414,7 +418,7 @@ export class PaymentService extends BaseService {
 
     let localVarPath = `/api/Payment/query`;
     const { basePath, withCredentials } = this.configuration;
-    return this.httpClient.request<ApiResponseOfVnPayQueryResponseDto>(
+    return this.httpClient.request<VnPayQueryResponseDtoApiResponse>(
       'post',
       `${basePath}${localVarPath}`,
       {
@@ -437,7 +441,7 @@ export class PaymentService extends BaseService {
    * @param reportProgress flag to report request and response progress.
    */
   public apiPaymentRefundPost(
-    vnPayRefundRequestDto: VnPayRefundRequestDto,
+    vnPayRefundRequestDto?: VnPayRefundRequestDto,
     observe?: 'body',
     reportProgress?: boolean,
     options?: {
@@ -445,9 +449,9 @@ export class PaymentService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<ApiResponseOfVnPayRefundResponseDto>;
+  ): Observable<VnPayRefundResponseDtoApiResponse>;
   public apiPaymentRefundPost(
-    vnPayRefundRequestDto: VnPayRefundRequestDto,
+    vnPayRefundRequestDto?: VnPayRefundRequestDto,
     observe?: 'response',
     reportProgress?: boolean,
     options?: {
@@ -455,9 +459,9 @@ export class PaymentService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpResponse<ApiResponseOfVnPayRefundResponseDto>>;
+  ): Observable<HttpResponse<VnPayRefundResponseDtoApiResponse>>;
   public apiPaymentRefundPost(
-    vnPayRefundRequestDto: VnPayRefundRequestDto,
+    vnPayRefundRequestDto?: VnPayRefundRequestDto,
     observe?: 'events',
     reportProgress?: boolean,
     options?: {
@@ -465,9 +469,9 @@ export class PaymentService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpEvent<ApiResponseOfVnPayRefundResponseDto>>;
+  ): Observable<HttpEvent<VnPayRefundResponseDtoApiResponse>>;
   public apiPaymentRefundPost(
-    vnPayRefundRequestDto: VnPayRefundRequestDto,
+    vnPayRefundRequestDto?: VnPayRefundRequestDto,
     observe: any = 'body',
     reportProgress: boolean = false,
     options?: {
@@ -476,12 +480,6 @@ export class PaymentService extends BaseService {
       transferCache?: boolean;
     },
   ): Observable<any> {
-    if (vnPayRefundRequestDto === null || vnPayRefundRequestDto === undefined) {
-      throw new Error(
-        'Required parameter vnPayRefundRequestDto was null or undefined when calling apiPaymentRefundPost.',
-      );
-    }
-
     let localVarHeaders = this.defaultHeaders;
 
     // authentication (Bearer) required
@@ -523,7 +521,7 @@ export class PaymentService extends BaseService {
 
     let localVarPath = `/api/Payment/refund`;
     const { basePath, withCredentials } = this.configuration;
-    return this.httpClient.request<ApiResponseOfVnPayRefundResponseDto>(
+    return this.httpClient.request<VnPayRefundResponseDtoApiResponse>(
       'post',
       `${basePath}${localVarPath}`,
       {
@@ -552,7 +550,7 @@ export class PaymentService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<ApiResponseOfVnPayReturnDto>;
+  ): Observable<VnPayReturnDtoApiResponse>;
   public apiPaymentReturnGet(
     observe?: 'response',
     reportProgress?: boolean,
@@ -561,7 +559,7 @@ export class PaymentService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpResponse<ApiResponseOfVnPayReturnDto>>;
+  ): Observable<HttpResponse<VnPayReturnDtoApiResponse>>;
   public apiPaymentReturnGet(
     observe?: 'events',
     reportProgress?: boolean,
@@ -570,7 +568,7 @@ export class PaymentService extends BaseService {
       context?: HttpContext;
       transferCache?: boolean;
     },
-  ): Observable<HttpEvent<ApiResponseOfVnPayReturnDto>>;
+  ): Observable<HttpEvent<VnPayReturnDtoApiResponse>>;
   public apiPaymentReturnGet(
     observe: any = 'body',
     reportProgress: boolean = false,
@@ -581,6 +579,14 @@ export class PaymentService extends BaseService {
     },
   ): Observable<any> {
     let localVarHeaders = this.defaultHeaders;
+
+    // authentication (Bearer) required
+    localVarHeaders = this.configuration.addCredentialToHeaders(
+      'Bearer',
+      'Authorization',
+      localVarHeaders,
+      'Bearer ',
+    );
 
     const localVarHttpHeaderAcceptSelected: string | undefined =
       options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept(['application/json']);
@@ -605,18 +611,14 @@ export class PaymentService extends BaseService {
 
     let localVarPath = `/api/Payment/return`;
     const { basePath, withCredentials } = this.configuration;
-    return this.httpClient.request<ApiResponseOfVnPayReturnDto>(
-      'get',
-      `${basePath}${localVarPath}`,
-      {
-        context: localVarHttpContext,
-        responseType: <any>responseType_,
-        ...(withCredentials ? { withCredentials } : {}),
-        headers: localVarHeaders,
-        observe: observe,
-        ...(localVarTransferCache !== undefined ? { transferCache: localVarTransferCache } : {}),
-        reportProgress: reportProgress,
-      },
-    );
+    return this.httpClient.request<VnPayReturnDtoApiResponse>('get', `${basePath}${localVarPath}`, {
+      context: localVarHttpContext,
+      responseType: <any>responseType_,
+      ...(withCredentials ? { withCredentials } : {}),
+      headers: localVarHeaders,
+      observe: observe,
+      ...(localVarTransferCache !== undefined ? { transferCache: localVarTransferCache } : {}),
+      reportProgress: reportProgress,
+    });
   }
 }

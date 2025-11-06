@@ -7,14 +7,18 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { FeeType } from './feeType';
+import { Currency } from './currency';
+import { PaymentMethod } from './paymentMethod';
 
 export interface DepositFeeDto {
-  type?: number;
-  description?: string;
+  type?: FeeType;
+  description?: string | null;
   amount?: number;
-  currency?: number;
-  method?: number;
+  currency?: Currency;
+  method?: PaymentMethod;
   amountPaid?: number;
   createdAt?: string;
   providerReference?: string | null;
 }
+export namespace DepositFeeDto {}

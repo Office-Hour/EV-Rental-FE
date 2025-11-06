@@ -9,8 +9,8 @@
  */
 
 export interface AuthDto {
-  accessToken?: string;
+  accessToken?: string | null;
   accessTokenExpiration?: string;
-  refreshToken?: string;
+  refreshToken?: string | null;
   refreshTokenExpiration?: string;
 }

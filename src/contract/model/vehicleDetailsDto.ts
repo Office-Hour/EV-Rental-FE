@@ -11,8 +11,8 @@ import { BookingBriefDto } from './bookingBriefDto';
 
 export interface VehicleDetailsDto {
   vehicleId?: string;
-  make?: string;
-  model?: string;
+  make?: string | null;
+  model?: string | null;
   modelYear?: number;
   rangeKm?: number;
   vehicleAtStationId?: string;
@@ -20,5 +20,5 @@ export interface VehicleDetailsDto {
   rentalPricePerHour?: number;
   rentalPricePerDay?: number | null;
   depositPrice?: number;
-  upcomingBookings?: Array<BookingBriefDto>;
+  upcomingBookings?: Array<BookingBriefDto> | null;
 }

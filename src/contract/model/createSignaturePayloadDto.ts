@@ -7,13 +7,17 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { PartyRole } from './partyRole';
+import { SignatureEvent } from './signatureEvent';
+import { SignatureType } from './signatureType';
 
 export interface CreateSignaturePayloadDto {
   contractId?: string;
-  documentUrl?: string;
-  documentHash?: string;
-  role?: number;
-  signatureEvent?: number;
-  type?: number;
+  documentUrl?: string | null;
+  documentHash?: string | null;
+  role?: PartyRole;
+  signatureEvent?: SignatureEvent;
+  type?: SignatureType;
   signedAt?: string;
 }
+export namespace CreateSignaturePayloadDto {}

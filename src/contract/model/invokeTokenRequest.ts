@@ -9,5 +9,5 @@
  */
 
 export interface InvokeTokenRequest {
-  refreshToken?: string;
+  refreshToken?: string | null;
 }

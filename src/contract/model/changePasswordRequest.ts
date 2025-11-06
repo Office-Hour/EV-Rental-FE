@@ -9,7 +9,7 @@
  */
 
 export interface ChangePasswordRequest {
-  oldPassword?: string;
-  newPassword?: string;
-  confirmPassword?: string;
+  oldPassword?: string | null;
+  newPassword?: string | null;
+  confirmPassword?: string | null;
 }
