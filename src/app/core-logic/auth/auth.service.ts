@@ -1,5 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { Observable, of, switchMap, throwError } from 'rxjs';
+import { Observable, of, switchMap, take, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import {
   AccountService,
@@ -22,6 +22,10 @@ export class AuthService {
   private _isAuthenticated = signal<boolean>(false);
   private _accountService = inject(AccountService);
   private _router = inject(Router);
+
+  constructor() {
+    this._restoreSessionFromTokens();
+  }
 
   // -----------------------------------------------------------------------------------------------------
   // @ Accessors
@@ -84,14 +88,7 @@ export class AuthService {
         this.isAuthenticated = true;
 
         // Decode the access token
-        const decodedToken = this._tokenService.decodeToken(data.accessToken ?? '');
-        if (decodedToken.Renter) {
-          this._userService.userRole = 'renter';
-        } else if (decodedToken.Admin) {
-          this._userService.userRole = 'admin';
-        } else if (decodedToken.Staff) {
-          this._userService.userRole = 'staff';
-        }
+        this._applyRoleFromToken(data.accessToken ?? '');
 
         // Get the user from the user service and chain it
         return this._userService.getUser().pipe(
@@ -197,5 +194,89 @@ export class AuthService {
         this._router.navigateByUrl('/booking');
         break;
     }
+  }
+
+  private _restoreSessionFromTokens(): void {
+    const refreshToken = this._tokenService.refreshToken.token;
+    const accessToken = this._tokenService.accessToken.token;
+
+    if (!refreshToken) {
+      return;
+    }
+
+    if (this._tokenService.isRefreshTokenExpiration()) {
+      this._handleFailedSessionRestore();
+      return;
+    }
+
+    if (!accessToken || this._tokenService.isAccessTokenExpiration()) {
+      this.invokeAccessTokenExpiration()
+        .pipe(take(1))
+        .subscribe({
+          next: (response) => {
+            const token = response.data?.accessToken ?? this._tokenService.accessToken.token;
+            this._establishAuthenticatedSession(token);
+          },
+          error: () => {
+            this._handleFailedSessionRestore();
+          },
+        });
+      return;
+    }
+
+    this._establishAuthenticatedSession(accessToken);
+  }
+
+  private _establishAuthenticatedSession(accessToken?: string): void {
+    if (!accessToken) {
+      this._handleFailedSessionRestore();
+      return;
+    }
+
+    this.isAuthenticated = true;
+    this._applyRoleFromToken(accessToken);
+    this._preloadUser();
+  }
+
+  private _applyRoleFromToken(accessToken: string): void {
+    if (!accessToken) {
+      this._userService.userRole = 'renter';
+      return;
+    }
+
+    try {
+      const decodedToken = this._tokenService.decodeToken(accessToken);
+      if (decodedToken.Admin) {
+        this._userService.userRole = 'admin';
+      } else if (decodedToken.Staff) {
+        this._userService.userRole = 'staff';
+      } else if (decodedToken.Renter) {
+        this._userService.userRole = 'renter';
+      }
+    } catch {
+      this._userService.userRole = 'renter';
+    }
+  }
+
+  private _preloadUser(): void {
+    if (this._userService.user) {
+      return;
+    }
+
+    this._userService
+      .getUser()
+      .pipe(take(1))
+      .subscribe({
+        error: () => {
+          // Silently ignore preload errors. Interceptor or guards will handle hard failures.
+        },
+      });
+  }
+
+  private _handleFailedSessionRestore(): void {
+    this.isAuthenticated = false;
+    this._tokenService.clearAllTokens();
+    this._userService.user = undefined;
+    this._userService.userRole = 'renter';
   }
 }
