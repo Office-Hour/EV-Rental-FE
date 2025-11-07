@@ -9,13 +9,13 @@
  */
 
 /**
- * Possible values: Issued, Partially_Signed, Signed, Voided, Expired.
+ * Possible values: issued, partially_Signed, signed, voided, expired.
  */
 export const ContractStatus = {
-  Issued: 'Issued',
-  PartiallySigned: 'Partially_Signed',
-  Signed: 'Signed',
-  Voided: 'Voided',
-  Expired: 'Expired',
+  Issued: 'issued',
+  PartiallySigned: 'partially_Signed',
+  Signed: 'signed',
+  Voided: 'voided',
+  Expired: 'expired',
 } as const;
 export type ContractStatus = (typeof ContractStatus)[keyof typeof ContractStatus];

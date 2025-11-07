@@ -9,12 +9,12 @@
  */
 
 /**
- * Possible values: National_ID, Driver_License, Passport, Other.
+ * Possible values: national_ID, driver_License, passport, other.
  */
 export const KycType = {
-  NationalId: 'National_ID',
-  DriverLicense: 'Driver_License',
-  Passport: 'Passport',
-  Other: 'Other',
+  NationalId: 'national_ID',
+  DriverLicense: 'driver_License',
+  Passport: 'passport',
+  Other: 'other',
 } as const;
 export type KycType = (typeof KycType)[keyof typeof KycType];

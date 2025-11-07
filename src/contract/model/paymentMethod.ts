@@ -9,15 +9,15 @@
  */
 
 /**
- * Possible values: Unknown, Cash, Card, Ewallet, Bank_Transfer, VNPay_QR, International_Card.
+ * Possible values: unknown, cash, card, ewallet, bank_Transfer, vnPay_QR, international_Card.
  */
 export const PaymentMethod = {
-  Unknown: 'Unknown',
-  Cash: 'Cash',
-  Card: 'Card',
-  Ewallet: 'Ewallet',
-  BankTransfer: 'Bank_Transfer',
-  VnPayQr: 'VNPay_QR',
-  InternationalCard: 'International_Card',
+  Unknown: 'unknown',
+  Cash: 'cash',
+  Card: 'card',
+  Ewallet: 'ewallet',
+  BankTransfer: 'bank_Transfer',
+  VnPayQr: 'vnPay_QR',
+  InternationalCard: 'international_Card',
 } as const;
 export type PaymentMethod = (typeof PaymentMethod)[keyof typeof PaymentMethod];

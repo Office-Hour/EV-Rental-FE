@@ -9,10 +9,10 @@
  */
 
 /**
- * Possible values: USD, VND.
+ * Possible values: usd, vnd.
  */
 export const Currency = {
-  Usd: 'USD',
-  Vnd: 'VND',
+  Usd: 'usd',
+  Vnd: 'vnd',
 } as const;
 export type Currency = (typeof Currency)[keyof typeof Currency];

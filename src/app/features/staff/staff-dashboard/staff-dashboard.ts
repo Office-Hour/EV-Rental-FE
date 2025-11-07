@@ -72,16 +72,19 @@ const BOOKING_TABS: readonly BookingTabDescriptor[] = [
 ] as const;
 
 const BOOKING_STATUS_BADGES: Record<BookingStatus, StatusBadge> = {
-  Pending_Verification: { text: 'Pending Verification', tone: 'pending' },
-  Verified: { text: 'Verified', tone: 'success' },
-  Cancelled: { text: 'Cancelled', tone: 'danger' },
+  [BookingStatusEnum.PendingVerification]: { text: 'Pending Verification', tone: 'pending' },
+  [BookingStatusEnum.Verified]: { text: 'Verified', tone: 'success' },
+  [BookingStatusEnum.Cancelled]: { text: 'Cancelled', tone: 'danger' },
 };
 
 const BOOKING_VERIFICATION_BADGES: Record<BookingVerificationStatus, StatusBadge> = {
-  Pending: { text: 'Verification Pending', tone: 'pending' },
-  Approved: { text: 'Verification Approved', tone: 'success' },
-  Rejected_Mismatch: { text: 'Verification Rejected', tone: 'danger' },
-  Rejected_Other: { text: 'Verification Rejected', tone: 'danger' },
+  [BookingVerificationStatusEnum.Pending]: { text: 'Verification Pending', tone: 'pending' },
+  [BookingVerificationStatusEnum.Approved]: { text: 'Verification Approved', tone: 'success' },
+  [BookingVerificationStatusEnum.RejectedMismatch]: {
+    text: 'Verification Rejected',
+    tone: 'danger',
+  },
+  [BookingVerificationStatusEnum.RejectedOther]: { text: 'Verification Rejected', tone: 'danger' },
 };
 
 @Component({
