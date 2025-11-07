@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  ViewChild,
+  afterNextRender,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { take } from 'rxjs';
 import { BookingsService, StaffBookingRecord } from '../../../core-logic/bookings/bookings.service';
@@ -84,6 +93,8 @@ const BOOKING_VERIFICATION_BADGES: Record<BookingVerificationStatus, StatusBadge
 })
 export class StaffDashboard {
   private readonly bookingsService = inject(BookingsService);
+  @ViewChild('detailPanel') private detailPanel?: ElementRef<HTMLDivElement>;
+  private activeDetailTrigger: HTMLElement | null = null;
 
   readonly tabs = BOOKING_TABS;
   readonly searchTerm = signal('');
@@ -225,12 +236,24 @@ export class StaffDashboard {
     this.viewMode.set(mode);
   }
 
-  openDetails(record: StaffBookingRecord): void {
+  openDetails(record: StaffBookingRecord, triggerEvent?: Event): void {
+    this.activeDetailTrigger =
+      triggerEvent?.currentTarget instanceof HTMLElement ? triggerEvent.currentTarget : null;
     this.selectedBooking.set(record);
+    afterNextRender(() => {
+      this.detailPanel?.nativeElement.focus();
+    });
   }
 
   closeDetails(): void {
     this.selectedBooking.set(null);
+    const target = this.activeDetailTrigger;
+    this.activeDetailTrigger = null;
+    if (target) {
+      queueMicrotask(() => {
+        target.focus();
+      });
+    }
   }
 
   onOverlayClick(event: MouseEvent): void {
