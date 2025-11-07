@@ -1,2 +1,253 @@
-<p>staff-dashboard works!</p>
-,
+<section class="staff-dashboard">
+  <header class="dashboard-header">
+    <div class="dashboard-header__titles">
+      <h1 class="dashboard-header__title">Booking Management</h1>
+      <p class="dashboard-header__subtitle">Manage all vehicle bookings and reservations.</p>
+    </div>
+    <button type="button" class="refresh-button" (click)="refresh()" [disabled]="loading()">
+      <mat-icon aria-hidden="true">refresh</mat-icon>
+      <span>Refresh</span>
+    </button>
+  </header>
+
+  <nav class="status-tabs" aria-label="Booking filters">
+    @for (tab of tabs; track tab.key) {
+      <button
+        type="button"
+        class="status-tab"
+        [class.status-tab--active]="activeTab() === tab.key"
+        (click)="onTabSelect(tab.key)"
+      >
+        <span class="status-tab__label">{{ tab.label }}</span>
+        <span class="status-tab__count">{{ statusCounters()[tab.counterKey] }}</span>
+      </button>
+    }
+  </nav>
+
+  <div class="toolbar">
+    <div class="toolbar__search">
+      <mat-icon aria-hidden="true">search</mat-icon>
+      <input
+        type="search"
+        class="toolbar__input"
+        [value]="searchTerm()"
+        (input)="onSearchInput($event)"
+        placeholder="Search booking ID, customer, vehicle..."
+        autocomplete="off"
+      />
+      @if (searchTerm()) {
+        <button
+          type="button"
+          class="toolbar__clear"
+          (click)="clearSearch()"
+          aria-label="Clear search"
+        >
+          <mat-icon aria-hidden="true">close</mat-icon>
+        </button>
+      }
+    </div>
+
+    <div class="toolbar__actions" aria-label="View options">
+      <button
+        type="button"
+        class="icon-button"
+        (click)="setViewMode('list')"
+        [class.icon-button--active]="viewMode() === 'list'"
+        aria-label="List view"
+      >
+        <mat-icon aria-hidden="true">view_list</mat-icon>
+      </button>
+      <button
+        type="button"
+        class="icon-button"
+        (click)="setViewMode('grid')"
+        [class.icon-button--active]="viewMode() === 'grid'"
+        aria-label="Grid view"
+      >
+        <mat-icon aria-hidden="true">grid_view</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  @if (error()) {
+    <div class="alert alert--error" role="alert">
+      <div class="alert__content">
+        <mat-icon aria-hidden="true">error</mat-icon>
+        <span>{{ error() }}</span>
+      </div>
+      <button type="button" class="alert__action" (click)="refresh()">Retry</button>
+    </div>
+  }
+
+  @if (loading()) {
+    <div class="loading-state" aria-live="polite">
+      <div class="loading-state__spinner"></div>
+      <p>Loading bookings...</p>
+    </div>
+  } @else {
+    @if (cardViewModels().length > 0) {
+      <div class="booking-collection" [class.booking-collection--list]="viewMode() === 'list'">
+        @for (card of cardViewModels(); track card.record.bookingId) {
+          <article class="booking-card">
+            <header class="booking-card__header">
+              <div class="booking-card__identity">
+                <p class="booking-card__label">Customer</p>
+                <h3 class="booking-card__title">{{ card.customerDisplay }}</h3>
+                <p class="booking-card__meta">Created {{ card.bookingCreatedDisplay }}</p>
+              </div>
+              <div class="booking-card__badges">
+                @for (badge of card.badges; track badge.text) {
+                  <span
+                    class="badge"
+                    [class.badge--pending]="badge.tone === 'pending'"
+                    [class.badge--success]="badge.tone === 'success'"
+                    [class.badge--danger]="badge.tone === 'danger'"
+                    [class.badge--info]="badge.tone === 'info'"
+                  >
+                    {{ badge.text }}
+                  </span>
+                }
+              </div>
+            </header>
+
+            <div class="booking-card__body">
+              <div class="booking-card__section">
+                <span class="booking-card__section-label">Rental Start</span>
+                <span class="booking-card__section-value">{{ card.rentalStartDisplay }}</span>
+              </div>
+              <div class="booking-card__section">
+                <span class="booking-card__section-label">Expected Return</span>
+                <span class="booking-card__section-value">{{ card.rentalEndDisplay }}</span>
+              </div>
+              <div class="booking-card__section">
+                <span class="booking-card__section-label">Total Amount</span>
+                <span class="booking-card__section-value">{{ card.totalAmountDisplay }}</span>
+              </div>
+              <div class="booking-card__section">
+                <span class="booking-card__section-label">Deposit</span>
+                <span class="booking-card__section-value">{{ card.depositDisplay }}</span>
+              </div>
+            </div>
+
+            <footer class="booking-card__footer">
+              <div class="booking-card__vehicle" title="{{ card.vehicleDisplay }}">
+                {{ card.vehicleDisplay }}
+              </div>
+              <button type="button" class="booking-card__cta" (click)="openDetails(card.record)">
+                View Details
+              </button>
+            </footer>
+          </article>
+        }
+      </div>
+    } @else {
+      <div class="empty-state">
+        <mat-icon aria-hidden="true">event_busy</mat-icon>
+        <h2>No bookings found</h2>
+        <p>Try adjusting filters or clearing the search term.</p>
+        <button type="button" (click)="clearSearch()">Clear Filters</button>
+      </div>
+    }
+  }
+
+  @if (selectedBookingView(); as detail) {
+    <div
+      class="details-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Booking details"
+      tabindex="0"
+      (click)="onOverlayClick($event)"
+      (keydown.enter)="closeDetails()"
+      (keydown.space)="closeDetails()"
+    >
+      <div class="details-panel" tabindex="-1">
+        <header class="details-panel__header">
+          <div>
+            <h2>Booking Details</h2>
+            <p>{{ detail.customerDisplay }}</p>
+          </div>
+          <button
+            type="button"
+            class="details-panel__close"
+            aria-label="Close details"
+            (click)="closeDetails()"
+          >
+            <mat-icon aria-hidden="true">close</mat-icon>
+          </button>
+        </header>
+
+        <div class="details-panel__badges">
+          @for (badge of detail.badges; track badge.text) {
+            <span
+              class="badge"
+              [class.badge--pending]="badge.tone === 'pending'"
+              [class.badge--success]="badge.tone === 'success'"
+              [class.badge--danger]="badge.tone === 'danger'"
+              [class.badge--info]="badge.tone === 'info'"
+            >
+              {{ badge.text }}
+            </span>
+          }
+        </div>
+
+        <section class="details-panel__grid">
+          <div>
+            <span class="details-panel__label">Booking ID</span>
+            <span class="details-panel__value">{{ detail.record.bookingId }}</span>
+          </div>
+          <div>
+            <span class="details-panel__label">Created At</span>
+            <span class="details-panel__value">{{ detail.createdAtDisplay }}</span>
+          </div>
+          <div>
+            <span class="details-panel__label">Rental Start</span>
+            <span class="details-panel__value">{{ detail.startDateTimeDisplay }}</span>
+          </div>
+          <div>
+            <span class="details-panel__label">Expected Return</span>
+            <span class="details-panel__value">{{ detail.endDateTimeDisplay }}</span>
+          </div>
+          <div>
+            <span class="details-panel__label">Total Amount</span>
+            <span class="details-panel__value">{{ detail.totalAmountDisplay }}</span>
+          </div>
+          <div>
+            <span class="details-panel__label">Deposit</span>
+            <span class="details-panel__value">{{ detail.depositDisplay }}</span>
+          </div>
+          <div>
+            <span class="details-panel__label">Vehicle</span>
+            <span class="details-panel__value">{{ detail.vehicleDisplay }}</span>
+          </div>
+          <div>
+            <span class="details-panel__label">Rental Days</span>
+            <span class="details-panel__value">{{ detail.rentalDays ?? '--' }}</span>
+          </div>
+        </section>
+
+        <section class="details-panel__section">
+          <h3>Customer Profile</h3>
+          <dl class="details-panel__definition">
+            <div>
+              <dt>Renter ID</dt>
+              <dd>{{ detail.record.renterId ?? '--' }}</dd>
+            </div>
+            <div>
+              <dt>Address</dt>
+              <dd>{{ detail.record.renterProfile?.address ?? '--' }}</dd>
+            </div>
+            <div>
+              <dt>Date of Birth</dt>
+              <dd>{{ formatDate(detail.record.renterProfile?.dateOfBirth ?? undefined) }}</dd>
+            </div>
+            <div>
+              <dt>Driver License</dt>
+              <dd>{{ detail.record.renterProfile?.driverLicenseNo ?? '--' }}</dd>
+            </div>
+          </dl>
+        </section>
+      </div>
+    </div>
+  }
+</section>
