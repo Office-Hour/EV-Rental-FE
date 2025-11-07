@@ -2214,10 +2214,6 @@
             "type": "string",
             "format": "uuid"
           },
-          "vehicleId": {
-            "type": "string",
-            "format": "uuid"
-          },
           "startTime": {
             "type": "string",
             "format": "date-time"

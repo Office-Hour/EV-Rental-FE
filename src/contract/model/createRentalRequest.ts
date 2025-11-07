@@ -10,7 +10,6 @@
 
 export interface CreateRentalRequest {
   bookingId?: string;
-  vehicleId?: string;
   startTime?: string;
   endTime?: string;
 }
