@@ -14,10 +14,7 @@ import { SignUpComponent } from './features/auth/sign-up/sign-up.component';
 // Landing component
 import { Landing } from './features/landing/landing';
 
-// Customer/Booking components
-import { CarDetail } from './features/customer/booking/pages/car-detail/car-detail';
-import { CarList } from './features/customer/booking/pages/car-list/car-list';
-import { Booking } from './features/customer/booking/booking';
+// Customer/Booking routes are lazy-loaded via booking.routes.ts
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'landing' },
@@ -99,9 +96,10 @@ export const routes: Routes = [
     },
     component: LayoutComponent,
     children: [
-      { path: 'cars', component: CarList },
-      { path: 'cars/:id', component: CarDetail },
-      { path: 'booking', component: Booking },
+      {
+        path: '',
+        loadChildren: () => import('./features/customer/booking/booking.routes'),
+      },
     ],
   },
 
