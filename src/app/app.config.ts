@@ -15,9 +15,9 @@ export const appConfig: ApplicationConfig = {
     provideZonelessChangeDetection(),
     provideRouter(routes),
     provideApi({
-      basePath: 'http://localhost:5251',
+      basePath:
+        'https://swd-be-webapi-production.politerock-c1f6f715.japaneast.azurecontainerapps.io',
     }),
-
     APIS,
 
     //Common UI - MANY PROVIDERS IN HERE
