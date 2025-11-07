@@ -1,10 +1,48 @@
-<section class="min-h-screen bg-surface-variant py-8">
-  <div class="w-full mx-auto flex flex-col gap-6">
-    <div
-      class="grid grid-cols-3 gap-5 md:gap-8 justify-center items-stretch w-full mx-auto overflow-x-auto"
-    >
-      @for (car of cars; track car.id) {
-        <app-car-card [car]="car" />
+<section class="car-list-section">
+  <div class="car-list-container">
+    <form class="car-list-filters" aria-label="Bộ lọc xe" [formGroup]="filterForm">
+      <mat-form-field appearance="outline" class="car-list-filters__field">
+        <mat-label>Trạm</mat-label>
+        <mat-select formControlName="station">
+          <mat-option value="all">Tất cả trạm</mat-option>
+          @for (station of stations(); track station.id) {
+            <mat-option [value]="station.id">{{ station.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="car-list-filters__field car-list-filters__range">
+        <mat-label>Khoảng thời gian</mat-label>
+        <mat-date-range-input formGroupName="range" [rangePicker]="rangePicker">
+          <input matStartDate placeholder="Bắt đầu" />
+          <input matEndDate placeholder="Kết thúc" />
+        </mat-date-range-input>
+        <mat-datepicker-toggle matIconSuffix [for]="rangePicker"></mat-datepicker-toggle>
+        <mat-date-range-picker #rangePicker></mat-date-range-picker>
+      </mat-form-field>
+
+      <button
+        mat-stroked-button
+        color="primary"
+        type="button"
+        class="car-list-filters__clear"
+        (click)="clearFilters()"
+        [disabled]="!hasActiveFilters()"
+      >
+        Xóa bộ lọc
+      </button>
+    </form>
+
+    <div class="car-list-grid" role="list">
+      @if (filteredCarsWithStationName().length) {
+        @for (item of filteredCarsWithStationName(); track item.car.vehicleId) {
+          <app-car-card
+            role="listitem"
+            [props]="{ car: item.car, stationName: item.stationName }"
+          />
+        }
+      } @else {
+        <p class="car-list-empty">Không có xe phù hợp với bộ lọc hiện tại.</p>
       }
     </div>
   </div>

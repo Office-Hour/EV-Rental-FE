@@ -1,0 +1,125 @@
+@use '@angular/material' as mat;
+// ==================================================
+// THEME CONFIGURATION
+// ==================================================
+
+// Base theme configuration shared between light and dark modes
+// Note: Base palette is minimal since we override all colors via theme-overrides
+$base-theme: (
+  color: (
+    // Using neutral palette as base since all colors will be overridden
+    primary: mat.$blue-palette,
+    tertiary: mat.$cyan-palette,
+  ),
+  typography: (
+    plain-family: 'Roboto',
+    brand-family: 'Roboto',
+    bold-weight: 600,
+    medium-weight: 500,
+    regular-weight: 400,
+  ),
+  density: 0,
+);
+
+// Apply base theme to html element with light/dark mode support
+html {
+  color-scheme: light;
+
+  // Apply Material theme
+  @include mat.theme($base-theme);
+
+  // Define typography CSS variables before using them in theme-overrides
+  --mat-sys-brand-font-family: Roboto;
+  --mat-sys-plain-font-family: Roboto;
+  --mat-sys-bold-font-weight: 700;
+  --mat-sys-medium-font-weight: 500;
+  --mat-sys-regular-font-weight: 400;
+
+  // Override theme colors and typography to use custom values
+  @include mat.theme-overrides((
+    // Color overrides
+    primary: oklch(0.765 0.177 163.22),
+    on-primary: #1a1a1a,
+    primary-container: oklch(84.5% 0.143 164.978),
+    on-primary-container: #221a00,
+    inverse-primary: #ebc300,
+    primary-fixed: #ffe177,
+    primary-fixed-dim: #ebc300,
+    on-primary-fixed: #231b00,
+    on-primary-fixed-variant: #554500,
+    secondary: #555f6b,
+    on-secondary: #ffffff,
+    secondary-container: #d9e3f1,
+    on-secondary-container: #121c26,
+    secondary-fixed: #d9e3f1,
+    secondary-fixed-dim: #bdc7d5,
+    on-secondary-fixed: #121c26,
+    on-secondary-fixed-variant: #3e4853,
+    tertiary: #006e2a,
+    on-tertiary: #ffffff,
+    tertiary-container: #69ff87,
+    on-tertiary-container: #002108,
+    tertiary-fixed: #69ff87,
+    tertiary-fixed-dim: #3ce36a,
+    on-tertiary-fixed: #002108,
+    on-tertiary-fixed-variant: #00531e,
+    background: #fdf8f6,
+    on-background: #1c1b1a,
+    surface: #fdf8f6,
+    surface-dim: #ddd9d7,
+    surface-bright: #fdf8f6,
+    surface-container-lowest: #ffffff,
+    surface-container-low: #f7f3f0,
+    surface-container: #f1edea,
+    surface-container-high: #ece7e5,
+    surface-container-highest: #e6e2df,
+    on-surface: #1c1b1a,
+    shadow: #000000,
+    scrim: #000000,
+    surface-tint: #635e50,
+    inverse-surface: #31302f,
+    inverse-on-surface: #f4f0ed,
+    outline: #7b776d,
+    outline-variant: #ccc6ba,
+    neutral: #797674,
+    neutral10: #1c1b1a,
+    error: #ba1a1a,
+    error-container: #ffdad6,
+    on-error: #ffffff,
+    on-error-container: #410002,
+    surface-variant: #e9e2d5,
+    on-surface-variant: #4a463d,
+    neutral-variant: #7b776c,
+    neutral-variant20: #333028,
+    inverse-secondary: #bdc7d5,
+    inverse-tertiary: #3ce36a,
+    // Typography overrides
+    brand-family: Roboto,
+    plain-family: Roboto,
+    bold-weight: 700,
+    medium-weight: 500,
+    regular-weight: 400,
+    headline-large-font: var(--mat-sys-brand-font-family),
+    headline-medium-font: var(--mat-sys-brand-font-family),
+    headline-small-font: var(--mat-sys-brand-font-family),
+    display-large-font: var(--mat-sys-brand-font-family),
+    display-medium-font: var(--mat-sys-brand-font-family),
+    display-small-font: var(--mat-sys-brand-font-family),
+    title-large-font: var(--mat-sys-brand-font-family),
+    body-large: var(--mat-sys-body-large-weight) var(--mat-sys-body-large-size) / var(--mat-sys-body-large-line-height) var(--mat-sys-body-large-font),
+    body-medium: var(--mat-sys-body-medium-weight) var(--mat-sys-body-medium-size) / var(--mat-sys-body-medium-line-height) var(--mat-sys-body-medium-font),
+    body-small: var(--mat-sys-body-small-weight) var(--mat-sys-body-small-size) / var(--mat-sys-body-small-line-height) var(--mat-sys-body-small-font),
+    label-large: var(--mat-sys-label-large-weight) var(--mat-sys-label-large-size) / var(--mat-sys-label-large-line-height) var(--mat-sys-label-large-font),
+    label-medium: var(--mat-sys-label-medium-weight) var(--mat-sys-label-medium-size) / var(--mat-sys-label-medium-line-height) var(--mat-sys-label-medium-font),
+    label-small: var(--mat-sys-label-small-weight) var(--mat-sys-label-small-size) / var(--mat-sys-label-small-line-height) var(--mat-sys-label-small-font),
+    title-large: var(--mat-sys-title-large-weight) var(--mat-sys-title-large-size) / var(--mat-sys-title-large-line-height) var(--mat-sys-title-large-font),
+    title-medium: var(--mat-sys-title-medium-weight) var(--mat-sys-title-medium-size) / var(--mat-sys-title-medium-line-height) var(--mat-sys-title-medium-font),
+    title-small: var(--mat-sys-title-small-weight) var(--mat-sys-title-small-size) / var(--mat-sys-title-small-line-height) var(--mat-sys-title-small-font),
+    headline-large: var(--mat-sys-headline-large-weight) var(--mat-sys-headline-large-size) / var(--mat-sys-headline-large-line-height) var(--mat-sys-headline-large-font),
+    headline-medium: var(--mat-sys-headline-medium-weight) var(--mat-sys-headline-medium-size) / var(--mat-sys-headline-medium-line-height) var(--mat-sys-headline-medium-font),
+    headline-small: var(--mat-sys-headline-small-weight) var(--mat-sys-headline-small-size) / var(--mat-sys-headline-small-line-height) var(--mat-sys-headline-small-font),
+    display-large: var(--mat-sys-display-large-weight) var(--mat-sys-display-large-size) / var(--mat-sys-display-large-line-height) var(--mat-sys-display-large-font),
+    display-medium: var(--mat-sys-display-medium-weight) var(--mat-sys-display-medium-size) / var(--mat-sys-display-medium-line-height) var(--mat-sys-display-medium-font),
+    display-small: var(--mat-sys-display-small-weight) var(--mat-sys-display-small-size) / var(--mat-sys-display-small-line-height) var(--mat-sys-display-small-font),
+  ));
+}

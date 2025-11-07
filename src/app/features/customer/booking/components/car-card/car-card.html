@@ -1,42 +1,52 @@
-<a [routerLink]="['/detail-card', car().id]" class="car-card">
-  <!-- Hover Overlay -->
-  <div class="car-card__overlay">
-    <div class="car-card__icon">
-      <mat-icon aria-hidden="false" fontIcon="zoom_in"></mat-icon>
+<a
+  class="car-card"
+  [routerLink]="detailLink()"
+  [attr.aria-label]="title()"
+  [class.car-card--disabled]="!detailLink()"
+  [attr.aria-disabled]="detailLink() ? null : true"
+>
+  <div class="car-card__header">
+    <div class="car-card__title-group">
+      <h2 class="car-card__title">{{ title() }}</h2>
     </div>
+
+    @if (upcomingStatus()) {
+      <span class="car-card__status">
+        <mat-icon aria-hidden="true">event</mat-icon>
+        {{ upcomingStatus() }}
+      </span>
+    }
   </div>
 
-  <div class="car-card__content">
-    @if (leadingBadges().length || trailingBadges().length) {}
-
-    <h2 class="car-card__name">
-      {{ car().name }}
-    </h2>
-
-    <div class="car-card__media">
-      <img
-        [ngSrc]="car().imageUrl + '.webp'"
-        [alt]="car().name"
-        class="car-card__image"
-        width="512"
-        height="256"
-        loading="lazy"
-      />
-    </div>
-
-    <div class="car-card__pricing">
-      <span class="car-card__price-prefix">{{ car().pricePrefix ?? 'Chỉ từ' }}</span>
-      <span class="car-card__price-amount">{{ formattedPrice() }}</span>
-      <span class="car-card__price-unit">{{ car().currency }}/{{ car().rateUnit }}</span>
-    </div>
-
-    <div class="car-card__specs">
-      @for (spec of car().specs; track spec.label) {
-        <div class="car-card__spec">
-          <mat-icon class="car-card__spec-icon">{{ getSpecIcon(spec.icon) }}</mat-icon>
-          <span class="car-card__spec-value">{{ spec.value }}</span>
+  @if (metrics().length) {
+    <div class="car-card__metrics">
+      @for (metric of metrics(); track metric.label) {
+        <div class="car-card__metric">
+          <div class="car-card__metric-icon">
+            <mat-icon aria-hidden="true">{{ metric.icon }}</mat-icon>
+          </div>
+          <div class="car-card__metric-content">
+            <span class="car-card__metric-label">{{ metric.label }}</span>
+            <span class="car-card__metric-value">{{ metric.value }}</span>
+          </div>
         </div>
       }
     </div>
+  }
+
+  <div class="car-card__footer">
+    @if (pricing().length) {
+      <div class="car-card__pricing">
+        @for (price of pricing(); track price.label) {
+          <div class="car-card__price">
+            <span class="car-card__price-label">{{ price.label }}</span>
+            <span class="car-card__price-amount">{{ price.value }}</span>
+            <span class="car-card__price-unit">{{ price.unit }}</span>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="car-card__price car-card__price--empty">Liên hệ để biết giá</div>
+    }
   </div>
 </a>

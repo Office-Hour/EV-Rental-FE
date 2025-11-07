@@ -17,11 +17,8 @@ export class SignOutComponent implements OnInit {
   countdown = signal(5);
 
   ngOnInit(): void {
-    // Sign out the user
-    this._authService.signOut().subscribe(() => {
-      // Start countdown
-      this.startCountdown();
-    });
+    // Start countdown
+    this.startCountdown();
   }
 
   /**
@@ -32,18 +29,22 @@ export class SignOutComponent implements OnInit {
       const currentValue = this.countdown();
       if (currentValue <= 1) {
         clearInterval(interval);
-        // Redirect to sign-in page
-        this._router.navigate(['/auth/sign-in']);
-      } else {
-        this.countdown.set(currentValue - 1);
+        if (this._authService.isAuthenticated) {
+          this.redirectToSignIn();
+        }
       }
+      this.countdown.set(currentValue - 1);
     }, 1000);
   }
 
   /**
-   * Redirect to sign-in immediately
+   * Redirect to sign-in page
    */
   redirectToSignIn(): void {
-    this._router.navigate(['/auth/sign-in']);
+    // Sign out the user
+    this._authService.signOut().subscribe(() => {
+      // Redirect to sign-in page
+      this._router.navigate(['/sign-in']);
+    });
   }
 }
