@@ -9,13 +9,13 @@
  */
 
 /**
- * Possible values: Reserved, In_Progress, Completed, Late, Cancelled.
+ * Possible values: reserved, in_Progress, completed, late, cancelled.
  */
 export const RentalStatus = {
-  Reserved: 'Reserved',
-  InProgress: 'In_Progress',
-  Completed: 'Completed',
-  Late: 'Late',
-  Cancelled: 'Cancelled',
+  Reserved: 'reserved',
+  InProgress: 'in_Progress',
+  Completed: 'completed',
+  Late: 'late',
+  Cancelled: 'cancelled',
 } as const;
 export type RentalStatus = (typeof RentalStatus)[keyof typeof RentalStatus];

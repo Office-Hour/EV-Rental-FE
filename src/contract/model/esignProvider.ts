@@ -9,13 +9,13 @@
  */
 
 /**
- * Possible values: Native, Docusign, Adobesign, Signnow, Other.
+ * Possible values: native, docusign, adobesign, signnow, other.
  */
 export const EsignProvider = {
-  Native: 'Native',
-  Docusign: 'Docusign',
-  Adobesign: 'Adobesign',
-  Signnow: 'Signnow',
-  Other: 'Other',
+  Native: 'native',
+  Docusign: 'docusign',
+  Adobesign: 'adobesign',
+  Signnow: 'signnow',
+  Other: 'other',
 } as const;
 export type EsignProvider = (typeof EsignProvider)[keyof typeof EsignProvider];

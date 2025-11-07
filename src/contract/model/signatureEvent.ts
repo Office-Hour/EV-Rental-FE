@@ -9,10 +9,10 @@
  */
 
 /**
- * Possible values: Pickup, Dropoff.
+ * Possible values: pickup, dropoff.
  */
 export const SignatureEvent = {
-  Pickup: 'Pickup',
-  Dropoff: 'Dropoff',
+  Pickup: 'pickup',
+  Dropoff: 'dropoff',
 } as const;
 export type SignatureEvent = (typeof SignatureEvent)[keyof typeof SignatureEvent];

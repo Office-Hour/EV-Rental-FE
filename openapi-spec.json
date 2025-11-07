@@ -1972,22 +1972,22 @@
       },
       "BookingStatus": {
         "enum": [
-          "Pending_Verification",
-          "Verified",
-          "Cancelled"
+          "pending_Verification",
+          "verified",
+          "cancelled"
         ],
         "type": "string",
-        "description": "Possible values: Pending_Verification, Verified, Cancelled."
+        "description": "Possible values: pending_Verification, verified, cancelled."
       },
       "BookingVerificationStatus": {
         "enum": [
-          "Pending",
-          "Approved",
-          "Rejected_Mismatch",
-          "Rejected_Other"
+          "pending",
+          "approved",
+          "rejected_Mismatch",
+          "rejected_Other"
         ],
         "type": "string",
-        "description": "Possible values: Pending, Approved, Rejected_Mismatch, Rejected_Other."
+        "description": "Possible values: pending, approved, rejected_Mismatch, rejected_Other."
       },
       "CancelCheckinRequest": {
         "type": "object",
@@ -2137,14 +2137,14 @@
       },
       "ContractStatus": {
         "enum": [
-          "Issued",
-          "Partially_Signed",
-          "Signed",
-          "Voided",
-          "Expired"
+          "issued",
+          "partially_Signed",
+          "signed",
+          "voided",
+          "expired"
         ],
         "type": "string",
-        "description": "Possible values: Issued, Partially_Signed, Signed, Voided, Expired."
+        "description": "Possible values: issued, partially_Signed, signed, voided, expired."
       },
       "CreateBookingRequest": {
         "type": "object",
@@ -2262,11 +2262,11 @@
       },
       "Currency": {
         "enum": [
-          "USD",
-          "VND"
+          "usd",
+          "vnd"
         ],
         "type": "string",
-        "description": "Possible values: USD, VND."
+        "description": "Possible values: usd, vnd."
       },
       "DepositFeeDto": {
         "type": "object",
@@ -2402,25 +2402,25 @@
       },
       "EsignProvider": {
         "enum": [
-          "Native",
-          "Docusign",
-          "Adobesign",
-          "Signnow",
-          "Other"
+          "native",
+          "docusign",
+          "adobesign",
+          "signnow",
+          "other"
         ],
         "type": "string",
-        "description": "Possible values: Native, Docusign, Adobesign, Signnow, Other."
+        "description": "Possible values: native, docusign, adobesign, signnow, other."
       },
       "FeeType": {
         "enum": [
-          "Deposit",
-          "Rental_Charge",
-          "Surcharge",
-          "Damage",
-          "Other"
+          "deposit",
+          "rental_Charge",
+          "surcharge",
+          "damage",
+          "other"
         ],
         "type": "string",
-        "description": "Possible values: Deposit, Rental_Charge, Surcharge, Damage, Other."
+        "description": "Possible values: deposit, rental_Charge, surcharge, damage, other."
       },
       "GuidApiResponse": {
         "type": "object",
@@ -2451,13 +2451,13 @@
       },
       "KycType": {
         "enum": [
-          "National_ID",
-          "Driver_License",
-          "Passport",
-          "Other"
+          "national_ID",
+          "driver_License",
+          "passport",
+          "other"
         ],
         "type": "string",
-        "description": "Possible values: National_ID, Driver_License, Passport, Other."
+        "description": "Possible values: national_ID, driver_License, passport, other."
       },
       "LoginRequest": {
         "type": "object",
@@ -2485,25 +2485,25 @@
       },
       "PartyRole": {
         "enum": [
-          "Renter",
-          "Staff",
-          "Other"
+          "renter",
+          "staff",
+          "other"
         ],
         "type": "string",
-        "description": "Possible values: Renter, Staff, Other."
+        "description": "Possible values: renter, staff, other."
       },
       "PaymentMethod": {
         "enum": [
-          "Unknown",
-          "Cash",
-          "Card",
-          "Ewallet",
-          "Bank_Transfer",
-          "VNPay_QR",
-          "International_Card"
+          "unknown",
+          "cash",
+          "card",
+          "ewallet",
+          "bank_Transfer",
+          "vnPay_QR",
+          "international_Card"
         ],
         "type": "string",
-        "description": "Possible values: Unknown, Cash, Card, Ewallet, Bank_Transfer, VNPay_QR, International_Card."
+        "description": "Possible values: unknown, cash, card, ewallet, bank_Transfer, vnPay_QR, international_Card."
       },
       "ReceiveInspectionRequest": {
         "type": "object",
@@ -2745,14 +2745,14 @@
       },
       "RentalStatus": {
         "enum": [
-          "Reserved",
-          "In_Progress",
-          "Completed",
-          "Late",
-          "Cancelled"
+          "reserved",
+          "in_Progress",
+          "completed",
+          "late",
+          "cancelled"
         ],
         "type": "string",
-        "description": "Possible values: Reserved, In_Progress, Completed, Late, Cancelled."
+        "description": "Possible values: reserved, in_Progress, completed, late, cancelled."
       },
       "RenterBankAccountDto": {
         "type": "object",
@@ -2859,21 +2859,21 @@
       },
       "SignatureEvent": {
         "enum": [
-          "Pickup",
-          "Dropoff"
+          "pickup",
+          "dropoff"
         ],
         "type": "string",
-        "description": "Possible values: Pickup, Dropoff."
+        "description": "Possible values: pickup, dropoff."
       },
       "SignatureType": {
         "enum": [
-          "Drawn",
-          "Typed",
-          "Digital_Cert",
-          "OnPaper"
+          "drawn",
+          "typed",
+          "digital_Cert",
+          "onPaper"
         ],
         "type": "string",
-        "description": "Possible values: Drawn, Typed, Digital_Cert, OnPaper."
+        "description": "Possible values: drawn, typed, digital_Cert, onPaper."
       },
       "StationDetailsDto": {
         "type": "object",
@@ -3070,12 +3070,12 @@
       },
       "VehicleAtStationStatus": {
         "enum": [
-          "Maintenance",
-          "Available",
-          "Booked"
+          "maintenance",
+          "available",
+          "booked"
         ],
         "type": "string",
-        "description": "Possible values: Maintenance, Available, Booked."
+        "description": "Possible values: maintenance, available, booked."
       },
       "VehicleDetailsDto": {
         "type": "object",

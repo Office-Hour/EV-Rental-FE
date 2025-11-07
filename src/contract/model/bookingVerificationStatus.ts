@@ -9,13 +9,13 @@
  */
 
 /**
- * Possible values: Pending, Approved, Rejected_Mismatch, Rejected_Other.
+ * Possible values: pending, approved, rejected_Mismatch, rejected_Other.
  */
 export const BookingVerificationStatus = {
-  Pending: 'Pending',
-  Approved: 'Approved',
-  RejectedMismatch: 'Rejected_Mismatch',
-  RejectedOther: 'Rejected_Other',
+  Pending: 'pending',
+  Approved: 'approved',
+  RejectedMismatch: 'rejected_Mismatch',
+  RejectedOther: 'rejected_Other',
 } as const;
 export type BookingVerificationStatus =
   (typeof BookingVerificationStatus)[keyof typeof BookingVerificationStatus];

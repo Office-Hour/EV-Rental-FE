@@ -9,12 +9,12 @@
  */
 
 /**
- * Possible values: Drawn, Typed, Digital_Cert, OnPaper.
+ * Possible values: drawn, typed, digital_Cert, onPaper.
  */
 export const SignatureType = {
-  Drawn: 'Drawn',
-  Typed: 'Typed',
-  DigitalCert: 'Digital_Cert',
-  OnPaper: 'OnPaper',
+  Drawn: 'drawn',
+  Typed: 'typed',
+  DigitalCert: 'digital_Cert',
+  OnPaper: 'onPaper',
 } as const;
 export type SignatureType = (typeof SignatureType)[keyof typeof SignatureType];

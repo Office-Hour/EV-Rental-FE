@@ -9,12 +9,12 @@
  */
 
 /**
- * Possible values: Maintenance, Available, Booked.
+ * Possible values: maintenance, available, booked.
  */
 export const VehicleAtStationStatus = {
-  Maintenance: 'Maintenance',
-  Available: 'Available',
-  Booked: 'Booked',
+  Maintenance: 'maintenance',
+  Available: 'available',
+  Booked: 'booked',
 } as const;
 export type VehicleAtStationStatus =
   (typeof VehicleAtStationStatus)[keyof typeof VehicleAtStationStatus];

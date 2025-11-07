@@ -9,13 +9,13 @@
  */
 
 /**
- * Possible values: Deposit, Rental_Charge, Surcharge, Damage, Other.
+ * Possible values: deposit, rental_Charge, surcharge, damage, other.
  */
 export const FeeType = {
-  Deposit: 'Deposit',
-  RentalCharge: 'Rental_Charge',
-  Surcharge: 'Surcharge',
-  Damage: 'Damage',
-  Other: 'Other',
+  Deposit: 'deposit',
+  RentalCharge: 'rental_Charge',
+  Surcharge: 'surcharge',
+  Damage: 'damage',
+  Other: 'other',
 } as const;
 export type FeeType = (typeof FeeType)[keyof typeof FeeType];

@@ -9,11 +9,11 @@
  */
 
 /**
- * Possible values: Renter, Staff, Other.
+ * Possible values: renter, staff, other.
  */
 export const PartyRole = {
-  Renter: 'Renter',
-  Staff: 'Staff',
-  Other: 'Other',
+  Renter: 'renter',
+  Staff: 'staff',
+  Other: 'other',
 } as const;
 export type PartyRole = (typeof PartyRole)[keyof typeof PartyRole];
