@@ -14,7 +14,7 @@
     "lint-style": "pnpm exec stylelint \"**/*.{css,scss,html}\" --fix",
     "deploy": "ng deploy --base-href=/EV-Rental-FE/",
     "lint-staged-script": "node ./node_modules/lint-staged/bin/lint-staged.js",
-    "generate-openapi": "curl.exe -k http://localhost:5251/openapi/v1.json -o openapi-spec.json && pnpm exec openapi-generator-cli generate -i openapi-spec.json -g typescript-angular -o src/contract -c open-api-config.json"
+    "generate-openapi": "curl.exe -k https://swd-be-webapi-production.politerock-c1f6f715.japaneast.azurecontainerapps.io/openapi/v1.json -o openapi-spec.json && pnpm exec openapi-generator-cli generate -i openapi-spec.json -g typescript-angular -o src/contract -c open-api-config.json"
   },
   "prettier": {
     "printWidth": 100,
