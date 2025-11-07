@@ -8,16 +8,16 @@ import { ConfirmationRequiredComponent } from './features/auth/confirmation-requ
 import { ForgotPasswordComponent } from './features/auth/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './features/auth/reset-password/reset-password.component';
 import { SignInComponent } from './features/auth/sign-in/sign-in.component';
-import { SignUpComponent } from './features/auth/sign-up/sign-up.component';
 import { SignOutComponent } from './features/auth/sign-out/sign-out.component';
-import { ErrorPageComponent } from './features/auth/error-page/error-page';
+import { SignUpComponent } from './features/auth/sign-up/sign-up.component';
 
 // Landing component
 import { Landing } from './features/landing/landing';
 
 // Customer/Booking components
-import { CarList } from './features/customer/booking/pages/car-list/car-list';
 import { CarDetail } from './features/customer/booking/pages/car-detail/car-detail';
+import { CarList } from './features/customer/booking/pages/car-list/car-list';
+import { Booking } from './features/customer/booking/booking';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'landing' },
@@ -27,7 +27,6 @@ export const routes: Routes = [
     path: '',
     canActivate: [NoAuthGuard],
     canActivateChild: [NoAuthGuard],
-    component: LayoutComponent,
     children: [
       {
         path: 'confirmation-required',
@@ -43,12 +42,6 @@ export const routes: Routes = [
       },
       { path: 'sign-in', component: SignInComponent },
       { path: 'sign-up', component: SignUpComponent },
-      {
-        path: 'error-page',
-        canActivate: [NoAuthGuard],
-        canActivateChild: [NoAuthGuard],
-        component: ErrorPageComponent,
-      },
     ],
   },
 
@@ -106,8 +99,9 @@ export const routes: Routes = [
     },
     component: LayoutComponent,
     children: [
-      { path: 'booking', component: CarList },
-      { path: 'booking/cars/:id', component: CarDetail },
+      { path: 'cars', component: CarList },
+      { path: 'cars/:id', component: CarDetail },
+      { path: 'booking', component: Booking },
     ],
   },
 
