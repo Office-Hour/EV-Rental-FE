@@ -433,6 +433,11 @@
   gap: 1.5rem;
 }
 
+.details-panel:focus-visible {
+  outline: 3px solid var(--mat-sys-primary, #2563eb);
+  outline-offset: 4px;
+}
+
 .details-panel__header {
   display: flex;
   align-items: flex-start;

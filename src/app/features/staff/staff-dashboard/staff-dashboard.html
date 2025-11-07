@@ -133,7 +133,11 @@
               <div class="booking-card__vehicle" title="{{ card.vehicleDisplay }}">
                 {{ card.vehicleDisplay }}
               </div>
-              <button type="button" class="booking-card__cta" (click)="openDetails(card.record)">
+              <button
+                type="button"
+                class="booking-card__cta"
+                (click)="openDetails(card.record, $event)"
+              >
                 View Details
               </button>
             </footer>
@@ -155,17 +159,16 @@
       class="details-overlay"
       role="dialog"
       aria-modal="true"
-      aria-label="Booking details"
-      tabindex="0"
+      aria-labelledby="booking-details-title"
+      aria-describedby="booking-details-summary"
       (click)="onOverlayClick($event)"
-      (keydown.enter)="closeDetails()"
-      (keydown.space)="closeDetails()"
+      (keydown.escape)="closeDetails()"
     >
-      <div class="details-panel" tabindex="-1">
+      <div #detailPanel class="details-panel" tabindex="-1">
         <header class="details-panel__header">
           <div>
-            <h2>Booking Details</h2>
-            <p>{{ detail.customerDisplay }}</p>
+            <h2 id="booking-details-title">Booking Details</h2>
+            <p id="booking-details-summary">{{ detail.customerDisplay }}</p>
           </div>
           <button
             type="button"

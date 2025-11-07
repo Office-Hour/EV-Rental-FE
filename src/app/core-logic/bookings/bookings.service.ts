@@ -107,8 +107,8 @@ export class BookingsService {
       }),
       catchError((error: unknown) => {
         this._error.set(this._resolveErrorMessage(error));
-        this._staffBookings.set([]);
-        return of<StaffBookingRecord[]>([]);
+        const previousRecords = [...this._staffBookings()];
+        return of<StaffBookingRecord[]>(previousRecords);
       }),
       finalize(() => {
         this._loading.set(false);
