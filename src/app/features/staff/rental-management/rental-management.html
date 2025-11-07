@@ -1,0 +1,309 @@
+<section class="rental-management">
+  <header class="page-header">
+    <div class="page-header__titles">
+      <h1 class="page-header__title">Rental Management</h1>
+      <p class="page-header__subtitle">Manage all active and completed rentals.</p>
+    </div>
+    <button type="button" class="refresh-button" (click)="refresh()" [disabled]="loading()">
+      <mat-icon aria-hidden="true">refresh</mat-icon>
+      <span>Refresh</span>
+    </button>
+  </header>
+
+  <nav class="status-tabs" aria-label="Rental filters">
+    @for (tab of tabs; track tab.key) {
+      <button
+        type="button"
+        class="status-tab"
+        [class.status-tab--active]="activeTab() === tab.key"
+        (click)="onTabSelect(tab.key)"
+      >
+        <span class="status-tab__label">{{ tab.label }}</span>
+        <span class="status-tab__count">{{ statusCounters()[tab.counterKey] }}</span>
+      </button>
+    }
+  </nav>
+
+  <div class="toolbar">
+    <div class="toolbar__search">
+      <mat-icon aria-hidden="true">search</mat-icon>
+      <input
+        type="search"
+        class="toolbar__input"
+        [value]="searchTerm()"
+        (input)="onSearchInput($event)"
+        placeholder="Search rental ID, customer, vehicle..."
+        autocomplete="off"
+      />
+      @if (searchTerm()) {
+        <button
+          type="button"
+          class="toolbar__clear"
+          (click)="clearSearch()"
+          aria-label="Clear search"
+        >
+          <mat-icon aria-hidden="true">close</mat-icon>
+        </button>
+      }
+    </div>
+
+    <div class="toolbar__actions" aria-label="View and filter options">
+      <button type="button" class="icon-button" aria-label="Filter rentals">
+        <mat-icon aria-hidden="true">tune</mat-icon>
+      </button>
+      <button
+        type="button"
+        class="icon-button"
+        (click)="setViewMode('list')"
+        [class.icon-button--active]="viewMode() === 'list'"
+        aria-label="List view"
+      >
+        <mat-icon aria-hidden="true">view_list</mat-icon>
+      </button>
+      <button
+        type="button"
+        class="icon-button"
+        (click)="setViewMode('grid')"
+        [class.icon-button--active]="viewMode() === 'grid'"
+        aria-label="Grid view"
+      >
+        <mat-icon aria-hidden="true">grid_view</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  @if (error()) {
+    <div class="alert alert--error" role="alert">
+      <div class="alert__content">
+        <mat-icon aria-hidden="true">error</mat-icon>
+        <span>{{ error() }}</span>
+      </div>
+      <button type="button" class="alert__action" (click)="refresh()">Retry</button>
+    </div>
+  }
+
+  @if (loading()) {
+    <div class="loading-state" aria-live="polite">
+      <div class="loading-state__spinner"></div>
+      <p>Loading rentals...</p>
+    </div>
+  } @else {
+    @if (cardViewModels().length > 0) {
+      <div class="rental-collection" [class.rental-collection--list]="viewMode() === 'list'">
+        @for (card of cardViewModels(); track card.record.rentalId) {
+          <article class="rental-card">
+            <header class="rental-card__header">
+              <div class="rental-card__identity">
+                <p class="rental-card__label">Rental ID</p>
+                <h3 class="rental-card__title">{{ card.rentalIdDisplay }}</h3>
+                <p class="rental-card__meta">Customer: {{ card.customerDisplay }}</p>
+              </div>
+              @if (card.statusBadge) {
+                <span
+                  class="badge"
+                  [class.badge--pending]="card.statusBadge.tone === 'pending'"
+                  [class.badge--success]="card.statusBadge.tone === 'success'"
+                  [class.badge--danger]="card.statusBadge.tone === 'danger'"
+                  [class.badge--info]="card.statusBadge.tone === 'info'"
+                >
+                  {{ card.statusBadge.text }}
+                </span>
+              }
+            </header>
+
+            <div class="rental-card__body">
+              <div class="rental-card__section">
+                <span class="rental-card__section-label">Pickup</span>
+                <span class="rental-card__section-value">{{ card.pickupDisplay }}</span>
+              </div>
+              <div class="rental-card__section">
+                <span class="rental-card__section-label">Expected Return</span>
+                <span class="rental-card__section-value">{{ card.expectedReturnDisplay }}</span>
+              </div>
+              <div class="rental-card__section">
+                <span class="rental-card__section-label">Rental Fee</span>
+                <span class="rental-card__section-value">{{ card.rentalFeeDisplay }}</span>
+              </div>
+              <div class="rental-card__section">
+                <span class="rental-card__section-label">Deposit</span>
+                <span class="rental-card__section-value">{{ card.depositDisplay }}</span>
+              </div>
+              <div class="rental-card__section">
+                <span class="rental-card__section-label">Total</span>
+                <span class="rental-card__section-value">{{ card.totalDisplay }}</span>
+              </div>
+            </div>
+
+            <footer class="rental-card__footer">
+              <div class="rental-card__vehicle" title="{{ card.vehicleDisplay }}">
+                {{ card.vehicleDisplay }}
+              </div>
+              <button
+                type="button"
+                class="rental-card__cta"
+                (click)="openDetails(card.record, $event)"
+              >
+                View Details
+              </button>
+            </footer>
+          </article>
+        }
+      </div>
+    } @else {
+      <div class="empty-state">
+        <mat-icon aria-hidden="true">garage</mat-icon>
+        <h2>No rentals found</h2>
+        <p>Try adjusting filters or clearing the search term.</p>
+        <button type="button" (click)="clearSearch()">Clear Filters</button>
+      </div>
+    }
+  }
+
+  @if (selectedRentalView(); as detail) {
+    <div
+      class="details-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="rental-details-title"
+      aria-describedby="rental-details-summary"
+      (click)="onOverlayClick($event)"
+      (keydown.escape)="closeDetails()"
+    >
+      <div #detailPanel class="details-panel" tabindex="-1">
+        <header class="details-panel__header">
+          <div>
+            <h2 id="rental-details-title">Rental Details</h2>
+            <p id="rental-details-summary">{{ detail.vehicleDisplay }}</p>
+          </div>
+          <button
+            type="button"
+            class="details-panel__close"
+            aria-label="Close details"
+            (click)="closeDetails()"
+          >
+            <mat-icon aria-hidden="true">close</mat-icon>
+          </button>
+        </header>
+
+        @if (detail.statusBadge) {
+          <div class="details-panel__badges">
+            <span
+              class="badge"
+              [class.badge--pending]="detail.statusBadge.tone === 'pending'"
+              [class.badge--success]="detail.statusBadge.tone === 'success'"
+              [class.badge--danger]="detail.statusBadge.tone === 'danger'"
+              [class.badge--info]="detail.statusBadge.tone === 'info'"
+            >
+              {{ detail.statusBadge.text }}
+            </span>
+          </div>
+        }
+
+        <section class="details-panel__grid">
+          <div>
+            <span class="details-panel__label">Rental ID</span>
+            <span class="details-panel__value">{{ detail.rentalIdDisplay }}</span>
+          </div>
+          <div>
+            <span class="details-panel__label">Booking ID</span>
+            <span class="details-panel__value">{{ detail.bookingIdDisplay }}</span>
+          </div>
+          <div>
+            <span class="details-panel__label">Pickup</span>
+            <span class="details-panel__value">{{ detail.pickupDisplay }}</span>
+          </div>
+          <div>
+            <span class="details-panel__label">Expected Return</span>
+            <span class="details-panel__value">{{ detail.expectedReturnDisplay }}</span>
+          </div>
+          <div>
+            <span class="details-panel__label">Duration</span>
+            <span class="details-panel__value">{{ detail.durationDisplay }}</span>
+          </div>
+          <div>
+            <span class="details-panel__label">Rental Fee</span>
+            <span class="details-panel__value">{{ detail.rentalFeeDisplay }}</span>
+          </div>
+          <div>
+            <span class="details-panel__label">Deposit</span>
+            <span class="details-panel__value">{{ detail.depositDisplay }}</span>
+          </div>
+          <div>
+            <span class="details-panel__label">Total</span>
+            <span class="details-panel__value">{{ detail.totalDisplay }}</span>
+          </div>
+        </section>
+
+        <section class="details-panel__section">
+          <h3>Customer Information</h3>
+          <dl class="details-panel__definition">
+            <div>
+              <dt>Renter ID</dt>
+              <dd>{{ detail.renterIdDisplay }}</dd>
+            </div>
+            <div>
+              <dt>Address</dt>
+              <dd>{{ detail.renterAddress ?? '--' }}</dd>
+            </div>
+            <div>
+              <dt>Driver License</dt>
+              <dd>{{ detail.renterLicense ?? '--' }}</dd>
+            </div>
+            <div>
+              <dt>Risk Score</dt>
+              <dd>{{ detail.renterRiskScore ?? '--' }}</dd>
+            </div>
+          </dl>
+        </section>
+
+        <section class="details-panel__section">
+          <h3>Vehicle Information</h3>
+          <dl class="details-panel__definition">
+            <div>
+              <dt>Vehicle</dt>
+              <dd>{{ detail.vehicleDisplay }}</dd>
+            </div>
+            <div>
+              <dt>Vehicle At Station</dt>
+              <dd>{{ detail.vehicleAtStationDisplay }}</dd>
+            </div>
+          </dl>
+        </section>
+
+        <section class="details-panel__section">
+          <h3>Contracts</h3>
+          @if (detail.contracts.length > 0) {
+            <ul class="details-panel__list">
+              @for (contract of detail.contracts; track contract.contractId) {
+                <li>
+                  <span class="details-panel__list-label">{{ contract.contractId }}</span>
+                  <span class="details-panel__list-value">{{ contract.statusLabel }}</span>
+                </li>
+              }
+            </ul>
+          } @else {
+            <p class="details-panel__empty">No contract data</p>
+          }
+        </section>
+
+        <section class="details-panel__section">
+          <h3>Rating</h3>
+          <dl class="details-panel__definition">
+            <div>
+              <dt>Score</dt>
+              <dd>{{ detail.ratingDisplay ?? '--' }}</dd>
+            </div>
+            <div>
+              <dt>Rated At</dt>
+              <dd>{{ detail.ratedAtDisplay ?? '--' }}</dd>
+            </div>
+            <div>
+              <dt>Comment</dt>
+              <dd>{{ detail.comment ?? '--' }}</dd>
+            </div>
+          </dl>
+        </section>
+      </div>
+    </div>
+  }
+</section>
