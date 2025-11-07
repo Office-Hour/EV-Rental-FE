@@ -1,207 +1,205 @@
-﻿import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { CarCard, CarCardData } from '../../components/car-card/car-card';
-
-interface CarMetadata {
-  readonly sale: boolean;
-  readonly bodyType: 'Bán tải' | 'Hatchback' | 'MPV 7 chỗ' | 'Sedan 5 chỗ' | 'SUV';
-  readonly brand: string;
-  readonly model: string;
-  readonly transmission: 'Số sàn' | 'Số tự động';
-  readonly fuel: 'Điện' | 'Xăng' | 'Hybrid';
-  readonly location: string;
-  readonly premium: boolean;
-  readonly distanceKm: number;
-  readonly listedAt: string;
-}
-
-type CarListItem = CarCardData & CarMetadata;
+﻿import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { CarCard } from '../../components/car-card/car-card';
+import { BookingBriefDto, VehicleDetailsDto } from '../../../../../../contract';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatNativeDateModule } from '@angular/material/core';
+import { StationService } from '../../../../../core-logic/station/station.service';
 
 @Component({
   selector: 'app-car-list',
-  imports: [CarCard],
+  imports: [
+    CarCard,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatDatepickerModule,
+    MatInputModule,
+    MatButtonModule,
+    MatNativeDateModule,
+  ],
   templateUrl: './car-list.html',
   styleUrl: './car-list.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CarList {
-  private readonly _cars = signal<readonly CarListItem[]>([
-    {
-      id: 'vinfast-vf3',
-      name: 'VinFast VF 3',
-      imageUrl: '/images/cars/vf3',
-      pricePerDay: 2_450_000,
-      currency: 'VND',
-      rateUnit: 'Ngày',
-      pricePrefix: 'Chỉ từ',
-      heroBackground: 'radial-gradient(circle at 20% 20%, #134e4a 0%, #020617 65%)',
-      badges: [{ label: 'Miễn phí sạc', tone: 'accent', position: 'leading' }],
-      specs: [
-        { icon: 'segment', label: 'Phân khúc', value: 'E-SUV 7 chỗ' },
-        { icon: 'range', label: 'Phạm vi', value: '594km (NEDC)' },
-        { icon: 'seats', label: 'Số chỗ', value: '6 hoặc 7 chỗ' },
-        { icon: 'cargo', label: 'Dung tích cốp', value: '567L' },
-      ],
-      sale: true,
-      bodyType: 'SUV',
-      brand: 'VinFast',
-      model: 'VF 3',
-      transmission: 'Số tự động',
-      fuel: 'Điện',
-      location: 'Hà Nội',
-      premium: true,
-      distanceKm: 4.2,
-      listedAt: '2024-08-15',
-    },
-    {
-      id: 'vinfast-vf5',
-      name: 'VinFast VF 5',
-      imageUrl: '/images/cars/vf5',
-      pricePerDay: 1_950_000,
-      currency: 'VND',
-      rateUnit: 'Ngày',
-      pricePrefix: 'Chỉ từ',
-      heroBackground: 'linear-gradient(180deg, #111827 0%, #0b1120 45%, #020617 100%)',
-      badges: [
-        { label: 'Giảm 10%', tone: 'accent', position: 'leading' },
-        { label: 'Còn xe', tone: 'success', position: 'trailing' },
-      ],
-      sale: true,
-      bodyType: 'SUV',
-      brand: 'VinFast',
-      model: 'VF 5',
-      transmission: 'Số tự động',
-      fuel: 'Điện',
-      location: 'Hồ Chí Minh',
-      premium: false,
-      distanceKm: 7.8,
-      listedAt: '2024-07-20',
-      specs: [
-        { icon: 'segment', label: 'Phân khúc', value: 'Crossover' },
-        { icon: 'range', label: 'Phạm vi', value: '506km (WLTP)' },
-        { icon: 'seats', label: 'Số chỗ', value: '5 chỗ' },
-        { icon: 'cargo', label: 'Dung tích cốp', value: '520L' },
-      ],
-    },
-    {
-      id: 'vinfast-vf6',
-      name: 'VinFast VF 6',
-      imageUrl: '/images/cars/vf6',
-      pricePerDay: 2_350_000,
-      currency: 'VND',
-      rateUnit: 'Ngày',
-      pricePrefix: 'Chỉ từ',
-      heroBackground: 'radial-gradient(circle at 80% 10%, #c026d3 0%, #1e1b4b 55%, #020617 100%)',
-      badges: [{ label: 'Đặt trước', tone: 'accent', position: 'leading' }],
-      sale: false,
-      bodyType: 'Sedan 5 chỗ',
-      brand: 'VinFast',
-      model: 'VF 6',
-      transmission: 'Số tự động',
-      fuel: 'Điện',
-      location: 'Đà Nẵng',
-      premium: true,
-      distanceKm: 12.4,
-      listedAt: '2024-06-28',
-      specs: [
-        { icon: 'segment', label: 'Phân khúc', value: 'Sedan' },
-        { icon: 'range', label: 'Phạm vi', value: '491km (WLTP)' },
-        { icon: 'seats', label: 'Số chỗ', value: '5 chỗ' },
-        { icon: 'cargo', label: 'Dung tích cốp', value: '649L' },
-      ],
-    },
-    {
-      id: 'vinfast-vf7',
-      name: 'VinFast VF 7',
-      imageUrl: '/images/cars/vf7',
-      pricePerDay: 1_650_000,
-      currency: 'VND',
-      rateUnit: 'Ngày',
-      pricePrefix: 'Chỉ từ',
-      heroBackground: 'radial-gradient(circle at 15% 15%, #2563eb 0%, #0f172a 70%)',
-      badges: [
-        { label: 'Giao xe tận nơi', tone: 'neutral', position: 'leading' },
-        { label: 'Còn xe', tone: 'success', position: 'trailing' },
-      ],
-      sale: true,
-      bodyType: 'SUV',
-      brand: 'VinFast',
-      model: 'VF 7',
-      transmission: 'Số tự động',
-      fuel: 'Điện',
-      location: 'Hồ Chí Minh',
-      premium: false,
-      distanceKm: 5.9,
-      listedAt: '2024-08-05',
-      specs: [
-        { icon: 'segment', label: 'Phân khúc', value: 'SUV hạng D' },
-        { icon: 'range', label: 'Phạm vi', value: '471km (NEDC)' },
-        { icon: 'seats', label: 'Số chỗ', value: '5 chỗ' },
-        { icon: 'cargo', label: 'Dung tích cốp', value: '420L' },
-      ],
-    },
-    {
-      id: 'vinfast-vf8',
-      name: 'VinFast VF 8',
-      imageUrl: '/images/cars/vf8',
-      pricePerDay: 1_890_000,
-      currency: 'VND',
-      rateUnit: 'Ngày',
-      pricePrefix: 'Chỉ từ',
-      heroBackground: 'radial-gradient(circle at 70% 20%, #0ea5e9 0%, #0f172a 60%)',
-      badges: [{ label: 'Miễn phí hủy', tone: 'neutral', position: 'leading' }],
-      sale: false,
-      bodyType: 'SUV',
-      brand: 'VinFast',
-      model: 'VF 8',
-      transmission: 'Số tự động',
-      fuel: 'Điện',
-      location: 'Hà Nội',
-      premium: false,
-      distanceKm: 9.6,
-      listedAt: '2024-05-18',
-      specs: [
-        { icon: 'segment', label: 'Phân khúc', value: 'Crossover' },
-        { icon: 'range', label: 'Phạm vi', value: '488km (WLTP)' },
-        { icon: 'seats', label: 'Số chỗ', value: '5 chỗ' },
-        { icon: 'cargo', label: 'Dung tích cốp', value: '527L' },
-      ],
-    },
-    {
-      id: 'vinfast-vf9',
-      name: 'VinFast VF 9',
-      imageUrl: '/images/cars/vf9',
-      pricePerDay: 1_250_000,
-      currency: 'VND',
-      rateUnit: 'Ngày',
-      pricePrefix: 'Chỉ từ',
-      heroBackground: 'radial-gradient(circle at 30% 20%, #14b8a6 0%, #0f172a 65%)',
-      badges: [{ label: 'Miễn phí giao nhận', tone: 'accent', position: 'leading' }],
-      sale: true,
-      bodyType: 'Hatchback',
-      brand: 'VinFast',
-      model: 'VF 9',
-      transmission: 'Số tự động',
-      fuel: 'Điện',
-      location: 'Hồ Chí Minh',
-      premium: false,
-      distanceKm: 3.8,
-      listedAt: '2024-04-09',
-      specs: [
-        { icon: 'segment', label: 'Phân khúc', value: 'Compact SUV' },
-        { icon: 'range', label: 'Phạm vi', value: '420km (WLTP)' },
-        { icon: 'seats', label: 'Số chỗ', value: '5 chỗ' },
-        { icon: 'cargo', label: 'Dung tích cốp', value: '440L' },
-      ],
-    },
-  ]);
+  private readonly _stationService = inject(StationService);
 
-  /**
-   * Getter for the cars signal
-   */
-  get cars(): CarListItem[] {
-    return this._cars().slice();
+  readonly selectedStation = signal<string>('all');
+  readonly bookingDateRange = signal<{ start: Date | null; end: Date | null }>({
+    start: null,
+    end: null,
+  });
+
+  readonly filterForm = new FormGroup({
+    station: new FormControl<string>('all', { nonNullable: true }),
+    range: new FormGroup({
+      start: new FormControl<Date | null>(null),
+      end: new FormControl<Date | null>(null),
+    }),
+  });
+
+  constructor() {
+    // Stations are typically loaded by AuthService during login/session restore.
+    // This is a fallback in case stations haven't been loaded yet (e.g., race condition, direct navigation).
+    if (this._stationService.stations.length === 0) {
+      this._stationService.getStations().subscribe({
+        next: () => {
+          console.log('getStations', this._stationService.stations);
+        },
+        error: () => {
+          // Silently ignore errors. They can be retried later.
+        },
+      });
+    }
+
+    const stationControl = this.filterForm.controls.station;
+    stationControl.valueChanges
+      .pipe(takeUntilDestroyed())
+      .subscribe((value) => this.selectedStation.set(value ?? 'all'));
+
+    this.filterForm.controls.range.valueChanges
+      .pipe(takeUntilDestroyed())
+      .subscribe(({ start, end }) => {
+        this.bookingDateRange.set({ start: start ?? null, end: end ?? null });
+      });
   }
-  set cars(cars: CarListItem[]) {
-    this._cars.set(cars);
+
+  // Get all vehicles from all stations with their station info
+  readonly carsWithStation = computed(() => {
+    const stations = this._stationService.stations;
+    const result: { car: VehicleDetailsDto; stationId: string; stationName: string }[] = [];
+
+    for (const station of stations) {
+      for (const vehicle of station.vehicles ?? []) {
+        result.push({
+          car: vehicle,
+          stationId: station.id,
+          stationName: station.name,
+        });
+      }
+    }
+
+    return result;
+  });
+
+  // Get all vehicles from all stations (for backward compatibility)
+  readonly cars = computed<readonly VehicleDetailsDto[]>(() => {
+    return this.carsWithStation().map((item) => item.car);
+  });
+
+  // Map station ID to station name
+  readonly stationNameMap = computed(() => {
+    const stations = this._stationService.stations;
+    const map = new Map<string, string>();
+    for (const station of stations) {
+      map.set(station.id, station.name);
+    }
+    return map;
+  });
+
+  // Get stations with id and name for filter dropdown
+  readonly stations = computed(() => {
+    const stationIds = new Set<string>();
+
+    // Collect unique station IDs from carsWithStation
+    for (const item of this.carsWithStation()) {
+      stationIds.add(item.stationId);
+    }
+
+    // Get station names from station service
+    const allStations = this._stationService.stations;
+    const stationMap = new Map<string, string>();
+    for (const station of allStations) {
+      stationMap.set(station.id, station.name);
+    }
+
+    // Return stations that have vehicles, sorted by name
+    return Array.from(stationIds)
+      .map((id) => ({
+        id,
+        name: stationMap.get(id) ?? id,
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+  });
+
+  readonly filteredCars = computed(() => {
+    const stationId = this.selectedStation();
+    const { start, end } = this.bookingDateRange();
+    const rangeStart = start;
+    const rangeEnd = end ?? rangeStart;
+
+    return this.carsWithStation().filter((item) => {
+      const { car, stationId: carStationId } = item;
+
+      // Filter by station ID
+      if (stationId !== 'all' && carStationId !== stationId) {
+        return false;
+      }
+
+      // Filter by date range
+      if (rangeStart && rangeEnd) {
+        return !this._hasBookingConflict(car.upcomingBookings ?? [], rangeStart, rangeEnd);
+      }
+
+      return true;
+    });
+  });
+
+  // Get filtered cars with station names
+  readonly filteredCarsWithStationName = computed(() => {
+    return this.filteredCars().map((item) => ({
+      car: item.car,
+      stationName: item.stationName,
+    }));
+  });
+
+  readonly hasActiveFilters = computed(() => {
+    const stationActive = this.selectedStation() !== 'all';
+    const { start, end } = this.bookingDateRange();
+    return stationActive || !!start || !!end;
+  });
+
+  clearFilters(): void {
+    this.filterForm.controls.station.setValue('all');
+    this.filterForm.controls.range.reset({ start: null, end: null });
+  }
+
+  private _hasBookingConflict(bookings: BookingBriefDto[], start: Date, end: Date): boolean {
+    if (!bookings.length) {
+      return false;
+    }
+
+    const requestedStart = this._normalizeDate(start);
+    const requestedEnd = this._normalizeDate(end);
+
+    for (const booking of bookings) {
+      if (!booking.startDate) {
+        continue;
+      }
+
+      const bookingStart = this._normalizeDate(new Date(booking.startDate));
+      const bookingEnd = booking.endDate
+        ? this._normalizeDate(new Date(booking.endDate))
+        : bookingStart;
+
+      const overlaps = requestedStart <= bookingEnd && bookingStart <= requestedEnd;
+      if (overlaps) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  private _normalizeDate(date: Date): number {
+    const normalized = new Date(date);
+    normalized.setHours(0, 0, 0, 0);
+    return normalized.getTime();
   }
 }

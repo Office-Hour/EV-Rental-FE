@@ -2,6 +2,7 @@ import { AsyncPipe } from '@angular/common';
 import { Component, computed, inject, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
@@ -47,6 +48,7 @@ interface GuestNavigationItem {
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
+    MatDividerModule,
     MatMenuModule,
     MatSidenavModule,
     AsyncPipe,
@@ -178,8 +180,6 @@ export class LayoutComponent {
   }
 
   private signOut(): void {
-    this.authService.signOut().subscribe(() => {
-      this.router.navigate(['/sign-in']);
-    });
+    this.router.navigate(['/sign-out']);
   }
 }

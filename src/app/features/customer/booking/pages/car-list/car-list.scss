@@ -1,29 +1,74 @@
-/* Angular Material form field customizations for car list filters */
-.mat-mdc-form-field {
-  .mat-mdc-select-trigger {
-    font-weight: 600;
-    color: #10b981;
-  }
-
-  .mat-mdc-select-value-text {
-    font-weight: 600;
-    color: #10b981;
-  }
-
-  .mat-mdc-form-field-subscript-wrapper {
-    display: none;
-  }
-
-  .mat-mdc-form-field-flex {
-    border-radius: 18px;
-    background-color: rgb(15 23 42 / 2%);
-  }
-
-  .mdc-floating-label {
-    color: #10b981;
-  }
+.car-list-section {
+  min-height: 100vh;
+  background: var(--mat-sys-surface-variant);
+  padding: clamp(1.5rem, 2vw, 3rem) 1.5rem;
 }
 
-.mat-mdc-form-field--disabled .mat-mdc-select-trigger {
-  color: rgb(15 23 42 / 35%);
+.car-list-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.car-list-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-center;
+  background: var(--mat-sys-surface);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 1rem;
+  padding: clamp(1rem, 1.5vw, 1.5rem);
+  padding-bottom: 0;
+  box-shadow: 0 10px 30px rgb(15 23 42 / 8%);
+}
+
+.car-list-filters__field {
+  min-width: clamp(180px, 20vw, 240px);
+}
+
+.car-list-filters__range {
+  flex: 1 1 260px;
+  min-width: 260px;
+}
+
+.car-list-filters__clear {
+  align-self: center;
+  padding: 0.65rem 1.5rem;
+}
+
+.car-list-filters__clear[disabled] {
+  opacity: 0.6;
+}
+
+.car-list-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: clamp(1.25rem, 2vw, 2rem);
+}
+
+.car-list-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 2.5rem 1.5rem;
+  border-radius: 1.25rem;
+  border: 1px dashed var(--mat-sys-outline-variant);
+  background: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-body-large);
+}
+
+@media (width <= 768px) {
+  .car-list-filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .car-list-filters__field,
+  .car-list-filters__range,
+  .car-list-filters__clear {
+    width: 100%;
+  }
 }

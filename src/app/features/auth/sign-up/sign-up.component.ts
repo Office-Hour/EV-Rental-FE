@@ -139,8 +139,6 @@ export class SignUpComponent {
       next: () => {
         // Show success message
         //<AlertComponent>
-        //Redirect to the signed-in-redirect page
-        this._router.navigate(['/signed-in-redirect']);
       },
       error: (error) => {
         console.error('Sign up error:', error);
