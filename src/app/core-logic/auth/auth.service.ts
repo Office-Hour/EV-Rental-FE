@@ -188,10 +188,10 @@ export class AuthService {
         this._router.navigateByUrl('/staff');
         break;
       case 'renter':
-        this._router.navigateByUrl('/booking');
+        this._router.navigateByUrl('/cars');
         break;
       default:
-        this._router.navigateByUrl('/booking');
+        this._router.navigateByUrl('/cars');
         break;
     }
   }

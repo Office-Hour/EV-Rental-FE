@@ -47,7 +47,7 @@ export class CarCard {
   readonly detailLink = computed(() => {
     const { car } = this.props();
     const identifier = car.vehicleId ?? car.vehicleAtStationId;
-    return identifier ? ['/booking', 'cars', identifier] : null;
+    return identifier ? ['/cars', identifier] : null;
   });
 
   readonly title = computed(() => {
