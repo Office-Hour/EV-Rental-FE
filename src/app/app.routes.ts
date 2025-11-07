@@ -3,10 +3,26 @@ import { AuthGuard } from './core-logic/auth/guards/auth.guard';
 import { NoAuthGuard } from './core-logic/auth/guards/noAuth.guard';
 import { LayoutComponent } from './layout/layout';
 
+// Auth components
+import { ConfirmationRequiredComponent } from './features/auth/confirmation-required/confirmation-required.component';
+import { ForgotPasswordComponent } from './features/auth/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './features/auth/reset-password/reset-password.component';
+import { SignInComponent } from './features/auth/sign-in/sign-in.component';
+import { SignUpComponent } from './features/auth/sign-up/sign-up.component';
+import { SignOutComponent } from './features/auth/sign-out/sign-out.component';
+import { ErrorPageComponent } from './features/auth/error-page/error-page';
+
+// Landing component
+import { Landing } from './features/landing/landing';
+
+// Customer/Booking components
+import { CarList } from './features/customer/booking/pages/car-list/car-list';
+import { CarDetail } from './features/customer/booking/pages/car-detail/car-detail';
+
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'landing' },
 
-  //Guest routes
+  // Guest routes
   {
     path: '',
     canActivate: [NoAuthGuard],
@@ -15,19 +31,24 @@ export const routes: Routes = [
     children: [
       {
         path: 'confirmation-required',
-        loadChildren: () =>
-          import('./features/auth/confirmation-required/confirmation-required.routes'),
+        component: ConfirmationRequiredComponent,
       },
       {
         path: 'forgot-password',
-        loadChildren: () => import('./features/auth/forgot-password/forgot-password.routes'),
+        component: ForgotPasswordComponent,
       },
       {
         path: 'reset-password',
-        loadChildren: () => import('./features/auth/reset-password/reset-password.routes'),
+        component: ResetPasswordComponent,
       },
-      { path: 'sign-in', loadChildren: () => import('./features/auth/sign-in/sign-in.routes') },
-      { path: 'sign-up', loadChildren: () => import('./features/auth/sign-up/sign-up.routes') },
+      { path: 'sign-in', component: SignInComponent },
+      { path: 'sign-up', component: SignUpComponent },
+      {
+        path: 'error-page',
+        canActivate: [NoAuthGuard],
+        canActivateChild: [NoAuthGuard],
+        component: ErrorPageComponent,
+      },
     ],
   },
 
@@ -36,26 +57,17 @@ export const routes: Routes = [
     path: '',
     canActivate: [AuthGuard],
     canActivateChild: [AuthGuard],
-    component: LayoutComponent,
-    children: [
-      { path: 'sign-out', loadChildren: () => import('./features/auth/sign-out/sign-out.routes') },
-    ],
+    children: [{ path: 'sign-out', component: SignOutComponent }],
   },
 
-  // public routes - guest only access landing
+  // Public routes with layout
   {
     path: '',
     component: LayoutComponent,
     children: [
       {
         path: 'landing',
-        loadChildren: () => import('./features/landing/landing.routes'),
-      },
-      {
-        path: 'error-page',
-        canActivate: [NoAuthGuard],
-        canActivateChild: [NoAuthGuard],
-        loadChildren: () => import('./features/auth/error-page/error-page.routes'),
+        component: Landing,
       },
     ],
   },
@@ -94,7 +106,8 @@ export const routes: Routes = [
     },
     component: LayoutComponent,
     children: [
-      { path: 'booking', loadChildren: () => import('./features/customer/booking/booking.routes') },
+      { path: 'booking', component: CarList },
+      { path: 'booking/cars/:id', component: CarDetail },
     ],
   },
 
