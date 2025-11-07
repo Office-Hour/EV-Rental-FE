@@ -83,10 +83,10 @@ export class LayoutComponent {
       { name: 'Báo cáo', href: '/reports', current: false, icon: 'analytics' },
     ],
     staff: [
-      { name: 'Booking Management', href: '/staff', current: false, icon: 'event_note' },
+      { name: 'Booking Management', href: '/staff/bookings', current: false, icon: 'event_note' },
       { name: 'Quản lý xe', href: '/staff/vehicles', current: false, icon: 'car_rental' },
       { name: 'Quản lý khách hàng', href: '/staff/customers', current: false, icon: 'group' },
-      { name: 'Quản lý đơn thuê', href: '/staff/orders', current: false, icon: 'assignment' },
+      { name: 'Rental Management', href: '/staff/rentals', current: false, icon: 'assignment' },
       { name: 'Báo cáo', href: '/staff/reports', current: false, icon: 'analytics' },
     ],
     admin: [
