@@ -22,7 +22,7 @@
           <div class="flex flex-col gap-0 divide-y divide-outline-variant">
             @for (metric of vehicleMetrics(); track metric.label) {
               <div
-                class="car-detail__metric flex items-center gap-4 px-4 py-4 first:pt-0 last:pb-0 hover:bg-surface-container-high transition-colors"
+                class="car-detail__metric flex items-center gap-4 px-4 py-4 hover:bg-surface-container-high transition-colors"
               >
                 <div
                   class="shrink-0 w-10 h-10 rounded-full bg-primary-container flex items-center justify-center"
@@ -64,6 +64,7 @@
                     formGroupName="range"
                     [rangePicker]="bookingRangePicker"
                     [dateFilter]="isDateAvailable"
+                    [min]="today"
                     #rangeInput="matDateRangeInput"
                     (dateChange)="onRangeChange(rangeInput.value, bookingRangePicker, rangeInput)"
                   >
@@ -89,11 +90,17 @@
                     <mat-select formControlName="startTime">
                       <mat-option value="">Chọn giờ</mat-option>
                       @for (hour of hourOptions; track hour) {
-                        <mat-option [value]="hour">{{ hour }}</mat-option>
+                        <mat-option [value]="hour" [disabled]="isStartHourDisabled(hour)">
+                          {{ hour }}
+                        </mat-option>
                       }
                     </mat-select>
                     @if (form.controls.startTime.invalid && form.controls.startTime.touched) {
-                      <mat-error>Vui lòng chọn giờ nhận.</mat-error>
+                      @if (form.controls.startTime.hasError('invalidPastTime')) {
+                        <mat-error>Giờ nhận đã qua. Vui lòng chọn khung giờ khác.</mat-error>
+                      } @else {
+                        <mat-error>Vui lòng chọn giờ nhận.</mat-error>
+                      }
                     }
                   </mat-form-field>
 
@@ -102,11 +109,19 @@
                     <mat-select formControlName="endTime">
                       <mat-option value="">Chọn giờ</mat-option>
                       @for (hour of hourOptions; track hour) {
-                        <mat-option [value]="hour">{{ hour }}</mat-option>
+                        <mat-option [value]="hour" [disabled]="isEndHourDisabled(hour)">
+                          {{ hour }}
+                        </mat-option>
                       }
                     </mat-select>
                     @if (form.controls.endTime.invalid && form.controls.endTime.touched) {
-                      <mat-error>Vui lòng chọn giờ trả.</mat-error>
+                      @if (form.controls.endTime.hasError('invalidPastTime')) {
+                        <mat-error>Giờ trả không thể ở trong quá khứ.</mat-error>
+                      } @else if (form.controls.endTime.hasError('beforeStartTime')) {
+                        <mat-error>Giờ trả phải sau giờ nhận.</mat-error>
+                      } @else {
+                        <mat-error>Vui lòng chọn giờ trả.</mat-error>
+                      }
                     }
                   </mat-form-field>
                 </div>
@@ -135,6 +150,12 @@
                       <span>Tổng cộng</span>
                       <strong>{{ estimate.total | number: '1.0-0' }} ₫</strong>
                     </div>
+                    @if (depositPrice(); as deposit) {
+                      <div class="booking-card__summary-row flex justify-between items-center">
+                        <span>Tiền đặt cọc</span>
+                        <strong>{{ deposit }}</strong>
+                      </div>
+                    }
                   </div>
                 }
 

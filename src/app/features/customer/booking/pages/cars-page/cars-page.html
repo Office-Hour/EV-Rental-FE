@@ -1,0 +1,58 @@
+<section class="booking-stepper" aria-label="Quy trình đặt xe">
+  <mat-stepper
+    class="booking-stepper__container"
+    [class.booking-stepper__hidden-header]="isFirstStep()"
+    labelPosition="bottom"
+    [selectedIndex]="activeStep()"
+    [linear]="true"
+    (selectionChange)="onStepSelectionChange($event)"
+  >
+    <mat-step [completed]="detailsCompleted()" [editable]="false">
+      @if (!isFirstStep()) {
+        <ng-template matStepLabel>Thông tin xe</ng-template>
+      } @else {
+        <div class="booking-stepper__content">
+          <app-car-detail
+            [stations]="stations()"
+            [stepIndex]="0"
+            stepKey="details"
+            (nextStep)="goToNextStep()"
+            (previousStep)="goToPreviousStep()"
+            (bookingDataReady)="onBookingDataReady($event)"
+          />
+        </div>
+      }
+    </mat-step>
+
+    <mat-step [completed]="paymentStarted()" [editable]="false">
+      <ng-template matStepLabel>Xác nhận thông tin</ng-template>
+      <div class="booking-stepper__content">
+        <app-checkout
+          [stepIndex]="1"
+          stepKey="checkout"
+          [bookingData]="bookingData()"
+          (nextStep)="markPaymentStarted(); goToNextStep()"
+          (previousStep)="goToPreviousStep()"
+        />
+      </div>
+    </mat-step>
+
+    <mat-step [completed]="activeStep() > 2" [editable]="false">
+      <ng-template matStepLabel>Thanh toán</ng-template>
+      <div class="booking-stepper__content">
+        <div class="payment-step-placeholder flex flex-col items-center justify-center py-16 px-4">
+          <p class="text-center text-lg">Đang chuyển hướng đến trang thanh toán...</p>
+        </div>
+      </div>
+    </mat-step>
+
+    <mat-step [completed]="activeStep() > 3" [editable]="false">
+      <ng-template matStepLabel>Đặt cọc hoàn tất</ng-template>
+      <div class="booking-stepper__content">
+        <div class="deposit-step-placeholder flex flex-col items-center justify-center py-16 px-4">
+          <p class="text-center text-lg">Đang chuyển hướng tới trang chi tiết đặt xe của bạn...</p>
+        </div>
+      </div>
+    </mat-step>
+  </mat-stepper>
+</section>

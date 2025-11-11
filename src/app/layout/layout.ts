@@ -80,8 +80,8 @@ export class LayoutComponent {
   // Navigation data cho từng role
   private navigationData = {
     renter: [
-      { name: 'Thuê xe', href: '/booking', current: false, icon: 'directions_car' },
-      { name: 'Đơn thuê của tôi', href: '/orders', current: false, icon: 'list_alt' },
+      { name: 'Thuê xe', href: '/cars', current: false, icon: 'directions_car' },
+      { name: 'Đơn thuê của tôi', href: '/bookings', current: false, icon: 'list_alt' },
       { name: 'Báo cáo', href: '/reports', current: false, icon: 'analytics' },
     ],
     staff: [

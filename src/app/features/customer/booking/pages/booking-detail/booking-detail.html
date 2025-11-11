@@ -1,0 +1,129 @@
+<section class="deposit-page w-full max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">
+  <div class="deposit-container flex flex-col gap-6">
+    <header class="deposit-header">
+      <h1 class="deposit-title">Đặt cọc hoàn tất</h1>
+      <p class="deposit-subtitle">Cảm ơn bạn đã đặt xe. Thông tin đặt xe của bạn:</p>
+    </header>
+
+    @if (isLoading()) {
+      <div class="deposit-loading text-center py-8">
+        <p>Đang tải thông tin đặt xe...</p>
+      </div>
+    } @else if (error(); as errorMessage) {
+      <div class="deposit-error text-center py-8">
+        <p>{{ errorMessage }}</p>
+      </div>
+    } @else if (bookingData(); as data) {
+      <div class="deposit-content grid gap-6">
+        <div class="deposit-card rounded-2xl border p-4 sm:p-6">
+          <h2 class="deposit-card__title flex items-center gap-2">
+            <mat-icon>confirmation_number</mat-icon>
+            <span>Mã đặt xe</span>
+          </h2>
+          <div class="deposit-card__content mt-4">
+            @if (hasBookingId()) {
+              <div class="mt-4 flex flex-col items-center gap-4">
+                <qrcode
+                  [ariaLabel]="'Mã QR cho đơn đặt xe ' + bookingId()"
+                  [qrdata]="bookingId()"
+                  [width]="192"
+                  [margin]="0"
+                  elementType="svg"
+                  errorCorrectionLevel="H"
+                  [imageSrc]="qrLogoUrl"
+                  [imageWidth]="64"
+                  [imageHeight]="64"
+                />
+                <p class="text-sm text-slate-600">
+                  Quét mã QR này khi nhận xe để xác minh đơn đặt xe của bạn.
+                </p>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Thông tin xe -->
+        <div class="deposit-card rounded-2xl border p-4 sm:p-6">
+          <h2 class="deposit-card__title flex items-center gap-2">
+            <mat-icon>directions_car</mat-icon>
+            <span>Thông tin xe</span>
+          </h2>
+          <div class="deposit-card__content mt-4 flex flex-col gap-3">
+            <div class="deposit-info-row">
+              <span class="deposit-info-label">Tên xe:</span>
+              <span class="deposit-info-value">{{ vehicleName() }}</span>
+            </div>
+            @if (data.vehicle.make) {
+              <div class="deposit-info-row">
+                <span class="deposit-info-label">Hãng:</span>
+                <span class="deposit-info-value">{{ data.vehicle.make }}</span>
+              </div>
+            }
+            @if (data.vehicle.model) {
+              <div class="deposit-info-row">
+                <span class="deposit-info-label">Model:</span>
+                <span class="deposit-info-value">{{ data.vehicle.model }}</span>
+              </div>
+            }
+            @if (data.vehicle.modelYear) {
+              <div class="deposit-info-row">
+                <span class="deposit-info-label">Năm sản xuất:</span>
+                <span class="deposit-info-value">{{ data.vehicle.modelYear }}</span>
+              </div>
+            }
+            @if (data.vehicle.rangeKm) {
+              <div class="deposit-info-row">
+                <span class="deposit-info-label">Phạm vi:</span>
+                <span class="deposit-info-value">{{ data.vehicle.rangeKm }} km</span>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Thông tin trạm -->
+        <div class="deposit-card rounded-2xl border p-4 sm:p-6">
+          <h2 class="deposit-card__title flex items-center gap-2">
+            <mat-icon>location_on</mat-icon>
+            <span>Thông tin trạm</span>
+          </h2>
+          <div class="deposit-card__content mt-4 flex flex-col gap-3">
+            <div class="deposit-info-row">
+              <span class="deposit-info-label">Tên trạm:</span>
+              <span class="deposit-info-value">{{ data.station.name }}</span>
+            </div>
+            <div class="deposit-info-row">
+              <span class="deposit-info-label">Địa chỉ:</span>
+              <span class="deposit-info-value">{{ data.station.address }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Thông tin lịch trình -->
+        <div class="deposit-card rounded-2xl border p-4 sm:p-6">
+          <h2 class="deposit-card__title flex items-center gap-2">
+            <mat-icon>schedule</mat-icon>
+            <span>Lịch trình thuê</span>
+          </h2>
+          <div class="deposit-card__content mt-4 flex flex-col gap-3">
+            <div class="deposit-info-row">
+              <span class="deposit-info-label">Ngày nhận:</span>
+              <span class="deposit-info-value"
+                >{{ formatDate(data.startDate) }} - {{ data.startTime }}</span
+              >
+            </div>
+            <div class="deposit-info-row">
+              <span class="deposit-info-label">Ngày trả:</span>
+              <span class="deposit-info-value"
+                >{{ formatDate(data.endDate) }} - {{ data.endTime }}</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    } @else {
+      <div class="deposit-empty text-center py-8">
+        <p>Không có thông tin đặt xe.</p>
+      </div>
+    }
+  </div>
+</section>
