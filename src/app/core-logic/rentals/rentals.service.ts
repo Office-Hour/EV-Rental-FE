@@ -1,7 +1,8 @@
 import { inject, Injectable, signal } from '@angular/core';
 import {
   BookingBriefDto,
-  BookingService,
+  BookingDetailsDto,
+  BookingDetailsDtoListApiResponse,
   ContractDto,
   RentalDetailsDto,
   RentalDetailsDtoListApiResponse,
@@ -9,11 +10,11 @@ import {
   RenterProfileDtoListApiResponse,
   StaffService,
   VehicleDetailsDto,
-  VehicleDetailsDtoApiResponse,
+  VehicleDetailsDtoListApiResponse,
   VehicleDto,
 } from '../../../contract';
-import type { RentalStatus } from '../../../contract';
-import { catchError, finalize, forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
+import type { BookingStatus, BookingVerificationStatus, RentalStatus } from '../../../contract';
+import { catchError, finalize, forkJoin, map, Observable, of, tap } from 'rxjs';
 
 export interface StaffRentalRecord {
   readonly rentalId: string;
@@ -21,12 +22,19 @@ export interface StaffRentalRecord {
   readonly status?: RentalStatus;
   readonly startTime?: string;
   readonly endTime?: string;
+  readonly bookingCreatedAt?: string;
   readonly ratedAt?: string;
   readonly score?: number;
   readonly comment?: string;
   readonly vehicleId?: string;
   readonly vehicle?: VehicleDto;
   readonly booking?: BookingBriefDto;
+  readonly bookingDetails?: BookingDetailsDto;
+  readonly bookingStatus?: BookingStatus;
+  readonly bookingVerificationStatus?: BookingVerificationStatus;
+  readonly verifiedAt?: string;
+  readonly verifiedByStaffId?: string;
+  readonly cancelReason?: string;
   readonly renterId?: string;
   readonly renterProfile?: RenterProfileDto;
   readonly vehicleDetails?: VehicleDetailsDto;
@@ -38,7 +46,6 @@ type VehicleDetailsMap = Map<string, VehicleDetailsDto | undefined>;
 @Injectable({ providedIn: 'root' })
 export class RentalsService {
   private readonly _staffService = inject(StaffService);
-  private readonly _bookingService = inject(BookingService);
 
   private readonly _staffRentals = signal<StaffRentalRecord[]>([]);
   private readonly _loading = signal(false);
@@ -54,47 +61,36 @@ export class RentalsService {
 
     return forkJoin({
       rentalsResponse: this._staffService.apiStaffRentalsGet(),
-      rentersResponse: this._staffService.apiStaffRentersGet(),
+      bookingsResponse: this._staffService
+        .apiStaffBookingsGet()
+        .pipe(catchError(() => of<BookingDetailsDtoListApiResponse>({ data: [] }))),
+      rentersResponse: this._staffService
+        .apiStaffRentersGet()
+        .pipe(catchError(() => of<RenterProfileDtoListApiResponse>({ data: [] }))),
+      vehiclesResponse: this._staffService
+        .apiStaffVehiclesGet()
+        .pipe(catchError(() => of<VehicleDetailsDtoListApiResponse>({ data: [] }))),
     }).pipe(
-      switchMap(
+      map(
         ({
           rentalsResponse,
+          bookingsResponse,
           rentersResponse,
+          vehiclesResponse,
         }: {
           rentalsResponse: RentalDetailsDtoListApiResponse;
+          bookingsResponse: BookingDetailsDtoListApiResponse;
           rentersResponse: RenterProfileDtoListApiResponse;
+          vehiclesResponse: VehicleDetailsDtoListApiResponse;
         }) => {
           const rentalItems = rentalsResponse.data ?? [];
+          const bookingItems = bookingsResponse.data ?? [];
           const renterItems = rentersResponse.data ?? [];
+          const vehicleItems = vehiclesResponse.data ?? [];
 
-          const vehicleIds = this._collectVehicleIds(rentalItems);
-          if (vehicleIds.size === 0) {
-            const records = this._mapStaffRentals(
-              rentalItems,
-              renterItems,
-              new Map<string, VehicleDetailsDto | undefined>(),
-            );
-            return of(records);
-          }
+          const vehicleDetailsMap = this._mapVehicleDetails(vehicleItems);
 
-          const vehicleDetailRequests = Array.from(vehicleIds).map((vehicleId) =>
-            this._bookingService.apiBookingVehiclesVehicleIdGet(vehicleId).pipe(
-              map(
-                (vehicleDetailResponse: VehicleDetailsDtoApiResponse) =>
-                  [vehicleId, vehicleDetailResponse.data ?? undefined] as const,
-              ),
-              catchError(() =>
-                of<readonly [string, VehicleDetailsDto | undefined]>([vehicleId, undefined]),
-              ),
-            ),
-          );
-
-          return forkJoin(vehicleDetailRequests).pipe(
-            map((vehicles) => new Map<string, VehicleDetailsDto | undefined>(vehicles)),
-            map((vehicleDetailsMap) =>
-              this._mapStaffRentals(rentalItems, renterItems, vehicleDetailsMap),
-            ),
-          );
+          return this._mapStaffRentals(rentalItems, bookingItems, renterItems, vehicleDetailsMap);
         },
       ),
       tap((records) => {
@@ -112,11 +108,37 @@ export class RentalsService {
     );
   }
 
+  private _mapVehicleDetails(vehicleDtos: readonly VehicleDetailsDto[]): VehicleDetailsMap {
+    const map = new Map<string, VehicleDetailsDto | undefined>();
+
+    for (const vehicle of vehicleDtos ?? []) {
+      const vehicleId = this._normalizeString(vehicle?.vehicleId);
+      if (!vehicleId) {
+        continue;
+      }
+
+      map.set(vehicleId, vehicle ?? undefined);
+    }
+
+    return map;
+  }
+
   private _mapStaffRentals(
     rentalDtos: readonly RentalDetailsDto[],
+    bookingDtos: readonly BookingDetailsDto[],
     renterDtos: readonly RenterProfileDto[],
     vehicleDetailsMap: VehicleDetailsMap,
   ): StaffRentalRecord[] {
+    const bookingById = new Map<string, BookingDetailsDto>();
+    for (const booking of bookingDtos ?? []) {
+      const bookingId = this._normalizeString(booking?.bookingId);
+      if (!bookingId) {
+        continue;
+      }
+
+      bookingById.set(bookingId, booking);
+    }
+
     const renterById = new Map<string, RenterProfileDto>();
     for (const renter of renterDtos ?? []) {
       const renterId = this._normalizeString(renter?.renterId);
@@ -134,7 +156,10 @@ export class RentalsService {
       }
 
       const bookingId = this._normalizeString(rental.bookingId ?? rental.booking?.bookingId);
-      const renterId = this._normalizeString(rental.booking?.renterId);
+      const bookingDetails = bookingId ? bookingById.get(bookingId) : undefined;
+      const renterId =
+        this._normalizeString(rental.booking?.renterId) ??
+        this._normalizeString(bookingDetails?.renterId);
       const vehicleId = this._normalizeString(rental.vehicleId ?? rental.vehicle?.vehicleId);
       const vehicleDetails = vehicleId ? vehicleDetailsMap.get(vehicleId) : undefined;
 
@@ -144,14 +169,27 @@ export class RentalsService {
         rentalId,
         bookingId,
         status: rental.status,
-        startTime: this._normalizeString(rental.startTime ?? rental.booking?.startDate),
-        endTime: this._normalizeString(rental.endTime ?? rental.booking?.endDate),
+        startTime:
+          this._normalizeString(rental.startTime) ??
+          this._normalizeString(bookingDetails?.startTime) ??
+          this._normalizeString(rental.booking?.startDate),
+        endTime:
+          this._normalizeString(rental.endTime) ??
+          this._normalizeString(bookingDetails?.endTime) ??
+          this._normalizeString(rental.booking?.endDate),
+        bookingCreatedAt: this._normalizeString(bookingDetails?.bookingCreatedAt),
         ratedAt: this._normalizeString(rental.ratedAt),
         score: rental.score ?? undefined,
         comment: this._normalizeString(rental.comment ?? undefined),
         vehicleId,
         vehicle: rental.vehicle,
         booking: rental.booking,
+        bookingDetails,
+        bookingStatus: bookingDetails?.status ?? undefined,
+        bookingVerificationStatus: bookingDetails?.verificationStatus ?? undefined,
+        verifiedAt: this._normalizeString(bookingDetails?.verifiedAt ?? undefined),
+        verifiedByStaffId: this._normalizeString(bookingDetails?.verifiedByStaffId ?? undefined),
+        cancelReason: this._normalizeString(bookingDetails?.cancelReason ?? undefined),
         renterId,
         renterProfile: renterId ? renterById.get(renterId) : undefined,
         vehicleDetails,
@@ -160,19 +198,6 @@ export class RentalsService {
     }
 
     return records.sort((a, b) => this._compareByDateDesc(a.startTime, b.startTime));
-  }
-
-  private _collectVehicleIds(rentals: readonly RentalDetailsDto[]): Set<string> {
-    const ids = new Set<string>();
-
-    for (const rental of rentals ?? []) {
-      const vehicleId = this._normalizeString(rental?.vehicle?.vehicleId ?? rental?.vehicleId);
-      if (vehicleId) {
-        ids.add(vehicleId);
-      }
-    }
-
-    return ids;
   }
 
   private _normalizeString(value: string | null | undefined): string | undefined {

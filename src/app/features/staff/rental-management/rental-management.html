@@ -209,6 +209,10 @@
             <span class="details-panel__value">{{ detail.bookingIdDisplay }}</span>
           </div>
           <div>
+            <span class="details-panel__label">Created At</span>
+            <span class="details-panel__value">{{ detail.bookingCreatedDisplay }}</span>
+          </div>
+          <div>
             <span class="details-panel__label">Pickup</span>
             <span class="details-panel__value">{{ detail.pickupDisplay }}</span>
           </div>
@@ -220,38 +224,80 @@
             <span class="details-panel__label">Duration</span>
             <span class="details-panel__value">{{ detail.durationDisplay }}</span>
           </div>
-          <div>
-            <span class="details-panel__label">Rental Fee</span>
-            <span class="details-panel__value">{{ detail.rentalFeeDisplay }}</span>
-          </div>
-          <div>
-            <span class="details-panel__label">Deposit</span>
-            <span class="details-panel__value">{{ detail.depositDisplay }}</span>
-          </div>
-          <div>
-            <span class="details-panel__label">Total</span>
-            <span class="details-panel__value">{{ detail.totalDisplay }}</span>
-          </div>
+        </section>
+
+        <section class="details-panel__section">
+          <h3>Payment Information</h3>
+          <dl class="details-panel__definition details-panel__definition--columns">
+            <div>
+              <dt>Rental Fee</dt>
+              <dd>{{ detail.rentalFeeDisplay }}</dd>
+            </div>
+            <div>
+              <dt>Deposit Fee</dt>
+              <dd>{{ detail.depositDisplay }}</dd>
+            </div>
+            <div>
+              <dt>Total Amount</dt>
+              <dd>{{ detail.totalDisplay }}</dd>
+            </div>
+          </dl>
+        </section>
+
+        <section class="details-panel__section">
+          <h3>Booking Information</h3>
+          <dl class="details-panel__definition details-panel__definition--columns">
+            <div>
+              <dt>Status</dt>
+              <dd>{{ detail.bookingStatusLabel }}</dd>
+            </div>
+            <div>
+              <dt>Verification Status</dt>
+              <dd>{{ detail.bookingVerificationStatusLabel }}</dd>
+            </div>
+            <div>
+              <dt>Verified At</dt>
+              <dd>{{ detail.verifiedAtDisplay }}</dd>
+            </div>
+            <div>
+              <dt>Verified By</dt>
+              <dd>{{ detail.verifiedByDisplay }}</dd>
+            </div>
+            @if (detail.cancelReasonDisplay !== '--') {
+              <div>
+                <dt>Cancel Reason</dt>
+                <dd>{{ detail.cancelReasonDisplay }}</dd>
+              </div>
+            }
+          </dl>
         </section>
 
         <section class="details-panel__section">
           <h3>Customer Information</h3>
-          <dl class="details-panel__definition">
+          <dl class="details-panel__definition details-panel__definition--columns">
+            <div>
+              <dt>Full Name</dt>
+              <dd>{{ detail.renterNameDisplay }}</dd>
+            </div>
             <div>
               <dt>Renter ID</dt>
               <dd>{{ detail.renterIdDisplay }}</dd>
             </div>
             <div>
+              <dt>Date of Birth</dt>
+              <dd>{{ detail.renterDobDisplay }}</dd>
+            </div>
+            <div>
               <dt>Address</dt>
-              <dd>{{ detail.renterAddress ?? '--' }}</dd>
+              <dd>{{ detail.renterAddressDisplay }}</dd>
             </div>
             <div>
               <dt>Driver License</dt>
-              <dd>{{ detail.renterLicense ?? '--' }}</dd>
+              <dd>{{ detail.renterLicenseDisplay }}</dd>
             </div>
             <div>
               <dt>Risk Score</dt>
-              <dd>{{ detail.renterRiskScore ?? '--' }}</dd>
+              <dd>{{ detail.renterRiskScoreDisplay }}</dd>
             </div>
           </dl>
         </section>
@@ -288,18 +334,18 @@
 
         <section class="details-panel__section">
           <h3>Rating</h3>
-          <dl class="details-panel__definition">
+          <dl class="details-panel__definition details-panel__definition--columns">
             <div>
               <dt>Score</dt>
-              <dd>{{ detail.ratingDisplay ?? '--' }}</dd>
+              <dd>{{ detail.ratingDisplay }}</dd>
             </div>
             <div>
               <dt>Rated At</dt>
-              <dd>{{ detail.ratedAtDisplay ?? '--' }}</dd>
+              <dd>{{ detail.ratedAtDisplay }}</dd>
             </div>
             <div>
               <dt>Comment</dt>
-              <dd>{{ detail.comment ?? '--' }}</dd>
+              <dd>{{ detail.commentDisplay }}</dd>
             </div>
           </dl>
         </section>

@@ -12,10 +12,17 @@ import { MatIconModule } from '@angular/material/icon';
 import { take } from 'rxjs';
 import { RentalsService, StaffRentalRecord } from '../../../core-logic/rentals/rentals.service';
 import {
+  BookingStatus as BookingStatusEnum,
+  BookingVerificationStatus as BookingVerificationStatusEnum,
   ContractStatus as ContractStatusEnum,
   RentalStatus as RentalStatusEnum,
 } from '../../../../contract';
-import type { ContractStatus, RentalStatus } from '../../../../contract';
+import type {
+  BookingStatus,
+  BookingVerificationStatus,
+  ContractStatus,
+  RentalStatus,
+} from '../../../../contract';
 
 type RentalTabKey = 'all' | 'reserved' | 'inProgress' | 'completed' | 'late' | 'cancelled';
 
@@ -63,6 +70,7 @@ interface SelectedRentalViewModel {
   readonly record: StaffRentalRecord;
   readonly rentalIdDisplay: string;
   readonly bookingIdDisplay: string;
+  readonly bookingCreatedDisplay: string;
   readonly statusBadge?: StatusBadge;
   readonly pickupDisplay: string;
   readonly expectedReturnDisplay: string;
@@ -72,13 +80,20 @@ interface SelectedRentalViewModel {
   readonly totalDisplay: string;
   readonly vehicleDisplay: string;
   readonly vehicleAtStationDisplay: string;
+  readonly bookingStatusLabel: string;
+  readonly bookingVerificationStatusLabel: string;
+  readonly verifiedAtDisplay: string;
+  readonly verifiedByDisplay: string;
+  readonly cancelReasonDisplay: string;
   readonly renterIdDisplay: string;
-  readonly renterAddress?: string;
-  readonly renterLicense?: string;
-  readonly renterRiskScore?: string;
-  readonly ratingDisplay?: string;
-  readonly ratedAtDisplay?: string;
-  readonly comment?: string;
+  readonly renterNameDisplay: string;
+  readonly renterDobDisplay: string;
+  readonly renterAddressDisplay: string;
+  readonly renterLicenseDisplay: string;
+  readonly renterRiskScoreDisplay: string;
+  readonly ratingDisplay: string;
+  readonly ratedAtDisplay: string;
+  readonly commentDisplay: string;
   readonly contracts: readonly ContractViewModel[];
 }
 
@@ -105,6 +120,20 @@ const CONTRACT_STATUS_LABELS: Record<ContractStatus, string> = {
   [ContractStatusEnum.Signed]: 'Signed',
   [ContractStatusEnum.Voided]: 'Voided',
   [ContractStatusEnum.Expired]: 'Expired',
+};
+
+const BOOKING_STATUS_LABELS: Record<BookingStatus, string> = {
+  [BookingStatusEnum.PendingVerification]: 'Pending Verification',
+  [BookingStatusEnum.Verified]: 'Verified',
+  [BookingStatusEnum.Cancelled]: 'Cancelled',
+  [BookingStatusEnum.RentalCreated]: 'Rental Created',
+};
+
+const BOOKING_VERIFICATION_STATUS_LABELS: Record<BookingVerificationStatus, string> = {
+  [BookingVerificationStatusEnum.Pending]: 'Pending',
+  [BookingVerificationStatusEnum.Approved]: 'Approved',
+  [BookingVerificationStatusEnum.RejectedMismatch]: 'Rejected - Mismatch',
+  [BookingVerificationStatusEnum.RejectedOther]: 'Rejected - Other',
 };
 
 @Component({
@@ -209,11 +238,19 @@ export class RentalManagement {
     const statusBadge = record.status ? RENTAL_STATUS_BADGES[record.status] : undefined;
     const rentalFee = this._computeRentalFee(record);
     const deposit = record.vehicleDetails?.depositPrice ?? undefined;
+    const renterProfile = record.renterProfile;
+
+    const renterName = this._normalize(renterProfile?.userName);
+    const renterAddress = this._normalize(renterProfile?.address);
+    const renterLicense = this._normalize(renterProfile?.driverLicenseNo);
+    const renterRiskScore =
+      typeof renterProfile?.riskScore === 'number' ? renterProfile.riskScore : undefined;
 
     return {
       record,
       rentalIdDisplay: record.rentalId,
       bookingIdDisplay: record.bookingId ?? '--',
+      bookingCreatedDisplay: this.formatDateTime(record.bookingCreatedAt),
       statusBadge,
       pickupDisplay: this.formatDateTime(record.startTime ?? record.booking?.startDate),
       expectedReturnDisplay: this.formatDateTime(record.endTime ?? record.booking?.endDate),
@@ -223,16 +260,22 @@ export class RentalManagement {
       totalDisplay: this.formatCurrency(this._computeTotalAmount(rentalFee, deposit)),
       vehicleDisplay: this._resolveVehicleLabel(record),
       vehicleAtStationDisplay: this._formatVehicleStation(record),
+      bookingStatusLabel: this._labelBookingStatus(record.bookingStatus),
+      bookingVerificationStatusLabel: this._labelVerificationStatus(
+        record.bookingVerificationStatus,
+      ),
+      verifiedAtDisplay: this.formatDateTime(record.verifiedAt),
+      verifiedByDisplay: this._normalize(record.verifiedByStaffId) ?? '--',
+      cancelReasonDisplay: this._normalize(record.cancelReason) ?? '--',
       renterIdDisplay: record.renterId ?? '--',
-      renterAddress: record.renterProfile?.address ?? undefined,
-      renterLicense: record.renterProfile?.driverLicenseNo ?? undefined,
-      renterRiskScore:
-        typeof record.renterProfile?.riskScore === 'number'
-          ? record.renterProfile.riskScore.toString()
-          : undefined,
-      ratingDisplay: typeof record.score === 'number' ? record.score.toString() : undefined,
+      renterNameDisplay: renterName ?? '--',
+      renterDobDisplay: this.formatDate(renterProfile?.dateOfBirth ?? undefined),
+      renterAddressDisplay: renterAddress ?? '--',
+      renterLicenseDisplay: renterLicense ?? '--',
+      renterRiskScoreDisplay: this._formatRiskScore(renterRiskScore),
+      ratingDisplay: this._formatRating(record.score),
       ratedAtDisplay: this.formatDateTime(record.ratedAt),
-      comment: record.comment,
+      commentDisplay: this._normalize(record.comment) ?? '--',
       contracts: this._buildContractViewModels(record),
     } satisfies SelectedRentalViewModel;
   });
@@ -378,20 +421,31 @@ export class RentalManagement {
       record.renterId,
       record.vehicleId,
       record.vehicle?.vehicleAtStationId,
+      record.vehicleDetails?.vehicleAtStationId ?? undefined,
       record.vehicleDetails?.make ?? undefined,
       record.vehicleDetails?.model ?? undefined,
+      record.renterProfile?.userName ?? undefined,
+      record.renterProfile?.driverLicenseNo ?? undefined,
     ];
 
     return haystack.some((value) => value?.toLowerCase().includes(query) ?? false);
   }
 
   private _resolveCustomerLabel(record: StaffRentalRecord): string {
-    const renterId = this._normalize(record.renterId);
-    if (renterId) {
-      return `Customer ${this._shortenIdentifier(renterId)}`;
+    const renterName = this._normalize(record.renterProfile?.userName);
+    if (renterName) {
+      return renterName;
     }
 
-    return 'Customer --';
+    const renterId =
+      this._normalize(record.renterId) ??
+      this._normalize(record.booking?.renterId) ??
+      this._normalize(record.bookingDetails?.renterId);
+    if (renterId) {
+      return this._shortenIdentifier(renterId);
+    }
+
+    return '--';
   }
 
   private _resolveVehicleLabel(record: StaffRentalRecord): string {
@@ -417,6 +471,11 @@ export class RentalManagement {
   }
 
   private _formatVehicleStation(record: StaffRentalRecord): string {
+    const fromDetails = this._normalize(record.vehicleDetails?.vehicleAtStationId);
+    if (fromDetails) {
+      return fromDetails;
+    }
+
     const vehicleStationId = this._normalize(record.vehicle?.vehicleAtStationId);
     if (vehicleStationId) {
       return vehicleStationId;
@@ -443,6 +502,34 @@ export class RentalManagement {
     }
 
     return results;
+  }
+
+  private _labelBookingStatus(status?: BookingStatus | null): string {
+    if (!status) {
+      return '--';
+    }
+    return BOOKING_STATUS_LABELS[status] ?? status;
+  }
+
+  private _labelVerificationStatus(status?: BookingVerificationStatus | null): string {
+    if (!status) {
+      return '--';
+    }
+    return BOOKING_VERIFICATION_STATUS_LABELS[status] ?? status;
+  }
+
+  private _formatRiskScore(value?: number): string {
+    if (value === undefined || value === null || Number.isNaN(value)) {
+      return '--';
+    }
+    return Number.isInteger(value) ? value.toString() : value.toFixed(1);
+  }
+
+  private _formatRating(value?: number | null): string {
+    if (value === undefined || value === null || Number.isNaN(value)) {
+      return '--';
+    }
+    return Number.isInteger(value) ? value.toString() : value.toFixed(1);
   }
 
   private _computeRentalFee(record: StaffRentalRecord): number | undefined {
