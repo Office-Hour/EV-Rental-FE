@@ -61,22 +61,20 @@ description: 'Task list template for feature implementation'
 
 ### Validation for User Story 1 ⚠️
 
-- [ ] T010 [P] [US1] Outline manual QA and analytics checkpoints for fulfillment entry at `specs/001-staff-booking-flow/checklists/us1-booking-entry.md`
+- [x] T010 [P] [US1] Outline manual QA and analytics checkpoints for fulfillment entry at `specs/001-staff-booking-flow/checklists/us1-booking-entry.md`
 - [ ] T011 [US1] Run AXE + keyboard validation for the fulfillment entry route and log evidence in `specs/001-staff-booking-flow/checklists/us1-booking-entry.md`
 
 ### Implementation for User Story 1
 
-- [ ] T012 [US1] Add booking fulfillment lazy route with staff guard and bookingId param at `src/app/features/staff/booking-fulfillment/booking-fulfillment.routes.ts`
-- [ ] T013 [US1] Scaffold `FulfillmentPage` component (signals, OnPush, providers) at `src/app/features/staff/booking-fulfillment/pages/fulfillment-page/fulfillment-page.ts|.html|.scss`
-- [ ] T014 [US1] Render booking summary and sequential checklist UI using fulfillment state signals in `src/app/features/staff/booking-fulfillment/pages/fulfillment-page/fulfillment-page.html`
-- [ ] T015 [US1] Wire check-in CTA to `FulfillmentOrchestrator.checkInBooking` with optimistic updates in `src/app/features/staff/booking-fulfillment/pages/fulfillment-page/fulfillment-page.ts`
-- [ ] T016 [US1] Add "Tiếp tục xử lý" CTA in staff booking details overlay to navigate to fulfillment route in `src/app/features/staff/staff-dashboard/staff-dashboard.html` and `src/app/features/staff/staff-dashboard/staff-dashboard.ts`
-- [ ] T017 [US1] Set document title and focus management for fulfillment entry in `src/app/features/staff/booking-fulfillment/pages/fulfillment-page/fulfillment-page.ts`
-- [ ] T018 [US1] Emit route entry and check-in analytics via helper in `src/app/features/staff/booking-fulfillment/pages/fulfillment-page/fulfillment-page.ts`
+- [x] T012 [US1] Add booking fulfillment lazy route with staff guard and bookingId param at `src/app/features/staff/booking-fulfillment/booking-fulfillment.routes.ts`
+- [x] T013 [US1] Scaffold `FulfillmentPage` component (signals, OnPush, providers) at `src/app/features/staff/booking-fulfillment/pages/fulfillment-page/fulfillment-page.ts|.html|.scss`
+- [x] T014 [US1] Render booking summary and sequential checklist UI using fulfillment state signals in `src/app/features/staff/booking-fulfillment/pages/fulfillment-page/fulfillment-page.html`
+- [x] T015 [US1] Wire check-in CTA to `FulfillmentOrchestrator.checkInBooking` with optimistic updates in `src/app/features/staff/booking-fulfillment/pages/fulfillment-page/fulfillment-page.ts`
+- [x] T016 [US1] Add "Tiếp tục xử lý" CTA in staff booking details overlay to navigate to fulfillment route in `src/app/features/staff/staff-dashboard/staff-dashboard.html` and `src/app/features/staff/staff-dashboard/staff-dashboard.ts`
+- [x] T017 [US1] Set document title and focus management for fulfillment entry in `src/app/features/staff/booking-fulfillment/pages/fulfillment-page/fulfillment-page.ts`
+- [x] T018 [US1] Emit route entry and check-in analytics via helper in `src/app/features/staff/booking-fulfillment/pages/fulfillment-page/fulfillment-page.ts`
 
 **Checkpoint**: User Story 1 is fully functional and independently testable
-
----
 
 ## Phase 4: User Story 2 - Prepare Rental Package (Priority: P2)
 

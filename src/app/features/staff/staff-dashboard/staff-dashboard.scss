@@ -580,6 +580,35 @@
   line-height: 1.45;
 }
 
+.details-panel__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.details-panel__action {
+  padding: 0.6rem 1.4rem;
+  border-radius: 999px;
+  border: 0;
+  background: var(--mat-sys-primary, #2563eb);
+  color: var(--mat-sys-on-primary, #fff);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.details-panel__action:hover,
+.details-panel__action:focus-visible {
+  background: color-mix(in srgb, var(--mat-sys-primary, #2563eb) 90%, #fff);
+  transform: translateY(-1px);
+}
+
+.details-panel__action[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
 @keyframes spin {
   to {
     transform: rotate(360deg);

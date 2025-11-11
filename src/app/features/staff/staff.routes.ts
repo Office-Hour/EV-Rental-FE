@@ -11,6 +11,10 @@ export default [
     redirectTo: 'bookings',
   },
   {
+    path: 'bookings/:bookingId/fulfillment',
+    loadChildren: () => import('./booking-fulfillment/booking-fulfillment.routes'),
+  },
+  {
     path: 'bookings',
     component: StaffDashboard,
   },

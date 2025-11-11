@@ -91,6 +91,19 @@ export interface FulfillmentAnalyticsFailurePayload {
   readonly errorCode?: string;
 }
 
+export interface FulfillmentAnalyticsStartedPayload {
+  readonly name: 'staff_booking_fulfillment_step_started';
+  readonly bookingId: string;
+  readonly step: FulfillmentStepId;
+}
+
+export interface FulfillmentAnalyticsRoutePayload {
+  readonly name: 'staff_booking_fulfillment_route_viewed';
+  readonly bookingId: string;
+}
+
 export type FulfillmentAnalyticsPayload =
   | FulfillmentAnalyticsSuccessPayload
-  | FulfillmentAnalyticsFailurePayload;
+  | FulfillmentAnalyticsFailurePayload
+  | FulfillmentAnalyticsStartedPayload
+  | FulfillmentAnalyticsRoutePayload;
