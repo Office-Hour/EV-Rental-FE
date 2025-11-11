@@ -86,17 +86,17 @@ export class LayoutComponent {
     ],
     staff: [
       { name: 'Booking Management', href: '/staff/bookings', current: false, icon: 'event_note' },
-      { name: 'Quản lý xe', href: '/staff/vehicles', current: false, icon: 'car_rental' },
-      { name: 'Quản lý người thuê', href: '/staff/renters', current: false, icon: 'group' },
+      { name: 'Vehicles Management', href: '/staff/vehicles', current: false, icon: 'car_rental' },
+      { name: 'Renter Management', href: '/staff/renters', current: false, icon: 'group' },
       { name: 'Rental Management', href: '/staff/rentals', current: false, icon: 'assignment' },
-      { name: 'Báo cáo', href: '/staff/reports', current: false, icon: 'analytics' },
+      { name: 'Reports', href: '/staff/reports', current: false, icon: 'analytics' },
     ],
     admin: [
-      { name: 'Quản lý người dùng', href: '/admin/users', current: false, icon: 'group' },
-      { name: 'Quản lý xe', href: '/admin/vehicles', current: false, icon: 'car_rental' },
-      { name: 'Quản lý đơn thuê', href: '/admin/orders', current: false, icon: 'assignment' },
-      { name: 'Báo cáo', href: '/admin/reports', current: false, icon: 'analytics' },
-      { name: 'Cài đặt hệ thống', href: '/admin/settings', current: false, icon: 'settings' },
+      { name: 'User Management', href: '/admin/users', current: false, icon: 'group' },
+      { name: 'Vehicle Management', href: '/admin/vehicles', current: false, icon: 'car_rental' },
+      { name: 'Rental Management', href: '/admin/orders', current: false, icon: 'assignment' },
+      { name: 'Reports', href: '/admin/reports', current: false, icon: 'analytics' },
+      { name: 'System Settings', href: '/admin/settings', current: false, icon: 'settings' },
     ],
   };
 
