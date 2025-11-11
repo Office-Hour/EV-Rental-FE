@@ -1,0 +1,223 @@
+<section class="renter-management">
+  <header class="page-header">
+    <div class="page-header__titles">
+      <h1 class="page-header__title">Renter Management</h1>
+      <p class="page-header__subtitle">
+        Review renter profiles, assess risk scores, and verify licensing details.
+      </p>
+    </div>
+    <button type="button" class="refresh-button" (click)="refresh()" [disabled]="loading()">
+      <mat-icon aria-hidden="true">refresh</mat-icon>
+      <span>Refresh</span>
+    </button>
+  </header>
+
+  <div class="toolbar" aria-label="Renter tools">
+    <div class="toolbar__search">
+      <mat-icon aria-hidden="true">search</mat-icon>
+      <input
+        type="search"
+        class="toolbar__input"
+        [value]="searchTerm()"
+        (input)="onSearchInput($event)"
+        placeholder="Search renter name, ID, or license"
+        autocomplete="off"
+      />
+      @if (searchTerm()) {
+        <button
+          type="button"
+          class="toolbar__clear"
+          (click)="clearSearch()"
+          aria-label="Clear search"
+        >
+          <mat-icon aria-hidden="true">close</mat-icon>
+        </button>
+      }
+    </div>
+
+    <div class="toolbar__filters" role="group" aria-label="Risk filters">
+      @for (filter of filters; track filter.key) {
+        <button
+          type="button"
+          class="filter-chip"
+          [class.filter-chip--active]="riskFilter() === filter.key"
+          (click)="setRiskFilter(filter.key)"
+        >
+          <span class="filter-chip__label">{{ filter.label }}</span>
+          <span class="filter-chip__description">{{ filter.description }}</span>
+        </button>
+      }
+    </div>
+
+    <div class="toolbar__actions" aria-label="View options">
+      <span class="toolbar__count" aria-live="polite">{{ filteredCount() }} renters</span>
+      <button
+        type="button"
+        class="icon-button"
+        (click)="setViewMode('list')"
+        [class.icon-button--active]="viewMode() === 'list'"
+        aria-label="List view"
+      >
+        <mat-icon aria-hidden="true">view_list</mat-icon>
+      </button>
+      <button
+        type="button"
+        class="icon-button"
+        (click)="setViewMode('grid')"
+        [class.icon-button--active]="viewMode() === 'grid'"
+        aria-label="Grid view"
+      >
+        <mat-icon aria-hidden="true">grid_view</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  @if (error()) {
+    <div class="alert alert--error" role="alert">
+      <div class="alert__content">
+        <mat-icon aria-hidden="true">error</mat-icon>
+        <span>{{ error() }}</span>
+      </div>
+      <button type="button" class="alert__action" (click)="refresh()">Retry</button>
+    </div>
+  }
+
+  @if (loading()) {
+    <div class="loading-state" aria-live="polite">
+      <div class="loading-state__spinner"></div>
+      <p>Loading renters...</p>
+    </div>
+  } @else {
+    @if (cardViewModels().length > 0) {
+      <div class="renter-collection" [class.renter-collection--list]="viewMode() === 'list'">
+        @for (card of cardViewModels(); track card.identifier) {
+          <article class="renter-card">
+            <header class="renter-card__header">
+              <div>
+                <p class="renter-card__identifier">ID: {{ card.identifier }}</p>
+                <h3 class="renter-card__title">{{ card.name }}</h3>
+              </div>
+              @if (card.riskBadge) {
+                <span
+                  class="badge"
+                  [class.badge--success]="card.riskBadge.tone === 'success'"
+                  [class.badge--info]="card.riskBadge.tone === 'info'"
+                  [class.badge--danger]="card.riskBadge.tone === 'danger'"
+                  [class.badge--pending]="card.riskBadge.tone === 'pending'"
+                >
+                  {{ card.riskBadge.text }}
+                </span>
+              }
+            </header>
+
+            <dl class="renter-card__details">
+              <div class="renter-card__row">
+                <dt>License</dt>
+                <dd>{{ card.licenseDisplay }}</dd>
+              </div>
+              <div class="renter-card__row">
+                <dt>Address</dt>
+                <dd>{{ card.locationDisplay }}</dd>
+              </div>
+              <div class="renter-card__row">
+                <dt>Date of birth</dt>
+                <dd>{{ card.dateOfBirthDisplay }}</dd>
+              </div>
+              <div class="renter-card__row">
+                <dt>Risk score</dt>
+                <dd>{{ card.riskScoreDisplay }}</dd>
+              </div>
+            </dl>
+
+            <footer class="renter-card__footer">
+              <button
+                type="button"
+                class="renter-card__cta"
+                (click)="openDetails(card.record, $event)"
+              >
+                View profile
+              </button>
+            </footer>
+          </article>
+        }
+      </div>
+    } @else {
+      <div class="empty-state">
+        <mat-icon aria-hidden="true">sentiment_satisfied</mat-icon>
+        <h2>No renters found</h2>
+        <p>Try adjusting the risk filters or clearing the search.</p>
+        <button type="button" (click)="clearSearch()">Clear search</button>
+      </div>
+    }
+  }
+
+  @if (selectedRenterView(); as detail) {
+    <div
+      class="details-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="renter-details-title"
+      aria-describedby="renter-details-summary"
+      (click)="onOverlayClick($event)"
+      (keydown.escape)="closeDetails()"
+    >
+      <div #detailPanel class="details-panel" tabindex="-1">
+        <header class="details-panel__header">
+          <div>
+            <h2 id="renter-details-title">Renter profile</h2>
+            <p id="renter-details-summary">{{ detail.name }}</p>
+          </div>
+          <button type="button" class="details-panel__close" (click)="closeDetails()">
+            <mat-icon aria-hidden="true">close</mat-icon>
+            <span class="sr-only">Close dialog</span>
+          </button>
+        </header>
+
+        <div class="details-panel__body">
+          <section class="details-section">
+            <h3>Identity</h3>
+            <dl>
+              <div>
+                <dt>Renter ID</dt>
+                <dd>{{ detail.renterId }}</dd>
+              </div>
+              <div>
+                <dt>Driver license</dt>
+                <dd>{{ detail.driverLicense ?? 'No license on file' }}</dd>
+              </div>
+              <div>
+                <dt>Date of birth</dt>
+                <dd>{{ detail.dateOfBirth ?? 'Unavailable' }}</dd>
+              </div>
+              <div>
+                <dt>Address</dt>
+                <dd>{{ detail.address ?? 'Not provided' }}</dd>
+              </div>
+            </dl>
+          </section>
+
+          <section class="details-section">
+            <h3>Risk assessment</h3>
+            <div class="risk-summary">
+              @if (detail.riskBadge) {
+                <span
+                  class="badge"
+                  [class.badge--success]="detail.riskBadge.tone === 'success'"
+                  [class.badge--info]="detail.riskBadge.tone === 'info'"
+                  [class.badge--danger]="detail.riskBadge.tone === 'danger'"
+                  [class.badge--pending]="detail.riskBadge.tone === 'pending'"
+                >
+                  {{ detail.riskBadge.text }}
+                </span>
+              }
+              <p class="risk-summary__score">
+                Risk score: {{ detail.riskScore !== undefined ? detail.riskScore : 'Unknown' }}
+              </p>
+              <p class="risk-summary__description">{{ detail.riskDescription }}</p>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  }
+</section>
