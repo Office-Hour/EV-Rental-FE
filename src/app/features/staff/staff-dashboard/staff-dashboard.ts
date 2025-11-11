@@ -3,11 +3,13 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  EnvironmentInjector,
   ViewChild,
   afterNextRender,
   computed,
   effect,
   inject,
+  runInInjectionContext,
   signal,
 } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
@@ -153,6 +155,7 @@ export class StaffDashboard {
   private readonly bookingsService = inject(BookingsService);
   private readonly router = inject(Router);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly environmentInjector = inject(EnvironmentInjector);
   @ViewChild('detailPanel') private detailPanel?: ElementRef<HTMLDivElement>;
   private activeDetailTrigger: HTMLElement | null = null;
 
@@ -167,8 +170,10 @@ export class StaffDashboard {
       return;
     }
 
-    afterNextRender(() => {
-      this.detailPanel?.nativeElement.focus();
+    runInInjectionContext(this.environmentInjector, () => {
+      afterNextRender(() => {
+        this.detailPanel?.nativeElement.focus();
+      });
     });
   });
 

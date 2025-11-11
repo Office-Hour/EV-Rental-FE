@@ -18,7 +18,7 @@
       <mat-list class="bg-transparent">
         <!-- Mobile Navigation - Only for authenticated users -->
         @if (isAuthenticated()) {
-          @for (item of navigation(); track item) {
+          @for (item of navigation(); track item.href) {
             <a
               mat-list-item
               [routerLink]="item.href"
@@ -64,7 +64,7 @@
               </button>
             </div>
           </div>
-          @for (item of userNavigation(); track item) {
+          @for (item of userNavigation(); track item.href) {
             <a
               mat-list-item
               [routerLink]="item.href"
@@ -75,7 +75,7 @@
             </a>
           }
         } @else {
-          @for (item of guestNavigation(); track item) {
+          @for (item of guestNavigation(); track item.href) {
             <a
               mat-list-item
               [routerLink]="item.href"
@@ -113,7 +113,7 @@
         @if ((isHandset$ | async) === false && !isAuthFlowPage()) {
           <nav class="flex flex-1 justify-center px-6">
             <div class="flex items-center gap-2">
-              @for (item of navigation(); track item) {
+              @for (item of navigation(); track item.href) {
                 <a
                   [routerLink]="item.href"
                   matButton
@@ -166,7 +166,7 @@
             <!-- Guest User Actions -->
           } @else {
             <div class="flex items-center gap-2 ml-auto">
-              @for (item of guestNavigation(); track item) {
+              @for (item of guestNavigation(); track item.href) {
                 <a
                   mat-stroked-button
                   [routerLink]="item.href"
@@ -215,7 +215,7 @@
           </div>
         </div>
         <mat-divider />
-        @for (item of userNavigation(); track item) {
+        @for (item of userNavigation(); track item.href) {
           <a
             mat-menu-item
             [routerLink]="item.href"

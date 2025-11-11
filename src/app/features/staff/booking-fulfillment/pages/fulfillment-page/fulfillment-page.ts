@@ -4,9 +4,11 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  EnvironmentInjector,
   computed,
   effect,
   inject,
+  runInInjectionContext,
   signal,
   viewChild,
   afterNextRender,
@@ -184,6 +186,8 @@ export class FulfillmentPage {
   private readonly analytics = inject(FulfillmentAnalyticsService);
   private readonly formBuilder = inject(NonNullableFormBuilder);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly environmentInjector = inject(EnvironmentInjector);
+  private lastInitializedBookingId: string | null = null;
 
   private readonly headingRef = viewChild<ElementRef<HTMLHeadingElement>>('pageHeading');
   private readonly initializationError = signal<string | null>(null);
@@ -264,17 +268,21 @@ export class FulfillmentPage {
   readonly initializationErrorMessage = computed(() => this.initializationError());
 
   constructor() {
-    effect(
-      () => {
-        const bookingId = this.bookingIdSignal();
-        if (!bookingId) {
-          return;
-        }
+    effect(() => {
+      const rawBookingId = this.bookingIdSignal();
+      const bookingId = rawBookingId.trim();
+      if (!bookingId) {
+        this.lastInitializedBookingId = null;
+        return;
+      }
 
-        this._loadFulfillment(bookingId);
-      },
-      { allowSignalWrites: true },
-    );
+      if (bookingId === this.lastInitializedBookingId) {
+        return;
+      }
+
+      this.lastInitializedBookingId = bookingId;
+      queueMicrotask(() => this._loadFulfillment(bookingId));
+    });
 
     effect(() => {
       const shouldDisable = this.isBusy() || !this._canPerformStep('vehicle-receive');
@@ -285,22 +293,21 @@ export class FulfillmentPage {
       }
     });
 
-    effect(
-      () => {
-        const vehicleStep = this.stepViewModels().find((step) => step.step === 'vehicle-receive');
-        if (vehicleStep?.status === 'fulfilled') {
-          this.vehicleReceiveSubmitAttempted.set(false);
-        }
-      },
-      { allowSignalWrites: true },
-    );
+    effect(() => {
+      const vehicleStep = this.stepViewModels().find((step) => step.step === 'vehicle-receive');
+      if (vehicleStep?.status !== 'fulfilled' || !this.vehicleReceiveSubmitAttempted()) {
+        return;
+      }
+
+      queueMicrotask(() => this.vehicleReceiveSubmitAttempted.set(false));
+    });
 
     effect(() => {
       if (!this.routeEntered()) {
         return;
       }
 
-      this._focusHeading();
+      queueMicrotask(() => this._focusHeading());
     });
 
     effect(() => {
@@ -888,9 +895,11 @@ export class FulfillmentPage {
   }
 
   private _focusHeading(): void {
-    afterNextRender(() => {
-      const heading = this.headingRef();
-      heading?.nativeElement.focus();
+    runInInjectionContext(this.environmentInjector, () => {
+      afterNextRender(() => {
+        const heading = this.headingRef();
+        heading?.nativeElement.focus();
+      });
     });
   }
 
