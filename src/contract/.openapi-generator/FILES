@@ -80,6 +80,7 @@ model/userInfoDtoApiResponse.ts
 model/vehicleAtStationStatus.ts
 model/vehicleDetailsDto.ts
 model/vehicleDetailsDtoApiResponse.ts
+model/vehicleDetailsDtoListApiResponse.ts
 model/vehicleDto.ts
 model/vehicleDtoPagedResult.ts
 model/vehicleDtoPagedResultApiResponse.ts

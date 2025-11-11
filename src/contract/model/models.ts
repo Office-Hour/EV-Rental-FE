@@ -64,6 +64,7 @@ export * from './userInfoDtoApiResponse';
 export * from './vehicleAtStationStatus';
 export * from './vehicleDetailsDto';
 export * from './vehicleDetailsDtoApiResponse';
+export * from './vehicleDetailsDtoListApiResponse';
 export * from './vehicleDto';
 export * from './vehicleDtoPagedResult';
 export * from './vehicleDtoPagedResultApiResponse';

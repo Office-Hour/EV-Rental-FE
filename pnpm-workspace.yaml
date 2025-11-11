@@ -1,4 +1,6 @@
 onlyBuiltDependencies:
+  - '@nestjs/core'
+  - '@openapitools/openapi-generator-cli'
   - '@parcel/watcher'
   - '@scarf/scarf'
   - esbuild
