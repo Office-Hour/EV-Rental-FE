@@ -1974,10 +1974,11 @@
         "enum": [
           "pending_Verification",
           "verified",
-          "cancelled"
+          "cancelled",
+          "rental_Created"
         ],
         "type": "string",
-        "description": "Possible values: pending_Verification, verified, cancelled."
+        "description": "Possible values: pending_Verification, verified, cancelled, rental_Created."
       },
       "BookingVerificationStatus": {
         "enum": [

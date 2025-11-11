@@ -75,6 +75,7 @@ const BOOKING_STATUS_BADGES: Record<BookingStatus, StatusBadge> = {
   [BookingStatusEnum.PendingVerification]: { text: 'Pending Verification', tone: 'pending' },
   [BookingStatusEnum.Verified]: { text: 'Verified', tone: 'success' },
   [BookingStatusEnum.Cancelled]: { text: 'Cancelled', tone: 'danger' },
+  [BookingStatusEnum.RentalCreated]: { text: 'Rental Created', tone: 'info' },
 };
 
 const BOOKING_VERIFICATION_BADGES: Record<BookingVerificationStatus, StatusBadge> = {
@@ -121,7 +122,10 @@ export class StaffDashboard {
         pending += 1;
       }
 
-      if (record.status === BookingStatusEnum.Verified) {
+      if (
+        record.status === BookingStatusEnum.Verified ||
+        record.status === BookingStatusEnum.RentalCreated
+      ) {
         verified += 1;
       }
 
@@ -299,7 +303,10 @@ export class StaffDashboard {
       case 'pendingVerification':
         return record.verificationStatus === BookingVerificationStatusEnum.Pending;
       case 'verified':
-        return record.status === BookingStatusEnum.Verified;
+        return (
+          record.status === BookingStatusEnum.Verified ||
+          record.status === BookingStatusEnum.RentalCreated
+        );
       case 'cancelled':
         return record.status === BookingStatusEnum.Cancelled;
       default:

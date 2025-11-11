@@ -9,11 +9,12 @@
  */
 
 /**
- * Possible values: pending_Verification, verified, cancelled.
+ * Possible values: pending_Verification, verified, cancelled, rental_Created.
  */
 export const BookingStatus = {
   PendingVerification: 'pending_Verification',
   Verified: 'verified',
   Cancelled: 'cancelled',
+  RentalCreated: 'rental_Created',
 } as const;
 export type BookingStatus = (typeof BookingStatus)[keyof typeof BookingStatus];
