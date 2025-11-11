@@ -8,6 +8,7 @@
  * Do not edit the class manually.
  */
 import { BookingBriefDto } from './bookingBriefDto';
+import { VehicleAtStationStatus } from './vehicleAtStationStatus';
 
 export interface VehicleDetailsDto {
   vehicleId?: string;
@@ -20,5 +21,7 @@ export interface VehicleDetailsDto {
   rentalPricePerHour?: number;
   rentalPricePerDay?: number | null;
   depositPrice?: number;
+  status?: VehicleAtStationStatus;
   upcomingBookings?: Array<BookingBriefDto> | null;
 }
+export namespace VehicleDetailsDto {}
