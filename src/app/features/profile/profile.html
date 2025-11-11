@@ -1,0 +1,216 @@
+<section class="w-full pb-16">
+  <div class="mx-auto flex w-full max-w-4xl flex-col gap-10 px-4 py-10 sm:px-6 lg:px-8">
+    <header class="space-y-2">
+      <p class="text-body-small font-medium uppercase tracking-wide text-primary">Tài khoản</p>
+      <h1 class="text-3xl font-semibold text-on-surface">Thông tin cá nhân</h1>
+      <p class="text-body-medium text-on-surface-variant">
+        Cập nhật thông tin liên hệ và gửi giấy tờ định danh để hoàn tất xác minh KYC.
+      </p>
+    </header>
+
+    <article class="overflow-hidden rounded-2xl border border-outline-variant bg-surface shadow-sm">
+      <div
+        class="flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant/60 px-6 py-4"
+      >
+        <div>
+          <h2 class="text-xl font-medium text-on-surface">Hồ sơ người dùng</h2>
+          <p class="text-body-small text-on-surface-variant">
+            Những thông tin này được hiển thị trên hợp đồng và biên nhận thuê xe.
+          </p>
+        </div>
+        @if (loadingProfile() || savingProfile()) {
+          <mat-progress-spinner
+            class="text-primary"
+            diameter="24"
+            mode="indeterminate"
+            strokeWidth="3"
+            aria-hidden="true"
+          />
+        }
+      </div>
+
+      <form
+        class="flex flex-col gap-6 px-6 py-6"
+        [formGroup]="profileForm"
+        (ngSubmit)="saveProfile()"
+        novalidate
+        autocomplete="on"
+      >
+        <div class="grid gap-6 md:grid-cols-2">
+          <mat-form-field appearance="outline">
+            <mat-label>Họ và tên</mat-label>
+            <input matInput formControlName="userName" autocomplete="name" />
+            <mat-hint align="start">Sử dụng tên đầy đủ như trên giấy tờ tùy thân.</mat-hint>
+            @if (profileForm.controls.userName.invalid && profileForm.controls.userName.touched) {
+              <mat-error>
+                @if (profileForm.controls.userName.hasError('required')) {
+                  <span>Vui lòng nhập họ tên hợp lệ.</span>
+                } @else if (profileForm.controls.userName.hasError('maxlength')) {
+                  <span>Họ tên không được vượt quá 80 ký tự.</span>
+                }
+              </mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input matInput type="email" formControlName="email" autocomplete="email" />
+            <mat-hint align="start"
+              >Chúng tôi sẽ gửi thông báo và hóa đơn đến địa chỉ này.</mat-hint
+            >
+            @if (profileForm.controls.email.invalid && profileForm.controls.email.touched) {
+              <mat-error>
+                @if (profileForm.controls.email.hasError('required')) {
+                  <span>Vui lòng nhập địa chỉ email.</span>
+                } @else if (profileForm.controls.email.hasError('email')) {
+                  <span>Email chưa đúng định dạng.</span>
+                }
+              </mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Số điện thoại</mat-label>
+            <input matInput type="tel" formControlName="phoneNumber" autocomplete="tel" />
+            <mat-hint align="start">Nhập số điện thoại bạn sử dụng để nhận thông báo.</mat-hint>
+            @if (
+              profileForm.controls.phoneNumber.invalid && profileForm.controls.phoneNumber.touched
+            ) {
+              <mat-error>
+                @if (profileForm.controls.phoneNumber.hasError('required')) {
+                  <span>Vui lòng nhập số điện thoại.</span>
+                } @else if (profileForm.controls.phoneNumber.hasError('minlength')) {
+                  <span>Số điện thoại cần ít nhất 8 chữ số.</span>
+                } @else if (profileForm.controls.phoneNumber.hasError('maxlength')) {
+                  <span>Số điện thoại không được vượt quá 15 chữ số.</span>
+                }
+              </mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-end gap-3 pt-2">
+          <button
+            mat-stroked-button
+            type="button"
+            class="min-w-36"
+            (click)="refreshProfile()"
+            [disabled]="loadingProfile()"
+          >
+            Tải lại
+          </button>
+          <button
+            mat-flat-button
+            color="primary"
+            class="min-w-40"
+            type="submit"
+            [disabled]="profileForm.invalid || savingProfile()"
+          >
+            @if (savingProfile()) {
+              <span class="flex items-center justify-center gap-2">
+                <mat-progress-spinner diameter="18" mode="indeterminate" strokeWidth="3" />
+                <span>Đang lưu...</span>
+              </span>
+            } @else {
+              <span>Lưu thay đổi</span>
+            }
+          </button>
+        </div>
+      </form>
+    </article>
+
+    <article class="overflow-hidden rounded-2xl border border-outline-variant bg-surface shadow-sm">
+      <div
+        class="flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant/60 px-6 py-4"
+      >
+        <div>
+          <h2 class="text-xl font-medium text-on-surface">Xác minh danh tính (KYC)</h2>
+          <p class="text-body-small text-on-surface-variant">
+            Gửi thông tin giấy tờ để đội ngũ của chúng tôi có thể xác minh nhanh chóng.
+          </p>
+        </div>
+        @if (kycLoading()) {
+          <mat-progress-spinner
+            class="text-primary"
+            diameter="24"
+            mode="indeterminate"
+            strokeWidth="3"
+            aria-hidden="true"
+          />
+        }
+      </div>
+
+      <form
+        class="flex flex-col gap-6 px-6 py-6"
+        [formGroup]="kycForm"
+        (ngSubmit)="submitKyc()"
+        novalidate
+        autocomplete="off"
+      >
+        <div class="grid gap-6 md:grid-cols-2">
+          <mat-form-field appearance="outline">
+            <mat-label>Loại giấy tờ</mat-label>
+            <mat-select formControlName="type">
+              @for (option of kycOptions; track option.value) {
+                <mat-option [value]="option.value">
+                  <span class="block font-medium text-on-surface">{{ option.label }}</span>
+                  <span class="block text-body-small text-on-surface-variant">{{
+                    option.description
+                  }}</span>
+                </mat-option>
+              }
+            </mat-select>
+            @if (kycForm.controls.type.invalid && kycForm.controls.type.touched) {
+              <mat-error>Vui lòng chọn loại giấy tờ phù hợp.</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Số giấy tờ</mat-label>
+            <input matInput formControlName="documentNumber" autocomplete="off" />
+            <mat-hint align="start">Nhập chính xác số hiển thị trên giấy tờ.</mat-hint>
+            @if (
+              kycForm.controls.documentNumber.invalid && kycForm.controls.documentNumber.touched
+            ) {
+              <mat-error>
+                @if (kycForm.controls.documentNumber.hasError('required')) {
+                  <span>Vui lòng nhập số giấy tờ.</span>
+                } @else if (kycForm.controls.documentNumber.hasError('maxlength')) {
+                  <span>Số giấy tờ không được vượt quá 64 ký tự.</span>
+                }
+              </mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        @if (kycError()) {
+          <div
+            class="rounded-xl border border-error-container bg-error-container/20 px-4 py-3 text-sm text-error"
+            role="alert"
+          >
+            {{ kycError() }}
+          </div>
+        }
+
+        <div class="flex flex-wrap items-center justify-end gap-3 pt-2">
+          <button
+            mat-flat-button
+            color="primary"
+            class="min-w-44"
+            type="submit"
+            [disabled]="kycForm.invalid || kycLoading()"
+          >
+            @if (kycLoading()) {
+              <span class="flex items-center justify-center gap-2">
+                <mat-progress-spinner diameter="18" mode="indeterminate" strokeWidth="3" />
+                <span>Đang gửi...</span>
+              </span>
+            } @else {
+              <span>Gửi xác minh</span>
+            }
+          </button>
+        </div>
+      </form>
+    </article>
+  </div>
+</section>

@@ -62,6 +62,17 @@ export const routes: Routes = [
     ],
   },
 
+  // Authenticated profile area (all roles)
+  {
+    path: '',
+    canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard],
+    component: LayoutComponent,
+    children: [
+      { path: 'profile', loadChildren: () => import('./features/profile/profile.routes') },
+    ],
+  },
+
   // Admin area (chỉ Admin)
   {
     path: '',

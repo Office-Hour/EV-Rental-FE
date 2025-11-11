@@ -1,0 +1,13 @@
+:host {
+  display: block;
+  min-height: 100%;
+  background-color: transparent;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+mat-progress-spinner {
+  --mdc-circular-progress-active-indicator-color: currentColor;
+}
