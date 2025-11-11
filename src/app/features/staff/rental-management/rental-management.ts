@@ -45,6 +45,7 @@ interface RentalStatusCounters {
 interface RentalTabDescriptor {
   readonly key: RentalTabKey;
   readonly label: string;
+  readonly description: string;
   readonly counterKey: keyof RentalStatusCounters;
 }
 
@@ -98,12 +99,32 @@ interface SelectedRentalViewModel {
 }
 
 const RENTAL_TABS: readonly RentalTabDescriptor[] = [
-  { key: 'all', label: 'All', counterKey: 'total' },
-  { key: 'reserved', label: 'Reserved', counterKey: 'reserved' },
-  { key: 'inProgress', label: 'In Progress', counterKey: 'inProgress' },
-  { key: 'completed', label: 'Completed', counterKey: 'completed' },
-  { key: 'late', label: 'Late', counterKey: 'late' },
-  { key: 'cancelled', label: 'Cancelled', counterKey: 'cancelled' },
+  { key: 'all', label: 'All rentals', description: 'Every rental record', counterKey: 'total' },
+  {
+    key: 'reserved',
+    label: 'Reserved',
+    description: 'Upcoming pickups',
+    counterKey: 'reserved',
+  },
+  {
+    key: 'inProgress',
+    label: 'In progress',
+    description: 'Currently active',
+    counterKey: 'inProgress',
+  },
+  {
+    key: 'completed',
+    label: 'Completed',
+    description: 'Finished trips',
+    counterKey: 'completed',
+  },
+  { key: 'late', label: 'Late', description: 'Past return time', counterKey: 'late' },
+  {
+    key: 'cancelled',
+    label: 'Cancelled',
+    description: 'Closed without trip',
+    counterKey: 'cancelled',
+  },
 ] as const;
 
 const RENTAL_STATUS_BADGES: Record<RentalStatus, StatusBadge> = {
@@ -207,6 +228,8 @@ export class RentalManagement {
       (record) => this._matchesTab(record, tab) && this._matchesSearch(record, query),
     );
   });
+
+  readonly filteredCount = computed(() => this.filteredRecords().length);
 
   readonly cardViewModels = computed<RentalCardViewModel[]>(() =>
     this.filteredRecords().map((record) => {

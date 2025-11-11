@@ -30,6 +30,7 @@ interface BookingStatusCounters {
 interface BookingTabDescriptor {
   readonly key: BookingTabKey;
   readonly label: string;
+  readonly description: string;
   readonly counterKey: keyof BookingStatusCounters;
 }
 
@@ -68,10 +69,30 @@ interface SelectedBookingViewModel {
 }
 
 const BOOKING_TABS: readonly BookingTabDescriptor[] = [
-  { key: 'all', label: 'All', counterKey: 'total' },
-  { key: 'pendingVerification', label: 'Pending Verification', counterKey: 'pendingVerification' },
-  { key: 'verified', label: 'Verified', counterKey: 'verified' },
-  { key: 'cancelled', label: 'Cancelled', counterKey: 'cancelled' },
+  {
+    key: 'all',
+    label: 'All bookings',
+    description: 'Every booking status',
+    counterKey: 'total',
+  },
+  {
+    key: 'pendingVerification',
+    label: 'Pending verification',
+    description: 'Awaiting review',
+    counterKey: 'pendingVerification',
+  },
+  {
+    key: 'verified',
+    label: 'Verified',
+    description: 'Approved bookings',
+    counterKey: 'verified',
+  },
+  {
+    key: 'cancelled',
+    label: 'Cancelled',
+    description: 'No longer active',
+    counterKey: 'cancelled',
+  },
 ] as const;
 
 const BOOKING_STATUS_BADGES: Record<BookingStatus, StatusBadge> = {
@@ -179,6 +200,8 @@ export class StaffDashboard {
       (record) => this._matchesTab(record, tab) && this._matchesSearch(record, query),
     );
   });
+
+  readonly filteredCount = computed(() => this.filteredRecords().length);
 
   readonly cardViewModels = computed<BookingCardViewModel[]>(() =>
     this.filteredRecords().map((record) => ({

@@ -2,6 +2,8 @@
   display: block;
   padding: 2.5rem 0;
   color: var(--mat-sys-on-surface, #0e1114);
+  --status-chip-accent: #0ea5e9;
+  --status-chip-accent-strong: #0369a1;
 }
 
 .rental-management {
@@ -46,7 +48,7 @@
   color: var(--mat-sys-on-primary, #fff);
   font-weight: 500;
   cursor: pointer;
-  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .refresh-button:disabled {
@@ -56,7 +58,6 @@
 
 .refresh-button:hover:enabled {
   background: color-mix(in srgb, var(--mat-sys-primary, #2563eb) 88%, #fff);
-  box-shadow: 0 8px 16px rgb(37 99 235 / 25%);
   transform: translateY(-1px);
 }
 
@@ -64,50 +65,74 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--mat-sys-outline-variant, #d1d5db);
 }
 
 .status-tab {
-  position: relative;
-  display: inline-flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.4rem 0.9rem;
-  border: 0;
+  gap: 0.5rem 1rem;
+  padding: 0.65rem 1rem;
+  min-width: 10.5rem;
   border-radius: 999px;
-  background: transparent;
-  color: var(--mat-sys-on-surface-variant, #4b5563);
-  font-weight: 500;
+  border: 1px solid rgb(15 23 42 / 8%);
+  background: var(--mat-sys-surface, #fff);
+  color: var(--mat-sys-on-surface, #0f172a);
   cursor: pointer;
-  transition: color 0.2s ease, background 0.2s ease;
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease,
+    color 0.2s ease;
 }
 
 .status-tab:hover {
-  background: rgb(37 99 235 / 8%);
-  color: var(--mat-sys-primary, #2563eb);
+  transform: translateY(-1px);
 }
 
 .status-tab--active {
-  background: rgb(37 99 235 / 12%);
-  color: var(--mat-sys-primary, #2563eb);
+  border-color: var(--status-chip-accent);
+  background: rgb(239 246 255);
+  color: var(--status-chip-accent-strong);
+}
+
+.status-tab__content {
+  display: grid;
+  gap: 0.15rem;
+  text-align: left;
 }
 
 .status-tab__label {
   font-size: 0.95rem;
+  font-weight: 600;
+  text-transform: none;
+}
+
+.status-tab__description {
+  font-size: 0.8rem;
+  color: var(--mat-sys-on-surface-variant, #64748b);
+}
+
+.status-tab--active .status-tab__description {
+  color: color-mix(in srgb, var(--status-chip-accent-strong) 70%, #0f172a);
 }
 
 .status-tab__count {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 1.6rem;
-  padding: 0 0.4rem;
+  align-self: start;
+  min-width: 1.75rem;
+  height: 1.75rem;
+  padding: 0 0.5rem;
   border-radius: 999px;
-  background: var(--mat-sys-primary, #2563eb);
-  color: var(--mat-sys-on-primary, #fff);
-  font-size: 0.75rem;
+  background: rgb(14 165 233 / 16%);
+  color: var(--status-chip-accent-strong);
+  font-size: 0.85rem;
   font-weight: 600;
+  line-height: 1;
+}
+
+.status-tab--active .status-tab__count {
+  background: var(--status-chip-accent);
+  color: #fff;
 }
 
 .toolbar {
@@ -118,6 +143,7 @@
   gap: 1rem;
 }
 
+
 .toolbar__search {
   display: inline-flex;
   align-items: center;
@@ -126,7 +152,7 @@
   padding: 0.6rem 0.8rem;
   border-radius: 999px;
   background: var(--mat-sys-surface, #fff);
-  box-shadow: 0 8px 24px rgb(15 23 42 / 12%);
+  border: 1px solid var(--mat-sys-outline-variant, #d1d5db);
 }
 
 .toolbar__input {
@@ -159,7 +185,19 @@
   background: rgb(15 23 42 / 16%);
 }
 
+
 .toolbar__actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--mat-sys-on-surface-variant, #475569);
+}
+
+.toolbar__count {
+  font-size: 0.85rem;
+}
+
+.toolbar__view-toggle {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -226,7 +264,6 @@
   padding: 2rem;
   border-radius: 1rem;
   background: var(--mat-sys-surface, #fff);
-  box-shadow: 0 12px 32px rgb(15 23 42 / 12%);
 }
 
 .loading-state__spinner {
@@ -255,7 +292,6 @@
   padding: 1.25rem;
   border-radius: 1rem;
   background: var(--mat-sys-surface, #fff);
-  box-shadow: 0 16px 40px rgb(15 23 42 / 14%);
   border: 1px solid rgb(148 163 184 / 18%);
   min-height: 100%;
 }
@@ -329,19 +365,23 @@
 }
 
 .rental-card__cta {
+  padding: 0.5rem 1rem;
   border: 0;
   border-radius: 999px;
-  padding: 0.55rem 1.2rem;
   background: var(--mat-sys-primary, #2563eb);
   color: var(--mat-sys-on-primary, #fff);
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.2s ease;
+  transition: background 0.2s ease;
 }
 
 .rental-card__cta:hover {
-  background: color-mix(in srgb, var(--mat-sys-primary, #2563eb) 90%, #fff);
-  transform: translateY(-1px);
+  background: color-mix(in srgb, var(--mat-sys-primary, #2563eb) 88%, #fff);
+}
+
+.rental-card__cta:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--mat-sys-primary, #2563eb) 55%, transparent);
+  outline-offset: 2px;
 }
 
 .badge {
@@ -384,7 +424,6 @@
   padding: 2.5rem 1.5rem;
   border-radius: 1rem;
   background: var(--mat-sys-surface, #fff);
-  box-shadow: 0 12px 32px rgb(15 23 42 / 12%);
   text-align: center;
 }
 
@@ -421,7 +460,6 @@
   border-radius: 1.25rem;
   background: var(--mat-sys-surface, #fff);
   padding: 1.75rem;
-  box-shadow: 0 24px 48px rgb(15 23 42 / 22%);
   display: grid;
   gap: 1.5rem;
 }

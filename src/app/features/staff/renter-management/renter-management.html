@@ -36,39 +36,47 @@
     </div>
 
     <div class="toolbar__filters" role="group" aria-label="Risk filters">
+      @let counts = riskCounts();
       @for (filter of filters; track filter.key) {
         <button
           type="button"
           class="filter-chip"
           [class.filter-chip--active]="riskFilter() === filter.key"
           (click)="setRiskFilter(filter.key)"
+          [attr.aria-pressed]="riskFilter() === filter.key"
+          [attr.aria-label]="filter.label + '. ' + filter.description"
         >
-          <span class="filter-chip__label">{{ filter.label }}</span>
-          <span class="filter-chip__description">{{ filter.description }}</span>
+          <span class="filter-chip__content">
+            <span class="filter-chip__label">{{ filter.label }}</span>
+            <span class="filter-chip__description">{{ filter.description }}</span>
+          </span>
+          <span class="filter-chip__count">{{ counts[filter.key] }}</span>
         </button>
       }
     </div>
 
-    <div class="toolbar__actions" aria-label="View options">
+    <div class="toolbar__actions" role="group" aria-label="View options">
       <span class="toolbar__count" aria-live="polite">{{ filteredCount() }} renters</span>
-      <button
-        type="button"
-        class="icon-button"
-        (click)="setViewMode('list')"
-        [class.icon-button--active]="viewMode() === 'list'"
-        aria-label="List view"
-      >
-        <mat-icon aria-hidden="true">view_list</mat-icon>
-      </button>
-      <button
-        type="button"
-        class="icon-button"
-        (click)="setViewMode('grid')"
-        [class.icon-button--active]="viewMode() === 'grid'"
-        aria-label="Grid view"
-      >
-        <mat-icon aria-hidden="true">grid_view</mat-icon>
-      </button>
+      <div class="toolbar__view-toggle">
+        <button
+          type="button"
+          class="icon-button"
+          (click)="setViewMode('list')"
+          [class.icon-button--active]="viewMode() === 'list'"
+          aria-label="List view"
+        >
+          <mat-icon aria-hidden="true">view_list</mat-icon>
+        </button>
+        <button
+          type="button"
+          class="icon-button"
+          (click)="setViewMode('grid')"
+          [class.icon-button--active]="viewMode() === 'grid'"
+          aria-label="Grid view"
+        >
+          <mat-icon aria-hidden="true">grid_view</mat-icon>
+        </button>
+      </div>
     </div>
   </div>
 
