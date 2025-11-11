@@ -224,6 +224,38 @@
               <p class="risk-summary__description">{{ detail.riskDescription }}</p>
             </div>
           </section>
+
+          <section class="details-section">
+            <h3>Verification tools</h3>
+            <p class="details-action__helper">
+              Kích hoạt lại tải lên KYC cho renter này nếu cần xác minh gấp.
+            </p>
+            <button
+              type="button"
+              class="details-action__button"
+              (click)="forceVerifySelected()"
+              [disabled]="forceVerifyLoading()"
+            >
+              <mat-icon
+                aria-hidden="true"
+                [class.details-action__icon--spin]="forceVerifyLoading()"
+              >
+                verified_user
+              </mat-icon>
+              <span>
+                {{ forceVerifyLoading() ? 'Đang gửi yêu cầu...' : 'Force verify renter' }}
+              </span>
+            </button>
+            @if (forceVerifyResult(); as result) {
+              <p
+                class="details-action__feedback"
+                [class.details-action__feedback--success]="result.status === 'success'"
+                [class.details-action__feedback--error]="result.status === 'error'"
+              >
+                {{ result.message }}
+              </p>
+            }
+          </section>
         </div>
       </div>
     </div>

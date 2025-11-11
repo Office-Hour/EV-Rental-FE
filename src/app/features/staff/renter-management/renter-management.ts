@@ -9,7 +9,7 @@ import {
   signal,
 } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { take } from 'rxjs';
+import { finalize, take } from 'rxjs';
 import { RentersService, StaffRenterRecord } from '../../../core-logic/renters/renters.service';
 
 interface RiskFilterDescriptor {
@@ -52,6 +52,11 @@ interface SelectedRenterViewModel {
   readonly riskDescription: string;
 }
 
+interface ForceVerifyResult {
+  readonly status: 'success' | 'error';
+  readonly message: string;
+}
+
 const RISK_FILTERS: readonly RiskFilterDescriptor[] = [
   { key: 'all', label: 'All renters', description: 'Include every risk level' },
   { key: 'low', label: 'Low risk', description: 'Score 0 – 40' },
@@ -83,6 +88,8 @@ export class RenterManagement {
   readonly riskFilter = signal<RiskFilterKey>('all');
   readonly viewMode = signal<'grid' | 'list'>('grid');
   readonly selectedRenter = signal<StaffRenterRecord | null>(null);
+  readonly forceVerifyLoading = signal(false);
+  readonly forceVerifyResult = signal<ForceVerifyResult | null>(null);
 
   readonly loading = computed(() => this.rentersService.staffRentersLoading());
   readonly error = computed(() => this.rentersService.staffRentersError());
@@ -214,12 +221,16 @@ export class RenterManagement {
     this.activeDetailTrigger =
       triggerEvent?.currentTarget instanceof HTMLElement ? triggerEvent.currentTarget : null;
     this.selectedRenter.set(record);
+    this.forceVerifyResult.set(null);
+    this.forceVerifyLoading.set(false);
     afterNextRender(() => {
       this.detailPanel?.nativeElement.focus();
     });
   }
 
   closeDetails(): void {
+    this.forceVerifyResult.set(null);
+    this.forceVerifyLoading.set(false);
     this.selectedRenter.set(null);
     const target = this.activeDetailTrigger;
     this.activeDetailTrigger = null;
@@ -228,6 +239,39 @@ export class RenterManagement {
         target.focus();
       });
     }
+  }
+
+  forceVerifySelected(): void {
+    const renter = this.selectedRenter();
+    if (!renter || this.forceVerifyLoading()) {
+      return;
+    }
+
+    this.forceVerifyResult.set(null);
+    this.forceVerifyLoading.set(true);
+
+    this.rentersService
+      .forceUploadKyc(renter.renterId)
+      .pipe(
+        take(1),
+        finalize(() => {
+          this.forceVerifyLoading.set(false);
+        }),
+      )
+      .subscribe({
+        next: () => {
+          this.forceVerifyResult.set({
+            status: 'success',
+            message: 'Đã gửi yêu cầu xác minh KYC.',
+          });
+        },
+        error: (error: unknown) => {
+          this.forceVerifyResult.set({
+            status: 'error',
+            message: this._resolveActionError(error),
+          });
+        },
+      });
   }
 
   onOverlayClick(event: MouseEvent): void {
@@ -255,6 +299,18 @@ export class RenterManagement {
 
     const level = this._determineRiskLevel(record.riskScore);
     return level === filter;
+  }
+
+  private _resolveActionError(error: unknown): string {
+    if (error instanceof Error && error.message) {
+      return error.message;
+    }
+
+    if (typeof error === 'string' && error.length > 0) {
+      return error;
+    }
+
+    return 'Không thể gửi yêu cầu. Vui lòng thử lại.';
   }
 
   private _determineRiskLevel(score: number | undefined): RiskLevel {

@@ -1,6 +1,13 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { catchError, finalize, map, Observable, of, tap } from 'rxjs';
-import { RenterProfileDto, StaffService } from '../../../contract';
+import {
+  ApiResponse,
+  BookingService,
+  KycType,
+  RenterProfileDto,
+  StaffService,
+  UploadKycRequest,
+} from '../../../contract';
 
 export interface StaffRenterRecord {
   readonly renterId: string;
@@ -14,6 +21,7 @@ export interface StaffRenterRecord {
 @Injectable({ providedIn: 'root' })
 export class RentersService {
   private readonly _staffService = inject(StaffService);
+  private readonly _bookingService = inject(BookingService);
 
   private readonly _staffRenters = signal<StaffRenterRecord[]>([]);
   private readonly _loading = signal(false);
@@ -22,6 +30,15 @@ export class RentersService {
   readonly staffRenters = this._staffRenters.asReadonly();
   readonly staffRentersLoading = this._loading.asReadonly();
   readonly staffRentersError = this._error.asReadonly();
+
+  forceUploadKyc(renterId: string): Observable<ApiResponse> {
+    const payload: UploadKycRequest = {
+      type: KycType.Other,
+      documentNumber: renterId,
+    };
+
+    return this._bookingService.apiBookingUploadKycPost(payload);
+  }
 
   loadStaffRenters(): Observable<StaffRenterRecord[]> {
     this._loading.set(true);
