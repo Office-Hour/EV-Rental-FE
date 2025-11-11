@@ -3,6 +3,7 @@ import {
   BookingDetailsDto,
   BookingDetailsDtoListApiResponse,
   BookingService,
+  BookingStatus as BookingStatusEnum,
   RentalDetailsDto,
   RentalDetailsDtoListApiResponse,
   RenterProfileDto,
@@ -52,53 +53,30 @@ export class BookingsService {
 
     return forkJoin({
       bookingsResponse: this._staffService.apiStaffBookingsGet(),
-      rentalsResponse: this._staffService.apiStaffRentalsGet(),
       rentersResponse: this._staffService.apiStaffRentersGet(),
     }).pipe(
       switchMap(
         ({
           bookingsResponse,
-          rentalsResponse,
           rentersResponse,
         }: {
           bookingsResponse: BookingDetailsDtoListApiResponse;
-          rentalsResponse: RentalDetailsDtoListApiResponse;
           rentersResponse: RenterProfileDtoListApiResponse;
         }) => {
           const bookingItems = bookingsResponse.data ?? [];
-          const rentalItems = rentalsResponse.data ?? [];
           const renterItems = rentersResponse.data ?? [];
 
-          const vehicleIds = this._collectVehicleIds(rentalItems);
-
-          if (vehicleIds.size === 0) {
+          if (!this._shouldFetchRentals(bookingItems)) {
             const records = this._mapStaffBookings(
               bookingItems,
-              rentalItems,
+              [],
               renterItems,
               new Map<string, VehicleDetailsDto | undefined>(),
             );
             return of(records);
           }
 
-          const vehicleDetailRequests = Array.from(vehicleIds).map((vehicleId) =>
-            this._bookingService.apiBookingVehiclesVehicleIdGet(vehicleId).pipe(
-              map(
-                (vehicleDetailResponse: VehicleDetailsDtoApiResponse) =>
-                  [vehicleId, vehicleDetailResponse.data ?? undefined] as const,
-              ),
-              catchError(() =>
-                of<readonly [string, VehicleDetailsDto | undefined]>([vehicleId, undefined]),
-              ),
-            ),
-          );
-
-          return forkJoin(vehicleDetailRequests).pipe(
-            map((vehicles) => new Map<string, VehicleDetailsDto | undefined>(vehicles)),
-            map((vehicleDetailsMap) =>
-              this._mapStaffBookings(bookingItems, rentalItems, renterItems, vehicleDetailsMap),
-            ),
-          );
+          return this._fetchRentalsWithVehicleDetails(bookingItems, renterItems);
         },
       ),
       tap((records) => {
@@ -114,6 +92,60 @@ export class BookingsService {
         this._loading.set(false);
       }),
     );
+  }
+
+  private _fetchRentalsWithVehicleDetails(
+    bookingDtos: readonly BookingDetailsDto[],
+    renterDtos: readonly RenterProfileDto[],
+  ): Observable<StaffBookingRecord[]> {
+    return this._staffService.apiStaffRentalsGet().pipe(
+      switchMap((rentalsResponse: RentalDetailsDtoListApiResponse) => {
+        const rentalItems = rentalsResponse.data ?? [];
+        const vehicleIds = this._collectVehicleIds(rentalItems);
+
+        if (vehicleIds.size === 0) {
+          const records = this._mapStaffBookings(
+            bookingDtos,
+            rentalItems,
+            renterDtos,
+            new Map<string, VehicleDetailsDto | undefined>(),
+          );
+          return of(records);
+        }
+
+        const vehicleDetailRequests = Array.from(vehicleIds).map((vehicleId) =>
+          this._bookingService.apiBookingVehiclesVehicleIdGet(vehicleId).pipe(
+            map(
+              (vehicleDetailResponse: VehicleDetailsDtoApiResponse) =>
+                [vehicleId, vehicleDetailResponse.data ?? undefined] as const,
+            ),
+            catchError(() =>
+              of<readonly [string, VehicleDetailsDto | undefined]>([vehicleId, undefined]),
+            ),
+          ),
+        );
+
+        return forkJoin(vehicleDetailRequests).pipe(
+          map((vehicles) => new Map<string, VehicleDetailsDto | undefined>(vehicles)),
+          map((vehicleDetailsMap) =>
+            this._mapStaffBookings(bookingDtos, rentalItems, renterDtos, vehicleDetailsMap),
+          ),
+        );
+      }),
+      catchError(() => {
+        const fallbackRecords = this._mapStaffBookings(
+          bookingDtos,
+          [],
+          renterDtos,
+          new Map<string, VehicleDetailsDto | undefined>(),
+        );
+        return of(fallbackRecords);
+      }),
+    );
+  }
+
+  private _shouldFetchRentals(bookings: readonly BookingDetailsDto[]): boolean {
+    return bookings.some((booking) => booking?.status === BookingStatusEnum.RentalCreated);
   }
 
   private _mapStaffBookings(
