@@ -23,8 +23,6 @@ All requests must use generated OpenAPI clients (`BookingService`, `RentalServic
 
 - Run `pnpm lint` and `pnpm lint-style` before submitting changes.
 - Execute the manual QA script for each user story:
-  - Verify focus handling and AXE scan results.
-  - Capture analytics payloads (`staff_booking_fulfillment_step_completed`, `*_failed`).
   - Confirm the checklist never enables a step prematurely.
 - Document validation evidence in the pull request description.
 

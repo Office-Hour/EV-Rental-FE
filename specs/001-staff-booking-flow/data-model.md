@@ -50,7 +50,7 @@
 - **Purpose**: Capture retry details and display actionable messages.
 - **Fields**:
   - `message: string` — human-readable summary for toast/banner.
-  - `code?: string` — backend-specific code for analytics.
+  - `code?: string` — backend-specific code for diagnostics.
   - `detail?: unknown` — raw response/logging payload (not surfaced to end user).
 
 ### 5. FulfillmentTimelineEvent
@@ -64,17 +64,6 @@
   - `occurredAt: string`
   - `metadata?: Record<string, string>` — contextual values (IDs, battery level, URLs).
 
-### 6. AnalyticsEventPayload
-
-- **Purpose**: Standardize telemetry emitted per success/error.
-- **Fields**:
-  - `name: 'staff_booking_fulfillment_step_completed' | 'staff_booking_fulfillment_step_failed'`
-  - `bookingId: string`
-  - `step: FulfillmentStepId`
-  - `status: 'success' | 'error'`
-  - `durationMs?: number`
-  - `errorCode?: string`
-
 ## Enumerations
 
 - `FulfillmentStepId = 'checkin' | 'create-rental' | 'create-contract' | 'inspection' | 'sign-renter' | 'sign-staff' | 'vehicle-receive'`
@@ -82,7 +71,7 @@
 ## Derived/Computed State
 
 - `isReadyFor(stepId)`: computed boolean verifying all prerequisites fulfilled.
-- `nextStep`: first `FulfillmentStepState` with `status !== 'fulfilled'` to guide CTA focus.
+- `nextStep`: first `FulfillmentStepState` with `status !== 'fulfilled'` to guide CTA state.
 - `completionPercentage`: ratio of fulfilled steps over total, surfaced in progress indicator.
 
 ## External Dependencies

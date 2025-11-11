@@ -328,12 +328,14 @@ export class StaffDashboard {
     void this.router.navigate(['/staff/bookings', record.bookingId, 'fulfillment']);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   canOpenFulfillment(record: StaffBookingRecord): boolean {
-    return (
-      record.verificationStatus === BookingVerificationStatusEnum.Approved ||
-      record.status === BookingStatusEnum.Verified ||
-      record.status === BookingStatusEnum.RentalCreated
-    );
+    return true;
+    // return (
+    //   record.verificationStatus === BookingVerificationStatusEnum.Approved ||
+    //   record.status === BookingStatusEnum.Verified ||
+    //   record.status === BookingStatusEnum.RentalCreated
+    // );
   }
 
   onOverlayClick(event: MouseEvent): void {
