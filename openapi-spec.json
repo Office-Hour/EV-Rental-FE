@@ -3122,6 +3122,9 @@
             "type": "number",
             "format": "double"
           },
+          "status": {
+            "$ref": "#/components/schemas/VehicleAtStationStatus"
+          },
           "upcomingBookings": {
             "type": "array",
             "items": {
