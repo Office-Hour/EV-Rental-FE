@@ -11,13 +11,13 @@
 
 A staff agent handling a fully paid booking opens the record in the bookings list, sees a "Tiếp tục xử lý" call-to-action inside the details panel, and follows it to a dedicated booking fulfillment route that summarises the booking, highlights pending steps, and enables the booking check-in.
 
-**Why this priority**: Without an accessible entry point and check-in capability, staff cannot progress bookings that are waiting for manual confirmation, blocking downstream rental creation and revenue recognition.
+**Why this priority**: Without a dedicated entry point and check-in capability, staff cannot progress bookings that are waiting for manual confirmation, blocking downstream rental creation and revenue recognition.
 
-**Independent Validation**: Manual walkthrough on desktop breakpoints verifying navigation, focus management of the fulfillment header, confirmation messaging for the check-in request, and analytics event confirming the route transition.
+**Independent Validation**: Manual walkthrough on desktop breakpoints verifying navigation and confirmation messaging for the check-in request.
 
 **Acceptance Scenarios**:
 
-1. **Given** a booking that is deposit-paid and awaiting staff approval, **When** the agent opens the details panel and activates the fulfillment button, **Then** the UI navigates to `staff/bookings/{bookingId}/fulfillment`, places focus on the page heading, and displays booking summary information and a checklist of remaining steps with only "Check in booking" enabled.
+1. **Given** a booking that is deposit-paid and awaiting staff approval, **When** the agent opens the details panel and activates the fulfillment button, **Then** the UI navigates to `staff/bookings/{bookingId}/fulfillment`, spotlights the page heading, and displays booking summary information and a checklist of remaining steps with only "Check in booking" enabled.
 2. **Given** the fulfillment page for an eligible booking, **When** the agent confirms the check-in step, **Then** the system sends `/booking/POST/api/Booking/checkin` with the booking identifier and status `Approved`, shows a success banner, records the completion timestamp, and unlocks the "Create rental" step.
 3. **Given** the fulfillment page for a booking that is already marked as approved in the backend, **When** the page loads, **Then** the check-in step is marked complete with backend metadata and subsequent steps are available without requiring the agent to re-trigger the API.
 
@@ -29,7 +29,7 @@ After confirming the booking, the staff agent uses the fulfillment route to crea
 
 **Why this priority**: Rental creation and documentation are the core deliverables of the hand-off process; without them, the renter cannot legally or operationally receive the vehicle.
 
-**Independent Validation**: Manual QA script covering the sequential buttons, mock API responses verifying the returned `rentalId`, `contractId`, and inspection identifiers, auditing analytics payloads for each milestone, and confirming all form interactions.
+**Independent Validation**: Manual QA script covering the sequential buttons, mock API responses verifying the returned `rentalId`, `contractId`, and inspection identifiers, and confirming all form interactions.
 
 **Acceptance Scenarios**:
 
@@ -45,13 +45,13 @@ With the rental package in place, the staff agent secures both renter and staff 
 
 **Why this priority**: Dual signatures and handover confirmation are regulatory and operational checkpoints; completing them ensures both parties acknowledge the contract and the fleet inventory updates in real time.
 
-**Independent Validation**: Stakeholder ride-along verifying digital signature capture flows, QA evidence that two distinct signature records are created per booking, automated AXE scan of the confirmation screen, and analytics events confirming vehicle handover timestamps.
+**Independent Validation**: Stakeholder ride-along verifying digital signature capture flows, QA evidence that two distinct signature records are created per booking, and confirmation UI review for vehicle handover timestamps.
 
 **Acceptance Scenarios**:
 
 1. **Given** a contract identifier exists, **When** the agent uploads or records the renter signature, **Then** `/rental/POST/api/Rental/contract/sign` is called with role `Renter`, `SignatureEvent.Pickup`, and the captured metadata, the UI marks the renter signature step complete, and the staff signature step remains pending.
 2. **Given** the renter signature is recorded, **When** the agent records the staff signature, **Then** `/rental/POST/api/Rental/contract/sign` is called a second time with role `Staff`, the UI requires distinct files or acknowledgements, and both signature cards display signed timestamps before enabling the final confirmation.
-3. **Given** both signatures are marked complete, **When** the agent confirms vehicle receipt, **Then** `/rental/POST/api/Rental/vehicle/receive` is sent with the rental identifier and staff handover details, the rental status updates to "In Progress" within the summary, and the fulfillment checklist shows all items completed with accessible success messaging.
+3. **Given** both signatures are marked complete, **When** the agent confirms vehicle receipt, **Then** `/rental/POST/api/Rental/vehicle/receive` is sent with the rental identifier and staff handover details, the rental status updates to "In Progress" within the summary, and the fulfillment checklist shows all items completed with clear success messaging.
 
 ### Edge Cases
 
@@ -65,7 +65,7 @@ With the rental package in place, the staff agent secures both renter and staff 
 
 ### Functional Requirements
 
-- **FR-001**: Provide a dedicated fulfillment route (`/staff/bookings/{bookingId}/fulfillment`) accessible only from the staff bookings workspace for bookings that are deposit-paid and awaiting manual processing; the existing dashboard component must remain unchanged.
+- **FR-001**: Provide a dedicated fulfillment route (`/staff/bookings/{bookingId}/fulfillment`) available only from the staff bookings workspace for bookings that are deposit-paid and awaiting manual processing; the existing dashboard component must remain unchanged.
 - **FR-002**: Display booking, renter, vehicle, and rental summaries on the fulfillment route using read-only data from existing staff booking sources so agents can confirm they are working on the correct record.
 - **FR-003**: Present the six required milestones as a sequential checklist that enforces the order `check-in → create rental → create contract → upload inspection → capture renter signature → capture staff signature → confirm vehicle receipt`, unlocking each item only when its predecessors succeed.
 - **FR-004**: When the agent confirms booking check-in, call `/booking/POST/api/Booking/checkin` with `bookingId` and `BookingStatus.Approved`, persist completion metadata, and prevent duplicate submissions while awaiting the response.
@@ -73,13 +73,13 @@ With the rental package in place, the staff agent secures both renter and staff 
 - **FR-006**: Require a contract before inspection by calling `/rental/POST/api/Rental/contract` with the new `rentalId` and the selected e-sign provider, capture the `contractId`, and display an audit trail entry.
 - **FR-007**: Collect inspection inputs (battery capacity, inspection timestamp, inspector identifier, media URL) and submit them via `/rental/POST/api/Rental/inspection`, presenting the inspection reference and allowing edits until signatures begin.
 - **FR-008**: Capture two distinct `/rental/POST/api/Rental/contract/sign` submissions—one with role `Renter`, one with role `Staff`—and require both to succeed before enabling `/rental/POST/api/Rental/vehicle/receive`.
-- **FR-009**: Upon vehicle receipt confirmation, call `/rental/POST/api/Rental/vehicle/receive` with the rental identifier, received timestamp, and staff identifier, update the booking overview to show the rental as "In Progress", and log completion analytics for auditing.
+- **FR-009**: Upon vehicle receipt confirmation, call `/rental/POST/api/Rental/vehicle/receive` with the rental identifier, received timestamp, and staff identifier, and update the booking overview to show the rental as "In Progress".
 - **FR-010**: Provide persistent status indicators, error handling, and audit notes so staff, QA, and stakeholders can review which steps succeeded, failed, or were skipped due to backend state reconciliation.
 
 ### Key Entities _(include if feature involves data)_
 
 - **Booking Fulfillment Summary**: Aggregates booking, renter, vehicle, and rental snapshots surfaced to staff so they can verify contextual details before each action.
-- **Fulfillment Step State**: Tracks the current status, timestamps, and backend identifiers (e.g., `rentalId`, `contractId`, inspection reference) for each milestone, supporting resume-after-refresh and analytics reporting.
+- **Fulfillment Step State**: Tracks the current status, timestamps, and backend identifiers (e.g., `rentalId`, `contractId`, inspection reference) for each milestone, supporting resume-after-refresh.
 - **Signature Record**: Represents each signing event with role, document details, evidence URL, and audit metadata, ensuring both renter and staff signatures are accounted for prior to vehicle handover.
 
 ## Assumptions
@@ -94,6 +94,4 @@ With the rental package in place, the staff agent secures both renter and staff 
 ### Measurable Outcomes
 
 - **SC-001**: During user acceptance testing, 95% of eligible bookings are advanced from "Approved" to "In Progress" within 10 minutes of an agent opening the fulfillment route, demonstrating that the flow removes bottlenecks.
-- **SC-002**: Accessibility audits (AXE and manual keyboard review) report zero critical or serious violations across desktop and tablet breakpoints for the fulfillment experience.
 - **SC-003**: QA regression logs confirm that the checklist never issues API calls out of the mandated order across 100% of automated and manual test cases.
-- **SC-004**: Post-launch analytics show at least 90% of fulfillment sessions complete all six milestones in a single visit, indicating the UI successfully guides staff through the entire flow.
