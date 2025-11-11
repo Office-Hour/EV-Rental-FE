@@ -1,0 +1,304 @@
+<section class="vehicle-management">
+  <header class="page-header">
+    <div class="page-header__titles">
+      <h1 class="page-header__title">Vehicle Management</h1>
+      <p class="page-header__subtitle">
+        Monitor vehicle availability, pricing, and upcoming bookings.
+      </p>
+    </div>
+    <button type="button" class="refresh-button" (click)="refresh()" [disabled]="loading()">
+      <mat-icon aria-hidden="true">refresh</mat-icon>
+      <span>Refresh</span>
+    </button>
+  </header>
+
+  <nav class="status-tabs" aria-label="Vehicle filters">
+    @for (tab of tabs; track tab.key) {
+      <button
+        type="button"
+        class="status-tab"
+        [class.status-tab--active]="activeTab() === tab.key"
+        (click)="onTabSelect(tab.key)"
+      >
+        <span class="status-tab__label">{{ tab.label }}</span>
+        <span class="status-tab__count">{{ statusCounters()[tab.counterKey] }}</span>
+      </button>
+    }
+  </nav>
+
+  <div class="toolbar">
+    <div class="toolbar__search">
+      <mat-icon aria-hidden="true">search</mat-icon>
+      <input
+        type="search"
+        class="toolbar__input"
+        [value]="searchTerm()"
+        (input)="onSearchInput($event)"
+        placeholder="Search vehicle, station, model..."
+        autocomplete="off"
+      />
+      @if (searchTerm()) {
+        <button
+          type="button"
+          class="toolbar__clear"
+          (click)="clearSearch()"
+          aria-label="Clear search"
+        >
+          <mat-icon aria-hidden="true">close</mat-icon>
+        </button>
+      }
+    </div>
+
+    <div class="toolbar__filters" aria-label="View and filter options">
+      <mat-form-field class="toolbar__station" appearance="outline">
+        <mat-label>Station</mat-label>
+        <mat-select
+          [value]="stationFilter()"
+          (selectionChange)="onStationFilterChange($event.value)"
+        >
+          <mat-option value="all">All stations</mat-option>
+          @for (station of stationOptions(); track station.id) {
+            <mat-option [value]="station.id">{{ station.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <div class="toolbar__actions">
+        <button
+          type="button"
+          class="icon-button"
+          (click)="setViewMode('list')"
+          [class.icon-button--active]="viewMode() === 'list'"
+          aria-label="List view"
+        >
+          <mat-icon aria-hidden="true">view_list</mat-icon>
+        </button>
+        <button
+          type="button"
+          class="icon-button"
+          (click)="setViewMode('grid')"
+          [class.icon-button--active]="viewMode() === 'grid'"
+          aria-label="Grid view"
+        >
+          <mat-icon aria-hidden="true">grid_view</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  @if (error()) {
+    <div class="alert alert--error" role="alert">
+      <div class="alert__content">
+        <mat-icon aria-hidden="true">error</mat-icon>
+        <span>{{ error() }}</span>
+      </div>
+      <button type="button" class="alert__action" (click)="refresh()">Retry</button>
+    </div>
+  }
+
+  @if (loading()) {
+    <div class="loading-state" aria-live="polite">
+      <div class="loading-state__spinner"></div>
+      <p>Loading vehicles...</p>
+    </div>
+  } @else {
+    @if (cardViewModels().length > 0) {
+      <div class="vehicle-collection" [class.vehicle-collection--list]="viewMode() === 'list'">
+        @for (
+          card of cardViewModels();
+          track card.record.vehicleId ?? card.record.vehicleAtStationId ?? card.vehicleDisplay
+        ) {
+          <article class="vehicle-card">
+            <header class="vehicle-card__header">
+              <div class="vehicle-card__identity">
+                <p class="vehicle-card__label">Vehicle</p>
+                <h3 class="vehicle-card__title">{{ card.vehicleDisplay }}</h3>
+                <p class="vehicle-card__station">{{ card.stationDisplay }}</p>
+                @if (card.stationAddress) {
+                  <p class="vehicle-card__address">{{ card.stationAddress }}</p>
+                }
+              </div>
+              @if (card.statusBadge) {
+                <span
+                  class="badge"
+                  [class.badge--success]="card.statusBadge.tone === 'success'"
+                  [class.badge--info]="card.statusBadge.tone === 'info'"
+                  [class.badge--pending]="card.statusBadge.tone === 'pending'"
+                  [class.badge--danger]="card.statusBadge.tone === 'danger'"
+                >
+                  {{ card.statusBadge.text }}
+                </span>
+              }
+            </header>
+
+            <div class="vehicle-card__body">
+              <div class="vehicle-card__section">
+                <span class="vehicle-card__section-label">Battery</span>
+                <span class="vehicle-card__section-value">{{ card.batteryDisplay }}</span>
+              </div>
+              <div class="vehicle-card__section">
+                <span class="vehicle-card__section-label">Range</span>
+                <span class="vehicle-card__section-value">{{ card.rangeDisplay }}</span>
+              </div>
+              <div class="vehicle-card__section">
+                <span class="vehicle-card__section-label">Hourly Rate</span>
+                <span class="vehicle-card__section-value">{{ card.hourlyRateDisplay }}</span>
+              </div>
+              <div class="vehicle-card__section">
+                <span class="vehicle-card__section-label">Daily Rate</span>
+                <span class="vehicle-card__section-value">{{ card.dailyRateDisplay }}</span>
+              </div>
+              <div class="vehicle-card__section">
+                <span class="vehicle-card__section-label">Deposit</span>
+                <span class="vehicle-card__section-value">{{ card.depositDisplay }}</span>
+              </div>
+              <div class="vehicle-card__section vehicle-card__section--wide">
+                <span class="vehicle-card__section-label">Availability</span>
+                <span class="vehicle-card__section-value">{{ card.availabilityDisplay }}</span>
+              </div>
+            </div>
+
+            <footer class="vehicle-card__footer">
+              <div class="vehicle-card__next">Next booking: {{ card.nextBookingDisplay }}</div>
+              <button
+                type="button"
+                class="vehicle-card__cta"
+                (click)="openDetails(card.record, $event)"
+              >
+                View Details
+              </button>
+            </footer>
+          </article>
+        }
+      </div>
+    } @else {
+      <div class="empty-state">
+        <mat-icon aria-hidden="true">electric_car</mat-icon>
+        <h2>No vehicles found</h2>
+        <p>Try adjusting filters or clearing the search term.</p>
+        <button type="button" (click)="clearSearch()">Clear Filters</button>
+      </div>
+    }
+  }
+
+  @if (selectedVehicleView(); as detail) {
+    <div
+      class="details-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="vehicle-details-title"
+      aria-describedby="vehicle-details-summary"
+      (click)="onOverlayClick($event)"
+      (keydown.escape)="closeDetails()"
+    >
+      <div #detailPanel class="details-panel" tabindex="-1">
+        <header class="details-panel__header">
+          <div>
+            <h2 id="vehicle-details-title">Vehicle Details</h2>
+            <p id="vehicle-details-summary">{{ detail.vehicleDisplay }}</p>
+          </div>
+          <button
+            type="button"
+            class="details-panel__close"
+            aria-label="Close details"
+            (click)="closeDetails()"
+          >
+            <mat-icon aria-hidden="true">close</mat-icon>
+          </button>
+        </header>
+
+        @if (detail.statusBadge) {
+          <div class="details-panel__badges">
+            <span
+              class="badge"
+              [class.badge--success]="detail.statusBadge.tone === 'success'"
+              [class.badge--info]="detail.statusBadge.tone === 'info'"
+              [class.badge--pending]="detail.statusBadge.tone === 'pending'"
+              [class.badge--danger]="detail.statusBadge.tone === 'danger'"
+            >
+              {{ detail.statusBadge.text }}
+            </span>
+          </div>
+        }
+
+        <section class="details-panel__grid">
+          <div>
+            <span class="details-panel__label">Station</span>
+            <span class="details-panel__value">{{ detail.stationDisplay }}</span>
+          </div>
+          <div>
+            <span class="details-panel__label">Station Address</span>
+            <span class="details-panel__value">{{ detail.stationAddress ?? '--' }}</span>
+          </div>
+          <div>
+            <span class="details-panel__label">Vehicle ID</span>
+            <span class="details-panel__value">{{ detail.vehicleIdDisplay }}</span>
+          </div>
+          <div>
+            <span class="details-panel__label">Vehicle At Station</span>
+            <span class="details-panel__value">{{ detail.vehicleAtStationDisplay }}</span>
+          </div>
+          <div>
+            <span class="details-panel__label">Current Window</span>
+            <span class="details-panel__value">{{ detail.currentWindowDisplay }}</span>
+          </div>
+          <div>
+            <span class="details-panel__label">Availability</span>
+            <span class="details-panel__value">{{ detail.availabilityDisplay }}</span>
+          </div>
+        </section>
+
+        <section class="details-panel__grid">
+          <div>
+            <span class="details-panel__label">Battery</span>
+            <span class="details-panel__value">{{ detail.batteryDisplay }}</span>
+          </div>
+          <div>
+            <span class="details-panel__label">Range</span>
+            <span class="details-panel__value">{{ detail.rangeDisplay }}</span>
+          </div>
+          <div>
+            <span class="details-panel__label">Hourly Rate</span>
+            <span class="details-panel__value">{{ detail.hourlyRateDisplay }}</span>
+          </div>
+          <div>
+            <span class="details-panel__label">Daily Rate</span>
+            <span class="details-panel__value">{{ detail.dailyRateDisplay }}</span>
+          </div>
+          <div>
+            <span class="details-panel__label">Deposit</span>
+            <span class="details-panel__value">{{ detail.depositDisplay }}</span>
+          </div>
+        </section>
+
+        <section class="details-panel__section">
+          <h3>Upcoming Bookings</h3>
+          @if (detail.upcomingBookings.length > 0) {
+            <ul class="details-panel__list">
+              @for (
+                booking of detail.upcomingBookings;
+                track booking.bookingId ?? booking.rangeDisplay
+              ) {
+                <li>
+                  <div class="details-panel__list-item">
+                    <span class="details-panel__list-label">{{ booking.rangeDisplay }}</span>
+                    <span class="details-panel__list-value">
+                      @if (booking.bookingId) {
+                        <span>Booking {{ booking.bookingId }}</span>
+                      }
+                      @if (booking.renterId) {
+                        <span> · Renter {{ booking.renterId }}</span>
+                      }
+                    </span>
+                  </div>
+                </li>
+              }
+            </ul>
+          } @else {
+            <p class="details-panel__empty">No upcoming bookings</p>
+          }
+        </section>
+      </div>
+    </div>
+  }
+</section>
