@@ -1,0 +1,70 @@
+<form class="signature-step__form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+  <div class="signature-step__field">
+    <label for="signature-datetime" class="signature-step__label">
+      Thời điểm ký {{ role() === 'renter' ? 'của khách' : 'của nhân viên' }}
+    </label>
+    <input
+      id="signature-datetime"
+      type="datetime-local"
+      class="signature-step__input"
+      formControlName="signedAt"
+      [attr.aria-invalid]="showError('signedAt', 'required')"
+      required
+    />
+    @if (showError('signedAt', 'required')) {
+      <p class="signature-step__error" role="alert">Vui lòng chọn thời điểm ký.</p>
+    }
+  </div>
+
+  <div class="signature-step__field">
+    <label for="signature-type" class="signature-step__label">Loại chữ ký</label>
+    <select
+      id="signature-type"
+      class="signature-step__select"
+      formControlName="signatureType"
+      [attr.aria-invalid]="showError('signatureType', 'required')"
+      required
+    >
+      @for (option of signatureTypes; track option.value) {
+        <option [value]="option.value">{{ option.label }}</option>
+      }
+    </select>
+    @if (showError('signatureType', 'required')) {
+      <p class="signature-step__error" role="alert">Vui lòng chọn loại chữ ký.</p>
+    }
+  </div>
+
+  <div class="signature-step__field">
+    <label for="signature-url" class="signature-step__label">Đường dẫn tài liệu (tuỳ chọn)</label>
+    <input
+      id="signature-url"
+      type="url"
+      class="signature-step__input"
+      placeholder="https://example.com/contract.pdf"
+      formControlName="documentUrl"
+    />
+    @if (showError('documentUrl', 'maxlength')) {
+      <p class="signature-step__error" role="alert">Đường dẫn quá dài (giới hạn 2048 ký tự).</p>
+    }
+  </div>
+
+  <div class="signature-step__field">
+    <label for="signature-hash" class="signature-step__label">Mã băm tài liệu (tuỳ chọn)</label>
+    <input
+      id="signature-hash"
+      type="text"
+      class="signature-step__input"
+      formControlName="documentHash"
+      autocomplete="off"
+    />
+    @if (showError('documentHash', 'maxlength')) {
+      <p class="signature-step__error" role="alert">Mã băm quá dài (giới hạn 512 ký tự).</p>
+    }
+  </div>
+
+  <div class="signature-step__actions">
+    <button type="submit" class="signature-step__submit" [disabled]="disabled() || form.invalid">
+      Ghi nhận chữ ký
+    </button>
+  </div>
+</form>

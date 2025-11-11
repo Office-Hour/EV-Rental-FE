@@ -77,14 +77,14 @@ description: 'Task list template for feature implementation'
 
 ### Validation for User Story 2 ⚠️
 
-- [ ] T019 [P] [US2] Document manual QA scenarios for rental package flow at `specs/001-staff-booking-flow/checklists/us2-rental-package.md`
+- [x] T019 [P] [US2] Document manual QA scenarios for rental package flow at `specs/001-staff-booking-flow/checklists/us2-rental-package.md`
 
 ### Implementation for User Story 2
 
-- [ ] T021 [US2] Extend `FulfillmentOrchestrator` with rental and contract creation flows plus error handling in `src/app/core-logic/rental-fulfillment/fulfillment.service.ts`
-- [ ] T022 [P] [US2] Build inspection reactive form component meeting research requirements at `src/app/features/staff/booking-fulfillment/components/inspection-form/inspection-form.ts|.html|.scss`
-- [ ] T023 [US2] Integrate rental, contract, and inspection steps with gating logic in `src/app/features/staff/booking-fulfillment/pages/fulfillment-page/fulfillment-page.html`
-- [ ] T024 [US2] Surface returned `rentalId`, `contractId`, and inspection reference in summary/timeline signals in `src/app/features/staff/booking-fulfillment/pages/fulfillment-page/fulfillment-page.ts`
+- [x] T021 [US2] Extend `FulfillmentOrchestrator` with rental and contract creation flows plus error handling in `src/app/core-logic/rental-fulfillment/fulfillment.service.ts`
+- [x] T022 [P] [US2] Build inspection reactive form component meeting research requirements at `src/app/features/staff/booking-fulfillment/components/inspection-form/inspection-form.ts|.html|.scss`
+- [x] T023 [US2] Integrate rental, contract, and inspection steps with gating logic in `src/app/features/staff/booking-fulfillment/pages/fulfillment-page/fulfillment-page.html`
+- [x] T024 [US2] Surface returned `rentalId`, `contractId`, and inspection reference in summary/timeline signals in `src/app/features/staff/booking-fulfillment/pages/fulfillment-page/fulfillment-page.ts`
       **Checkpoint**: User Stories 1 and 2 operate independently with validated evidence
 
 ---
@@ -97,15 +97,15 @@ description: 'Task list template for feature implementation'
 
 ### Validation for User Story 3 ⚠️
 
-- [ ] T026 [P] [US3] Draft manual QA script for signature + vehicle receive flow at `specs/001-staff-booking-flow/checklists/us3-finalization.md`
+- [x] T026 [P] [US3] Draft manual QA script for signature + vehicle receive flow at `specs/001-staff-booking-flow/checklists/us3-finalization.md`
 
 ### Implementation for User Story 3
 
-- [ ] T028 [US3] Add renter/staff signature and vehicle receive orchestration with retry support in `src/app/core-logic/rental-fulfillment/fulfillment.service.ts`
-- [ ] T029 [P] [US3] Create signature step component handling dual submissions at `src/app/features/staff/booking-fulfillment/components/signature-step/signature-step.ts|.html|.scss`
-- [ ] T030 [US3] Integrate signature gating and completion feedback in `src/app/features/staff/booking-fulfillment/pages/fulfillment-page/fulfillment-page.html`
-- [ ] T031 [US3] Render vehicle receipt confirmation with staff metadata in `src/app/features/staff/booking-fulfillment/pages/fulfillment-page/fulfillment-page.ts`
-- [ ] T032 [US3] Reconcile backend-completed steps into the UI timeline and badges in `src/app/features/staff/booking-fulfillment/pages/fulfillment-page/fulfillment-page.ts`
+- [x] T028 [US3] Add renter/staff signature and vehicle receive orchestration with retry support in `src/app/core-logic/rental-fulfillment/fulfillment.service.ts`
+- [x] T029 [P] [US3] Create signature step component handling dual submissions at `src/app/features/staff/booking-fulfillment/components/signature-step/signature-step.ts|.html|.scss`
+- [x] T030 [US3] Integrate signature gating and completion feedback in `src/app/features/staff/booking-fulfillment/pages/fulfillment-page/fulfillment-page.html`
+- [x] T031 [US3] Render vehicle receipt confirmation with staff metadata in `src/app/features/staff/booking-fulfillment/pages/fulfillment-page/fulfillment-page.ts`
+- [x] T032 [US3] Reconcile backend-completed steps into the UI timeline and badges in `src/app/features/staff/booking-fulfillment/pages/fulfillment-page/fulfillment-page.ts`
 
 **Checkpoint**: All fulfillment milestones complete with signatures and vehicle handover recorded
 

@@ -233,6 +233,25 @@
   gap: 0.75rem;
 }
 
+.steps__artifacts {
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  margin: 0;
+}
+
+.steps__artifacts dt {
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: rgba(15, 23, 42, 0.65);
+}
+
+.steps__artifacts dd {
+  margin: 0.25rem 0 0;
+  font-size: 0.875rem;
+  color: rgba(15, 23, 42, 0.95);
+}
+
 .steps__titles h3 {
   margin: 0;
   font-size: 1.1rem;
@@ -283,6 +302,101 @@
 }
 
 .steps__cta[disabled] {
+  background-color: rgba(37, 99, 235, 0.4);
+  cursor: not-allowed;
+}
+
+.steps__form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.steps__label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: rgba(15, 23, 42, 0.8);
+}
+
+.steps__select {
+  min-width: 220px;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  border-radius: 0.75rem;
+  background-color: #fff;
+  font: inherit;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.steps__select:focus {
+  border-color: rgba(37, 99, 235, 0.9);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  outline: none;
+}
+
+.steps__select[disabled] {
+  background-color: rgba(148, 163, 184, 0.12);
+  cursor: not-allowed;
+}
+
+.vehicle-receive {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.vehicle-receive__label {
+  font-weight: 600;
+  color: rgba(15, 23, 42, 0.85);
+}
+
+.vehicle-receive__input {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  border-radius: 0.75rem;
+  font: inherit;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.vehicle-receive__input:focus {
+  border-color: rgba(37, 99, 235, 0.9);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  outline: none;
+}
+
+.vehicle-receive__error {
+  margin: 0;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.75rem;
+  background-color: rgba(248, 113, 113, 0.12);
+  color: #b91c1c;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.vehicle-receive__actions {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.vehicle-receive__submit {
+  padding: 0.625rem 1.5rem;
+  border-radius: 0.75rem;
+  background-color: #2563eb;
+  color: #fff;
+  font-weight: 600;
+  transition: background-color 150ms ease;
+}
+
+.vehicle-receive__submit:hover,
+.vehicle-receive__submit:focus-visible {
+  background-color: #1d4ed8;
+}
+
+.vehicle-receive__submit[disabled] {
   background-color: rgba(37, 99, 235, 0.4);
   cursor: not-allowed;
 }
