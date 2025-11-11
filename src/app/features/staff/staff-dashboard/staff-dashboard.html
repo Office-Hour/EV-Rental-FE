@@ -297,6 +297,17 @@
             </div>
           </dl>
         </section>
+
+        <footer class="details-panel__actions">
+          <button
+            type="button"
+            class="details-panel__primary"
+            (click)="goToBookingDetail(detail.record.bookingId)"
+          >
+            Continue workflow
+            <mat-icon aria-hidden="true">arrow_forward</mat-icon>
+          </button>
+        </footer>
       </div>
     </div>
   }

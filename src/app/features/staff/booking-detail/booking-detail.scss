@@ -1,0 +1,241 @@
+:host {
+  display: block;
+  padding: 2.5rem 0;
+  color: var(--mat-sys-on-surface, #0f172a);
+}
+
+.booking-workflow {
+  display: grid;
+  gap: 2rem;
+}
+
+.booking-workflow__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.booking-workflow__header h1 {
+  margin: 0;
+  font-size: clamp(1.75rem, 2.5vw, 2.25rem);
+  font-weight: 600;
+}
+
+.booking-workflow__header p {
+  margin: 0.25rem 0 0;
+  color: var(--mat-sys-on-surface-variant, #475569);
+}
+
+.booking-workflow__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--mat-sys-outline-variant, #cbd5f5);
+  color: inherit;
+  text-decoration: none;
+  transition: background 0.2s ease, border 0.2s ease;
+}
+
+.booking-workflow__back:hover {
+  background: rgb(37 99 235 / 8%);
+  border-color: transparent;
+}
+
+.booking-workflow__alert {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  border-radius: 1rem;
+  background: rgb(220 38 38 / 12%);
+  color: #991b1b;
+}
+
+.booking-summary {
+  padding: 1.5rem;
+  border-radius: 1.25rem;
+  background: var(--mat-sys-surface, #fff);
+  box-shadow: 0 16px 32px rgb(15 23 42 / 14%);
+  display: grid;
+  gap: 1.5rem;
+}
+
+.booking-summary__grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.booking-summary__label {
+  display: block;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--mat-sys-on-surface-variant, #64748b);
+}
+
+.booking-summary__value {
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.workflow-form {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.workflow-form__section {
+  border: 1px solid rgb(226 232 240 / 65%);
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+  background: var(--mat-sys-surface, #fff);
+  display: grid;
+  gap: 1.25rem;
+}
+
+.workflow-form__section legend {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.workflow-form__grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.workflow-form__field {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.workflow-form__field span {
+  font-size: 0.95rem;
+  color: var(--mat-sys-on-surface, #1f2937);
+}
+
+.workflow-form__field input,
+.workflow-form__field select {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--mat-sys-outline-variant, #cbd5f5);
+  background: var(--mat-sys-surface, #fff);
+  font: inherit;
+  color: inherit;
+}
+
+.workflow-form__field input:focus,
+.workflow-form__field select:focus {
+  outline: 3px solid rgb(37 99 235 / 35%);
+  outline-offset: 1px;
+}
+
+.workflow-form__field--single {
+  max-width: 340px;
+}
+
+.workflow-form__error {
+  color: #b91c1c;
+  font-size: 0.85rem;
+}
+
+.workflow-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+}
+
+.workflow-form__actions button {
+  padding: 0.75rem 1.75rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--mat-sys-primary, #2563eb);
+  color: var(--mat-sys-on-primary, #fff);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.workflow-form__actions button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.workflow-form__actions button:hover:enabled {
+  background: color-mix(in srgb, var(--mat-sys-primary, #2563eb) 90%, #fff);
+  box-shadow: 0 12px 24px rgb(37 99 235 / 28%);
+}
+
+.workflow-form__status {
+  font-size: 0.95rem;
+  color: var(--mat-sys-on-surface-variant, #475569);
+}
+
+.workflow-status {
+  padding: 1.5rem;
+  border-radius: 1.25rem;
+  background: var(--mat-sys-surface, #fff);
+  box-shadow: 0 16px 32px rgb(15 23 42 / 12%);
+  display: grid;
+  gap: 0.75rem;
+}
+
+.workflow-status h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.workflow-status__note {
+  margin: 0;
+  color: var(--mat-sys-on-surface-variant, #475569);
+}
+
+.workflow-status__error,
+.workflow-status__success {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  padding: 1rem 1.2rem;
+  border-radius: 1rem;
+}
+
+.workflow-status__error {
+  background: rgb(239 68 68 / 12%);
+  color: #b91c1c;
+}
+
+.workflow-status__success {
+  background: rgb(34 197 94 / 12%);
+  color: #15803d;
+}
+
+.workflow-status__success ul {
+  margin: 0.5rem 0 0;
+  padding-left: 1.25rem;
+}
+
+.workflow-status__success li {
+  margin: 0.25rem 0;
+}
+
+@media (width <= 768px) {
+  :host {
+    padding: 1.5rem 0;
+  }
+
+  .booking-workflow__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .booking-workflow__back {
+    align-self: stretch;
+    justify-content: center;
+  }
+}

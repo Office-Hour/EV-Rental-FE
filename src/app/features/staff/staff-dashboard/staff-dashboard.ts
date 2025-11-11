@@ -17,6 +17,7 @@ import {
   RentalStatus as RentalStatusEnum,
 } from '../../../../contract';
 import type { BookingStatus, BookingVerificationStatus, RentalStatus } from '../../../../contract';
+import { Router } from '@angular/router';
 
 type BookingTabKey = 'all' | 'pendingVerification' | 'verified' | 'cancelled';
 
@@ -126,6 +127,7 @@ const RENTAL_LINKED_BADGE: StatusBadge = {
 })
 export class StaffDashboard {
   private readonly bookingsService = inject(BookingsService);
+  private readonly router = inject(Router);
   @ViewChild('detailPanel') private detailPanel?: ElementRef<HTMLDivElement>;
   private activeDetailTrigger: HTMLElement | null = null;
 
@@ -238,6 +240,14 @@ export class StaffDashboard {
 
   constructor() {
     this.refresh();
+  }
+
+  goToBookingDetail(bookingId: string): void {
+    if (!bookingId) {
+      return;
+    }
+    this.closeDetails();
+    this.router.navigate(['/staff/bookings', bookingId]);
   }
 
   refresh(): void {
