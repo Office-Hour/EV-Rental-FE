@@ -6,7 +6,16 @@ const angular = require('angular-eslint');
 module.exports = tseslint.config(
   {
     files: ['**/*.ts'],
-    ignores: ['**/*.spec.ts', 'node_modules/**', 'src/contract/**'],
+    ignores: [
+      '**/*.spec.ts',
+      'node_modules/**',
+      'src/contract/**',
+      'dist/**',
+      'build/**',
+      'coverage/**',
+      '.angular/cache/**',
+      'pnpm-lock.yaml',
+    ],
     extends: [
       eslint.configs.recommended,
       ...tseslint.configs.recommended,
@@ -35,7 +44,16 @@ module.exports = tseslint.config(
   },
   {
     files: ['**/*.html'],
-    ignores: ['**/*.spec.ts', 'node_modules/**', 'src/contract/**'],
+    ignores: [
+      '**/*.spec.ts',
+      'node_modules/**',
+      'src/contract/**',
+      'dist/**',
+      'build/**',
+      'coverage/**',
+      '.angular/cache/**',
+      'pnpm-lock.yaml',
+    ],
     extends: [...angular.configs.templateRecommended, ...angular.configs.templateAccessibility],
     rules: {},
   },

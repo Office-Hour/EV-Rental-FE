@@ -14,6 +14,8 @@ import {
   BookingDetailsDtoListApiResponse,
   BookingService,
   BookingStatus as BookingStatusEnum,
+  BookingVerificationStatus as BookingVerificationStatusEnum,
+  ContractDto,
   RentalDetailsDto,
   RentalDetailsDtoListApiResponse,
   RentalService,
@@ -23,6 +25,12 @@ import {
   VehicleDetailsDto,
   VehicleDetailsDtoApiResponse,
 } from '../../../contract';
+import type { BookingStatus, BookingVerificationStatus } from '../../../contract';
+import { catchError, finalize, forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
+import {
+  BookingFulfillmentSummary,
+  FulfillmentTimelineEvent,
+} from '../rental-fulfillment/fulfillment.types';
 
 export interface StaffBookingRecord {
   readonly bookingId: string;
@@ -118,6 +126,25 @@ export class BookingsService {
       finalize(() => {
         this._loading.set(false);
       }),
+    );
+  }
+
+  loadBookingFulfillmentSummary(
+    bookingId: string,
+  ): Observable<BookingFulfillmentSummary | undefined> {
+    const normalizedId = this._normalizeString(bookingId);
+    if (!normalizedId) {
+      return of(undefined);
+    }
+
+    const cachedRecord = this._staffBookings().find((record) => record.bookingId === normalizedId);
+    if (cachedRecord) {
+      return of(this._toFulfillmentSummary(cachedRecord));
+    }
+
+    return this.loadStaffBookings().pipe(
+      map((records) => records.find((record) => record.bookingId === normalizedId)),
+      map((record) => (record ? this._toFulfillmentSummary(record) : undefined)),
     );
   }
 
@@ -248,6 +275,120 @@ export class BookingsService {
     }
 
     return records.sort((a, b) => this._compareByDateDesc(a.bookingCreatedAt, b.bookingCreatedAt));
+  }
+
+  private _toFulfillmentSummary(record: StaffBookingRecord): BookingFulfillmentSummary {
+    const booking: BookingDetailsDto = {
+      bookingId: record.bookingId,
+      renterId: record.renterId,
+      vehicleAtStationId: record.vehicleAtStationId,
+      bookingCreatedAt: record.bookingCreatedAt,
+      startTime: record.startTime,
+      endTime: record.endTime,
+      status: record.status,
+      verificationStatus: record.verificationStatus,
+      verifiedByStaffId: record.verifiedByStaffId ?? null,
+      verifiedAt: record.verifiedAt ?? null,
+      cancelReason: record.cancelReason ?? null,
+    };
+
+    return {
+      bookingId: record.bookingId,
+      status: record.status,
+      verificationStatus: record.verificationStatus,
+      booking,
+      renterProfile: record.renterProfile,
+      vehicleDetails: record.vehicleDetails,
+      rental: record.rental,
+      timeline: this._buildFulfillmentTimeline(record),
+    };
+  }
+
+  private _buildFulfillmentTimeline(record: StaffBookingRecord): FulfillmentTimelineEvent[] {
+    const now = new Date().toISOString();
+    const events: FulfillmentTimelineEvent[] = [];
+
+    if (record.verificationStatus === BookingVerificationStatusEnum.Approved) {
+      const occurredAt =
+        this._normalizeString(record.verifiedAt) ??
+        this._normalizeString(record.bookingCreatedAt) ??
+        now;
+
+      events.push({
+        step: 'checkin',
+        title: 'Đặt xe đã được duyệt',
+        description: 'Nhân viên đã xác nhận đặt xe và chuyển sang chuẩn bị thuê.',
+        actor: 'staff',
+        occurredAt,
+        metadata: this._buildMetadata({ staffId: record.verifiedByStaffId }),
+      });
+    }
+
+    const rentalId = this._normalizeString(record.rental?.rentalId);
+    if (rentalId) {
+      const rentalStartAt =
+        this._normalizeString(record.rental?.startTime) ??
+        this._normalizeString(record.rental?.booking?.startDate) ??
+        now;
+
+      events.push({
+        step: 'create-rental',
+        title: 'Đơn thuê đã được tạo',
+        description: 'Đơn thuê được khởi tạo sau khi booking được phê duyệt.',
+        actor: 'staff',
+        occurredAt: rentalStartAt,
+        metadata: this._buildMetadata({ rentalId }),
+      });
+
+      const validContracts = (record.rental?.contracts ?? []).reduce<ContractDto[]>(
+        (accumulator, contract) => {
+          if (contract?.contractId) {
+            accumulator.push(contract);
+          }
+          return accumulator;
+        },
+        [],
+      );
+
+      if (validContracts.length > 0) {
+        const sortedContracts = [...validContracts].sort((first, second) => {
+          const firstTime = Date.parse(first.issuedAt ?? '');
+          const secondTime = Date.parse(second.issuedAt ?? '');
+          return firstTime - secondTime;
+        });
+
+        const latestContract = sortedContracts[sortedContracts.length - 1];
+        const occurredAt = this._normalizeString(latestContract.issuedAt) ?? rentalStartAt;
+
+        events.push({
+          step: 'create-contract',
+          title: 'Hợp đồng đã được phát hành',
+          description: 'Hợp đồng điện tử gắn với đơn thuê đã sẵn sàng cho chữ ký.',
+          actor: 'staff',
+          occurredAt,
+          metadata: this._buildMetadata({ contractId: latestContract.contractId }),
+        });
+      }
+    }
+
+    return events.sort(
+      (first, second) => Date.parse(first.occurredAt) - Date.parse(second.occurredAt),
+    );
+  }
+
+  private _buildMetadata(
+    entries: Record<string, string | undefined | null>,
+  ): Readonly<Record<string, string>> | undefined {
+    const metadata: Record<string, string> = {};
+
+    for (const [key, value] of Object.entries(entries)) {
+      const normalized = this._normalizeString(value);
+      if (normalized) {
+        metadata[key] = normalized;
+      }
+    }
+
+    return Object.keys(metadata).length > 0 ? metadata : undefined;
   }
 
   private _resolveVehicleDetails(
