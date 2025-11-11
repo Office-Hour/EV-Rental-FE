@@ -1,0 +1,147 @@
+openapi: 3.0.3
+info:
+  title: EV Rental Frontend Booking Fulfillment Orchestration
+  version: 1.0.0
+  description: >-
+    Logical contract map for required backend calls triggered by the staff booking
+    fulfillment UI. Mirrors existing EV Rental REST API endpoints consumed via
+    generated OpenAPI clients.
+servers:
+  - url: https://api.ev-rental.local
+paths:
+  /api/Booking/checkin:
+    post:
+      summary: Staff confirms booking check-in
+      operationId: staffCheckinBooking
+      tags:
+        - Booking
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckinBookingRequest'
+      responses:
+        '200':
+          description: Booking check-in processed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingApiResponse'
+  /api/Rental:
+    post:
+      summary: Create rental for approved booking
+      operationId: staffCreateRental
+      tags:
+        - Rental
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRentalRequest'
+      responses:
+        '200':
+          description: Rental created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RentalApiResponse'
+  /api/Rental/contract:
+    post:
+      summary: Generate contract for rental
+      operationId: staffCreateRentalContract
+      tags:
+        - Rental
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateContractRequest'
+      responses:
+        '200':
+          description: Contract created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractApiResponse'
+  /api/Rental/inspection:
+    post:
+      summary: Record pre-handover inspection
+      operationId: staffRecordInspection
+      tags:
+        - Rental
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReceiveInspectionRequest'
+      responses:
+        '200':
+          description: Inspection stored
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InspectionApiResponse'
+  /api/Rental/contract/sign:
+    post:
+      summary: Capture digital signature
+      operationId: staffSignContract
+      tags:
+        - Rental
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignContractRequest'
+      responses:
+        '200':
+          description: Signature stored
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractApiResponse'
+  /api/Rental/vehicle/receive:
+    post:
+      summary: Confirm vehicle handover
+      operationId: staffReceiveVehicle
+      tags:
+        - Rental
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReceiveVehicleRequest'
+      responses:
+        '204':
+          description: Vehicle receive acknowledged
+components:
+  schemas:
+    CheckinBookingRequest:
+      $ref: '../../src/contract/model/checkinBookingRequest.ts'
+    CreateRentalRequest:
+      $ref: '../../src/contract/model/createRentalRequest.ts'
+    CreateContractRequest:
+      $ref: '../../src/contract/model/createContractRequest.ts'
+    ReceiveInspectionRequest:
+      $ref: '../../src/contract/model/receiveInspectionRequest.ts'
+    SignContractRequest:
+      $ref: '../../src/contract/model/signContractRequest.ts'
+    ReceiveVehicleRequest:
+      $ref: '../../src/contract/model/receiveVehicleRequest.ts'
+    BookingApiResponse:
+      description: Wraps booking details payload (placeholder for generated model)
+      type: object
+    RentalApiResponse:
+      description: Wraps rental details payload (placeholder for generated model)
+      type: object
+    ContractApiResponse:
+      description: Wraps contract details payload (placeholder for generated model)
+      type: object
+    InspectionApiResponse:
+      description: Wraps inspection details payload (placeholder for generated model)
+      type: object
