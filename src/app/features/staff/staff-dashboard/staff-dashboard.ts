@@ -9,6 +9,7 @@ import {
   signal,
 } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
+import { Router } from '@angular/router';
 import { take } from 'rxjs';
 import { BookingsService, StaffBookingRecord } from '../../../core-logic/bookings/bookings.service';
 import {
@@ -126,6 +127,7 @@ const RENTAL_LINKED_BADGE: StatusBadge = {
 })
 export class StaffDashboard {
   private readonly bookingsService = inject(BookingsService);
+  private readonly router = inject(Router);
   @ViewChild('detailPanel') private detailPanel?: ElementRef<HTMLDivElement>;
   private activeDetailTrigger: HTMLElement | null = null;
 
@@ -292,6 +294,15 @@ export class StaffDashboard {
         target.focus();
       });
     }
+  }
+
+  goToBookingWorkflow(bookingId: string): void {
+    if (!bookingId) {
+      return;
+    }
+
+    this.closeDetails();
+    void this.router.navigate(['/staff/bookings', bookingId]);
   }
 
   onOverlayClick(event: MouseEvent): void {

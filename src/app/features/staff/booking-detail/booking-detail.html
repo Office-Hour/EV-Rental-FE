@@ -1,0 +1,438 @@
+<section class="booking-detail">
+  <header class="booking-detail__header">
+    <a class="booking-detail__back" routerLink="/staff/bookings">← Back to bookings</a>
+    <div class="booking-detail__titles">
+      <h1 class="booking-detail__title">Booking workflow</h1>
+      <p class="booking-detail__subtitle">
+        Review booking details and execute the rental handoff workflow step-by-step.
+      </p>
+    </div>
+  </header>
+
+  @if (bookingSummary(); as summary) {
+    <article class="booking-summary" aria-labelledby="booking-summary-heading">
+      <header class="booking-summary__header">
+        <div>
+          <h2 id="booking-summary-heading">Booking {{ summary.bookingId }}</h2>
+          <p class="booking-summary__customer">{{ summary.customer }}</p>
+        </div>
+        <div class="booking-summary__badges">
+          @for (badge of summary.badges; track badge.label) {
+            <span
+              class="badge"
+              [class.badge--success]="badge.tone === 'success'"
+              [class.badge--danger]="badge.tone === 'danger'"
+              [class.badge--info]="badge.tone === 'info'"
+              [class.badge--pending]="badge.tone === 'pending'"
+            >
+              {{ badge.label }}
+            </span>
+          }
+        </div>
+      </header>
+
+      <dl class="booking-summary__grid">
+        <div>
+          <dt>Created</dt>
+          <dd>{{ summary.createdAt ?? '--' }}</dd>
+        </div>
+        <div>
+          <dt>Rental start</dt>
+          <dd>{{ summary.startTime ?? '--' }}</dd>
+        </div>
+        <div>
+          <dt>Expected return</dt>
+          <dd>{{ summary.endTime ?? '--' }}</dd>
+        </div>
+        <div>
+          <dt>Deposit</dt>
+          <dd>{{ summary.deposit ?? '--' }}</dd>
+        </div>
+        <div>
+          <dt>Estimated total</dt>
+          <dd>{{ summary.total ?? '--' }}</dd>
+        </div>
+        <div>
+          <dt>Vehicle</dt>
+          <dd>{{ summary.vehicle ?? '--' }}</dd>
+        </div>
+        <div>
+          <dt>Rental ID</dt>
+          <dd>{{ summary.rentalId ?? '--' }}</dd>
+        </div>
+        <div>
+          <dt>Rental status</dt>
+          <dd>{{ summary.rentalStatus ?? '--' }}</dd>
+        </div>
+      </dl>
+    </article>
+
+    <section class="workflow" aria-labelledby="workflow-heading">
+      <header class="workflow__header">
+        <h2 id="workflow-heading">Rental handoff workflow</h2>
+        <p>All actions will be executed in order. Provide the required data before starting.</p>
+      </header>
+
+      <ol class="workflow-steps">
+        @for (step of workflowSteps(); track step.key) {
+          <li
+            class="workflow-step"
+            [class.workflow-step--success]="step.status === 'success'"
+            [class.workflow-step--error]="step.status === 'error'"
+            [class.workflow-step--running]="step.status === 'running'"
+            [class.workflow-step--idle]="step.status === 'idle'"
+          >
+            <div class="workflow-step__header">
+              <h3 class="workflow-step__title">{{ step.label }}</h3>
+              <span class="workflow-step__status">{{ statusLabel(step.status) }}</span>
+            </div>
+            @if (step.message) {
+              <p class="workflow-step__message" aria-live="polite">{{ step.message }}</p>
+            }
+          </li>
+        }
+      </ol>
+
+      @if (workflowError()) {
+        <div class="workflow__error" role="alert">{{ workflowError() }}</div>
+      }
+
+      <form class="workflow-form" [formGroup]="workflowForm" novalidate>
+        <fieldset class="workflow-fieldset" formGroupName="inspection">
+          <legend>Vehicle inspection</legend>
+          <div class="form-field">
+            <label for="inspection-battery">Battery capacity (kWh)</label>
+            <input
+              id="inspection-battery"
+              type="number"
+              formControlName="batteryCapacity"
+              min="0"
+              step="0.1"
+              [class.input--invalid]="
+                inspectionGroup.controls.batteryCapacity.invalid &&
+                inspectionGroup.controls.batteryCapacity.touched
+              "
+            />
+            @if (
+              inspectionGroup.controls.batteryCapacity.invalid &&
+              inspectionGroup.controls.batteryCapacity.touched
+            ) {
+              <span class="form-error">Enter the current battery capacity.</span>
+            }
+          </div>
+
+          <div class="form-field">
+            <label for="inspection-time">Inspection time</label>
+            <input
+              id="inspection-time"
+              type="datetime-local"
+              formControlName="inspectedAt"
+              [class.input--invalid]="
+                inspectionGroup.controls.inspectedAt.invalid &&
+                inspectionGroup.controls.inspectedAt.touched
+              "
+            />
+            @if (
+              inspectionGroup.controls.inspectedAt.invalid &&
+              inspectionGroup.controls.inspectedAt.touched
+            ) {
+              <span class="form-error">Provide the inspection timestamp.</span>
+            }
+          </div>
+
+          <div class="form-field">
+            <label for="inspection-url">Inspection report URL (optional)</label>
+            <input id="inspection-url" type="url" formControlName="inspectionUrl" />
+          </div>
+        </fieldset>
+
+        <fieldset class="workflow-fieldset" formGroupName="renterSignature">
+          <legend>Renter signature</legend>
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="renter-document-url">Document URL</label>
+              <input
+                id="renter-document-url"
+                type="url"
+                formControlName="documentUrl"
+                autocomplete="off"
+                [class.input--invalid]="
+                  renterSignatureGroup.controls.documentUrl.invalid &&
+                  renterSignatureGroup.controls.documentUrl.touched
+                "
+              />
+              @if (
+                renterSignatureGroup.controls.documentUrl.invalid &&
+                renterSignatureGroup.controls.documentUrl.touched
+              ) {
+                <span class="form-error">Document URL is required.</span>
+              }
+            </div>
+            <div class="form-field">
+              <label for="renter-document-hash">Document hash</label>
+              <input
+                id="renter-document-hash"
+                type="text"
+                formControlName="documentHash"
+                autocomplete="off"
+                [class.input--invalid]="
+                  renterSignatureGroup.controls.documentHash.invalid &&
+                  renterSignatureGroup.controls.documentHash.touched
+                "
+              />
+              @if (
+                renterSignatureGroup.controls.documentHash.invalid &&
+                renterSignatureGroup.controls.documentHash.touched
+              ) {
+                <span class="form-error">Document hash is required.</span>
+              }
+            </div>
+            <div class="form-field">
+              <label for="renter-signature-type">Signature type</label>
+              <select id="renter-signature-type" formControlName="signatureType">
+                @for (option of signatureTypeOptions; track option.value) {
+                  <option [value]="option.value">{{ option.label }}</option>
+                }
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="renter-signed-at">Signed at</label>
+              <input
+                id="renter-signed-at"
+                type="datetime-local"
+                formControlName="signedAt"
+                [class.input--invalid]="
+                  renterSignatureGroup.controls.signedAt.invalid &&
+                  renterSignatureGroup.controls.signedAt.touched
+                "
+              />
+              @if (
+                renterSignatureGroup.controls.signedAt.invalid &&
+                renterSignatureGroup.controls.signedAt.touched
+              ) {
+                <span class="form-error">Select when the renter signed.</span>
+              }
+            </div>
+            <div class="form-field">
+              <label for="renter-signer-ip">Signer IP (optional)</label>
+              <input
+                id="renter-signer-ip"
+                type="text"
+                formControlName="signerIp"
+                autocomplete="off"
+              />
+            </div>
+            <div class="form-field">
+              <label for="renter-user-agent">User agent (optional)</label>
+              <input
+                id="renter-user-agent"
+                type="text"
+                formControlName="userAgent"
+                autocomplete="off"
+              />
+            </div>
+            <div class="form-field">
+              <label for="renter-signature-image">Signature image URL (optional)</label>
+              <input id="renter-signature-image" type="url" formControlName="signatureImageUrl" />
+            </div>
+            <div class="form-field">
+              <label for="renter-provider-signature">Provider signature ID (optional)</label>
+              <input
+                id="renter-provider-signature"
+                type="text"
+                formControlName="providerSignatureId"
+              />
+            </div>
+            <div class="form-field">
+              <label for="renter-signature-hash">Signature hash (optional)</label>
+              <input id="renter-signature-hash" type="text" formControlName="signatureHash" />
+            </div>
+            <div class="form-field">
+              <label for="renter-evidence-url">Evidence URL (optional)</label>
+              <input id="renter-evidence-url" type="url" formControlName="evidenceUrl" />
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="workflow-fieldset" formGroupName="staffSignature">
+          <legend>Staff signature</legend>
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="staff-document-url">Document URL</label>
+              <input
+                id="staff-document-url"
+                type="url"
+                formControlName="documentUrl"
+                autocomplete="off"
+                [class.input--invalid]="
+                  staffSignatureGroup.controls.documentUrl.invalid &&
+                  staffSignatureGroup.controls.documentUrl.touched
+                "
+              />
+              @if (
+                staffSignatureGroup.controls.documentUrl.invalid &&
+                staffSignatureGroup.controls.documentUrl.touched
+              ) {
+                <span class="form-error">Document URL is required.</span>
+              }
+            </div>
+            <div class="form-field">
+              <label for="staff-document-hash">Document hash</label>
+              <input
+                id="staff-document-hash"
+                type="text"
+                formControlName="documentHash"
+                autocomplete="off"
+                [class.input--invalid]="
+                  staffSignatureGroup.controls.documentHash.invalid &&
+                  staffSignatureGroup.controls.documentHash.touched
+                "
+              />
+              @if (
+                staffSignatureGroup.controls.documentHash.invalid &&
+                staffSignatureGroup.controls.documentHash.touched
+              ) {
+                <span class="form-error">Document hash is required.</span>
+              }
+            </div>
+            <div class="form-field">
+              <label for="staff-signature-type">Signature type</label>
+              <select id="staff-signature-type" formControlName="signatureType">
+                @for (option of signatureTypeOptions; track option.value) {
+                  <option [value]="option.value">{{ option.label }}</option>
+                }
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="staff-signed-at">Signed at</label>
+              <input
+                id="staff-signed-at"
+                type="datetime-local"
+                formControlName="signedAt"
+                [class.input--invalid]="
+                  staffSignatureGroup.controls.signedAt.invalid &&
+                  staffSignatureGroup.controls.signedAt.touched
+                "
+              />
+              @if (
+                staffSignatureGroup.controls.signedAt.invalid &&
+                staffSignatureGroup.controls.signedAt.touched
+              ) {
+                <span class="form-error">Select when the staff member signed.</span>
+              }
+            </div>
+            <div class="form-field">
+              <label for="staff-signer-ip">Signer IP (optional)</label>
+              <input
+                id="staff-signer-ip"
+                type="text"
+                formControlName="signerIp"
+                autocomplete="off"
+              />
+            </div>
+            <div class="form-field">
+              <label for="staff-user-agent">User agent (optional)</label>
+              <input
+                id="staff-user-agent"
+                type="text"
+                formControlName="userAgent"
+                autocomplete="off"
+              />
+            </div>
+            <div class="form-field">
+              <label for="staff-signature-image">Signature image URL (optional)</label>
+              <input id="staff-signature-image" type="url" formControlName="signatureImageUrl" />
+            </div>
+            <div class="form-field">
+              <label for="staff-provider-signature">Provider signature ID (optional)</label>
+              <input
+                id="staff-provider-signature"
+                type="text"
+                formControlName="providerSignatureId"
+              />
+            </div>
+            <div class="form-field">
+              <label for="staff-signature-hash">Signature hash (optional)</label>
+              <input id="staff-signature-hash" type="text" formControlName="signatureHash" />
+            </div>
+            <div class="form-field">
+              <label for="staff-evidence-url">Evidence URL (optional)</label>
+              <input id="staff-evidence-url" type="url" formControlName="evidenceUrl" />
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="workflow-fieldset" formGroupName="vehicleReceive">
+          <legend>Vehicle receipt</legend>
+          <div class="form-field">
+            <label for="vehicle-received-at">Received at</label>
+            <input
+              id="vehicle-received-at"
+              type="datetime-local"
+              formControlName="receivedAt"
+              [class.input--invalid]="
+                vehicleReceiveGroup.controls.receivedAt.invalid &&
+                vehicleReceiveGroup.controls.receivedAt.touched
+              "
+            />
+            @if (
+              vehicleReceiveGroup.controls.receivedAt.invalid &&
+              vehicleReceiveGroup.controls.receivedAt.touched
+            ) {
+              <span class="form-error">Provide the vehicle handoff timestamp.</span>
+            }
+          </div>
+        </fieldset>
+      </form>
+
+      <div class="workflow__actions">
+        <button
+          type="button"
+          class="workflow__submit"
+          (click)="runWorkflow()"
+          [disabled]="workflowRunning()"
+        >
+          @if (workflowRunning()) {
+            Processing...
+          } @else {
+            Run workflow
+          }
+        </button>
+      </div>
+
+      @if (workflowResult(); as result) {
+        <aside class="workflow-result" aria-live="polite">
+          <h3>Workflow result</h3>
+          <dl>
+            <div>
+              <dt>Rental ID</dt>
+              <dd>{{ result.rentalId || '—' }}</dd>
+            </div>
+            <div>
+              <dt>Contract ID</dt>
+              <dd>{{ result.contractId || '—' }}</dd>
+            </div>
+            <div>
+              <dt>Inspection ID</dt>
+              <dd>{{ result.inspectionId || '—' }}</dd>
+            </div>
+            <div>
+              <dt>Renter signature ID</dt>
+              <dd>{{ result.renterSignatureId || '—' }}</dd>
+            </div>
+            <div>
+              <dt>Staff signature ID</dt>
+              <dd>{{ result.staffSignatureId || '—' }}</dd>
+            </div>
+          </dl>
+        </aside>
+      }
+    </section>
+  } @else {
+    <div class="booking-missing">
+      <h2>Booking not found</h2>
+      <p>The requested booking could not be located. Return to the bookings list and try again.</p>
+      <a class="booking-missing__link" routerLink="/staff/bookings">Back to bookings</a>
+    </div>
+  }
+</section>

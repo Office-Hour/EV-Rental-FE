@@ -545,6 +545,27 @@
   line-height: 1.45;
 }
 
+.details-panel__actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.details-panel__action {
+  border: 0;
+  border-radius: 999px;
+  padding: 0.65rem 1.4rem;
+  background: var(--mat-sys-primary, #2563eb);
+  color: var(--mat-sys-on-primary, #fff);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.details-panel__action:hover {
+  background: color-mix(in srgb, var(--mat-sys-primary, #2563eb) 88%, #fff);
+  transform: translateY(-1px);
+}
+
 @keyframes spin {
   to {
     transform: rotate(360deg);

@@ -297,6 +297,16 @@
             </div>
           </dl>
         </section>
+
+        <footer class="details-panel__actions">
+          <button
+            type="button"
+            class="details-panel__action"
+            (click)="goToBookingWorkflow(detail.record.bookingId)"
+          >
+            Continue workflow
+          </button>
+        </footer>
       </div>
     </div>
   }
