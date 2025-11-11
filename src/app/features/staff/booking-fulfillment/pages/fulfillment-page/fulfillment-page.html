@@ -68,6 +68,48 @@
               <dt>Tiền cọc</dt>
               <dd>{{ summary.depositDisplay }}</dd>
             </div>
+            @if (summary.rentalId) {
+              <div>
+                <dt>Mã đơn thuê</dt>
+                <dd>{{ summary.rentalId }}</dd>
+              </div>
+            }
+            @if (summary.contractId) {
+              <div>
+                <dt>Mã hợp đồng</dt>
+                <dd>{{ summary.contractId }}</dd>
+              </div>
+            }
+            @if (summary.inspectionId) {
+              <div>
+                <dt>Biên bản kiểm tra</dt>
+                <dd>{{ summary.inspectionId }}</dd>
+              </div>
+            }
+            @if (summary.renterSignatureId) {
+              <div>
+                <dt>Chữ ký khách</dt>
+                <dd>{{ summary.renterSignatureId }}</dd>
+              </div>
+            }
+            @if (summary.staffSignatureId) {
+              <div>
+                <dt>Chữ ký nhân viên</dt>
+                <dd>{{ summary.staffSignatureId }}</dd>
+              </div>
+            }
+            @if (summary.vehicleReceipt?.receivedAtDisplay) {
+              <div>
+                <dt>Thời điểm bàn giao</dt>
+                <dd>{{ summary.vehicleReceipt?.receivedAtDisplay }}</dd>
+              </div>
+            }
+            @if (summary.vehicleReceipt?.receivedByStaffId) {
+              <div>
+                <dt>Nhân viên bàn giao</dt>
+                <dd>{{ summary.vehicleReceipt?.receivedByStaffId }}</dd>
+              </div>
+            }
           </dl>
         } @else {
           <div class="summary__loading" aria-live="polite">
@@ -110,15 +152,105 @@
                   <p class="steps__error" role="alert">{{ step.errorMessage }}</p>
                 }
 
-                @if (step.step === 'checkin') {
-                  <button
-                    type="button"
-                    class="steps__cta"
-                    (click)="onCheckIn()"
-                    [disabled]="step.disabled"
-                  >
-                    Xác nhận check-in booking
-                  </button>
+                @if (step.artifactEntries.length > 0) {
+                  <dl class="steps__artifacts">
+                    @for (artifact of step.artifactEntries; track artifact.label) {
+                      <div>
+                        <dt>{{ artifact.label }}</dt>
+                        <dd>{{ artifact.value }}</dd>
+                      </div>
+                    }
+                  </dl>
+                }
+
+                @if (step.status !== 'fulfilled') {
+                  @if (step.action.kind === 'button' && step.canPerform) {
+                    <button
+                      type="button"
+                      class="steps__cta"
+                      (click)="onStepButton(step.step)"
+                      [disabled]="step.disabled"
+                    >
+                      {{ step.action.label }}
+                    </button>
+                  }
+
+                  @if (step.action.kind === 'contract' && step.canPerform) {
+                    <div class="steps__form">
+                      <label for="contract-provider" class="steps__label"
+                        >Nhà cung cấp chữ ký số</label
+                      >
+                      <select
+                        id="contract-provider"
+                        class="steps__select"
+                        [value]="selectedContractProvider()"
+                        (change)="onContractProviderChange($event)"
+                        [disabled]="step.disabled"
+                      >
+                        @for (provider of contractProviders; track provider.value) {
+                          <option [value]="provider.value">{{ provider.label }}</option>
+                        }
+                      </select>
+                      <button
+                        type="button"
+                        class="steps__cta"
+                        (click)="onCreateContract()"
+                        [disabled]="step.disabled"
+                      >
+                        Phát hành hợp đồng
+                      </button>
+                    </div>
+                  }
+
+                  @if (step.action.kind === 'inspection' && step.canPerform) {
+                    <app-inspection-form
+                      (submitted)="onSubmitInspection($event)"
+                      [disabled]="step.disabled"
+                    ></app-inspection-form>
+                  }
+
+                  @if (step.action.kind === 'signature' && step.canPerform) {
+                    <app-signature-step
+                      [role]="step.action.role"
+                      [disabled]="step.disabled"
+                      (submitted)="onSubmitSignature($event)"
+                    ></app-signature-step>
+                  }
+
+                  @if (step.action.kind === 'vehicle' && step.canPerform) {
+                    <form
+                      class="vehicle-receive"
+                      [formGroup]="vehicleReceiveForm"
+                      (ngSubmit)="onSubmitVehicleReceive()"
+                      novalidate
+                    >
+                      <label for="vehicle-receive-datetime" class="vehicle-receive__label">
+                        Thời điểm bàn giao
+                      </label>
+                      <input
+                        id="vehicle-receive-datetime"
+                        type="datetime-local"
+                        class="vehicle-receive__input"
+                        formControlName="receivedAt"
+                        [attr.aria-invalid]="vehicleReceiveError('required')"
+                        required
+                      />
+                      @if (vehicleReceiveError('required')) {
+                        <p class="vehicle-receive__error" role="alert">
+                          Vui lòng chọn thời điểm bàn giao.
+                        </p>
+                      }
+                      <div class="vehicle-receive__actions">
+                        <button
+                          type="submit"
+                          class="vehicle-receive__submit"
+                          [disabled]="step.disabled || vehicleReceiveForm.invalid"
+                        >
+                          Xác nhận bàn giao xe
+                        </button>
+                      </div>
+                    </form>
+                  }
                 }
               </div>
             </li>

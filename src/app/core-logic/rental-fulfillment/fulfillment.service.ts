@@ -420,6 +420,43 @@ export class FulfillmentOrchestrator {
         this._state.markStepFulfilled('sign-staff', undefined, contractEvent?.occurredAt);
       }
     }
+
+    const inspectionEvent = this._findTimelineEvent(summary.timeline, 'inspection');
+    if (inspectionEvent) {
+      const inspectionId = inspectionEvent.metadata?.['inspectionId'];
+      const artifact: FulfillmentArtifact | undefined = inspectionId ? { inspectionId } : undefined;
+      this._state.markStepFulfilled('inspection', artifact, inspectionEvent.occurredAt);
+    }
+
+    const renterSignEvent = this._findTimelineEvent(summary.timeline, 'sign-renter');
+    if (renterSignEvent) {
+      const signatureId = renterSignEvent.metadata?.['signatureId'];
+      const artifact: FulfillmentArtifact | undefined = signatureId
+        ? { renterSignatureId: signatureId }
+        : undefined;
+      this._state.markStepFulfilled('sign-renter', artifact, renterSignEvent.occurredAt);
+    }
+
+    const staffSignEvent = this._findTimelineEvent(summary.timeline, 'sign-staff');
+    if (staffSignEvent) {
+      const signatureId = staffSignEvent.metadata?.['signatureId'];
+      const artifact: FulfillmentArtifact | undefined = signatureId
+        ? { staffSignatureId: signatureId }
+        : undefined;
+      this._state.markStepFulfilled('sign-staff', artifact, staffSignEvent.occurredAt);
+    }
+
+    const vehicleReceiveEvent = this._findTimelineEvent(summary.timeline, 'vehicle-receive');
+    if (vehicleReceiveEvent) {
+      const staffId = vehicleReceiveEvent.metadata?.['staffId'] ?? '';
+      const artifact: FulfillmentArtifact = {
+        vehicleReceipt: {
+          receivedAt: vehicleReceiveEvent.occurredAt,
+          receivedByStaffId: staffId,
+        },
+      };
+      this._state.markStepFulfilled('vehicle-receive', artifact, vehicleReceiveEvent.occurredAt);
+    }
   }
 
   private _resetSteps(): void {

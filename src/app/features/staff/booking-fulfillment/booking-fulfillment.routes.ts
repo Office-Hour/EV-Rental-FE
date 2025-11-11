@@ -3,7 +3,7 @@ import { AuthGuard } from '../../../core-logic/auth/guards/auth.guard';
 
 export default [
   {
-    path: ':bookingId/fulfillment',
+    path: '',
     canActivate: [AuthGuard],
     canActivateChild: [AuthGuard],
     data: {

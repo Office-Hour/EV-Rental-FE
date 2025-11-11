@@ -96,7 +96,7 @@
   } @else {
     @if (cardViewModels().length > 0) {
       <div class="booking-collection" [class.booking-collection--list]="viewMode() === 'list'">
-        @for (card of cardViewModels(); track card.record.bookingId) {
+        @for (card of cardViewModels(); track card.key) {
           <article class="booking-card">
             <header class="booking-card__header">
               <div class="booking-card__identity">

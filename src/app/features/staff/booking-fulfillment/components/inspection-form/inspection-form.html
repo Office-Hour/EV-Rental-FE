@@ -1,0 +1,67 @@
+<form class="inspection-form__form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+  <div class="inspection-form__field">
+    <label for="inspection-battery" class="inspection-form__label">
+      Dung lượng pin hiện tại (kWh)
+    </label>
+    <input
+      id="inspection-battery"
+      type="number"
+      inputmode="decimal"
+      min="0"
+      step="0.1"
+      autocomplete="off"
+      class="inspection-form__input"
+      formControlName="batteryCapacity"
+      [attr.aria-invalid]="
+        showError('batteryCapacity', 'required') || showError('batteryCapacity', 'min')
+      "
+      [attr.aria-describedby]="'inspection-battery-help'"
+      required
+    />
+    <p id="inspection-battery-help" class="inspection-form__help">
+      Nhập dung lượng pin thực tế của xe trước khi giao.
+    </p>
+    @if (showError('batteryCapacity', 'required')) {
+      <p class="inspection-form__error" role="alert">Vui lòng nhập dung lượng pin.</p>
+    } @else if (showError('batteryCapacity', 'min')) {
+      <p class="inspection-form__error" role="alert">Dung lượng pin phải lớn hơn hoặc bằng 0.</p>
+    }
+  </div>
+
+  <div class="inspection-form__field">
+    <label for="inspection-time" class="inspection-form__label">Thời điểm kiểm tra</label>
+    <input
+      id="inspection-time"
+      type="datetime-local"
+      class="inspection-form__input"
+      formControlName="inspectedAt"
+      [attr.aria-invalid]="showError('inspectedAt', 'required')"
+      required
+    />
+    @if (showError('inspectedAt', 'required')) {
+      <p class="inspection-form__error" role="alert">Vui lòng chọn thời điểm kiểm tra.</p>
+    }
+  </div>
+
+  <div class="inspection-form__field">
+    <label for="inspection-evidence" class="inspection-form__label">
+      URL minh chứng (nếu có)
+    </label>
+    <input
+      id="inspection-evidence"
+      type="url"
+      class="inspection-form__input"
+      placeholder="https://example.com/inspection-photo"
+      formControlName="evidenceUrl"
+    />
+    @if (showError('evidenceUrl', 'maxlength')) {
+      <p class="inspection-form__error" role="alert">Đường dẫn quá dài. Giới hạn 2048 ký tự.</p>
+    }
+  </div>
+
+  <div class="inspection-form__actions">
+    <button type="submit" class="inspection-form__submit" [disabled]="disabled() || form.invalid">
+      Ghi nhận kiểm tra
+    </button>
+  </div>
+</form>

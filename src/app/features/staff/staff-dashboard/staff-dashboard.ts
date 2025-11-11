@@ -1,10 +1,12 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   ViewChild,
   afterNextRender,
   computed,
+  effect,
   inject,
   signal,
 } from '@angular/core';
@@ -43,6 +45,7 @@ interface StatusBadge {
 }
 
 interface BookingCardViewModel {
+  readonly key: string;
   readonly record: StaffBookingRecord;
   readonly customerDisplay: string;
   readonly bookingCreatedDisplay: string;
@@ -149,6 +152,7 @@ const RENTAL_LINKED_BADGE: StatusBadge = {
 export class StaffDashboard {
   private readonly bookingsService = inject(BookingsService);
   private readonly router = inject(Router);
+  private readonly cdr = inject(ChangeDetectorRef);
   @ViewChild('detailPanel') private detailPanel?: ElementRef<HTMLDivElement>;
   private activeDetailTrigger: HTMLElement | null = null;
 
@@ -157,6 +161,16 @@ export class StaffDashboard {
   readonly activeTab = signal<BookingTabKey>('all');
   readonly viewMode = signal<'grid' | 'list'>('grid');
   readonly selectedBooking = signal<StaffBookingRecord | null>(null);
+
+  private readonly focusDetailPanelEffect = effect(() => {
+    if (!this.selectedBooking()) {
+      return;
+    }
+
+    afterNextRender(() => {
+      this.detailPanel?.nativeElement.focus();
+    });
+  });
 
   readonly loading = computed(() => this.bookingsService.staffBookingsLoading());
   readonly error = computed(() => this.bookingsService.staffBookingsError());
@@ -207,6 +221,7 @@ export class StaffDashboard {
 
   readonly cardViewModels = computed<BookingCardViewModel[]>(() =>
     this.filteredRecords().map((record) => ({
+      key: this._buildCardKey(record),
       record,
       customerDisplay: this._resolveCustomerLabel(record),
       bookingCreatedDisplay: this.formatDate(record.bookingCreatedAt),
@@ -262,6 +277,13 @@ export class StaffDashboard {
   });
 
   constructor() {
+    effect(() => {
+      this.bookingsService.staffBookings();
+      this.bookingsService.staffBookingsLoading();
+      this.bookingsService.staffBookingsError();
+      queueMicrotask(() => this.cdr.detectChanges());
+    });
+
     this.refresh();
   }
 
@@ -303,9 +325,6 @@ export class StaffDashboard {
     this.activeDetailTrigger =
       triggerEvent?.currentTarget instanceof HTMLElement ? triggerEvent.currentTarget : null;
     this.selectedBooking.set(record);
-    afterNextRender(() => {
-      this.detailPanel?.nativeElement.focus();
-    });
   }
 
   closeDetails(): void {
@@ -580,5 +599,14 @@ export class StaffDashboard {
       return value;
     }
     return `${value.slice(0, 4)}...${value.slice(-4)}`;
+  }
+
+  private _buildCardKey(record: StaffBookingRecord): string {
+    const bookingId = record.bookingId;
+    const rentalId = record.rental?.rentalId ?? 'no-rental';
+    const status = record.status ?? 'unknown-status';
+    const verification = record.verificationStatus ?? 'unknown-verification';
+
+    return `${bookingId}|${status}|${verification}|${rentalId}`;
   }
 }
