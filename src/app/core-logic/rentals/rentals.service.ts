@@ -6,6 +6,7 @@ import {
   ContractDto,
   RentalDetailsDto,
   RentalDetailsDtoListApiResponse,
+  RentalService,
   RenterProfileDto,
   RenterProfileDtoListApiResponse,
   StaffService,
@@ -13,7 +14,12 @@ import {
   VehicleDetailsDtoListApiResponse,
   VehicleDto,
 } from '../../../contract';
-import type { BookingStatus, BookingVerificationStatus, RentalStatus } from '../../../contract';
+import type {
+  BookingStatus,
+  BookingVerificationStatus,
+  RentalDetailsDtoApiResponse,
+  RentalStatus,
+} from '../../../contract';
 import { catchError, finalize, forkJoin, map, Observable, of, tap } from 'rxjs';
 
 export interface StaffRentalRecord {
@@ -46,7 +52,7 @@ type VehicleDetailsMap = Map<string, VehicleDetailsDto | undefined>;
 @Injectable({ providedIn: 'root' })
 export class RentalsService {
   private readonly _staffService = inject(StaffService);
-
+  private readonly _rentalService = inject(RentalService);
   private readonly _staffRentals = signal<StaffRentalRecord[]>([]);
   private readonly _loading = signal(false);
   private readonly _error = signal<string | null>(null);
@@ -54,6 +60,14 @@ export class RentalsService {
   readonly staffRentals = this._staffRentals.asReadonly();
   readonly staffRentalsLoading = this._loading.asReadonly();
   readonly staffRentalsError = this._error.asReadonly();
+
+  getRental(rentalId: string): Observable<RentalDetailsDto> {
+    return this._rentalService
+      .apiRentalRentalIdGet(rentalId)
+      .pipe(
+        map((response: RentalDetailsDtoApiResponse) => response.data ?? ({} as RentalDetailsDto)),
+      );
+  }
 
   loadStaffRentals(): Observable<StaffRentalRecord[]> {
     this._loading.set(true);

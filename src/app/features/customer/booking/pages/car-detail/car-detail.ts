@@ -5,10 +5,13 @@ import {
   Component,
   DestroyRef,
   computed,
+  effect,
   inject,
+  input,
+  output,
   signal,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -24,18 +27,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { ActivatedRoute } from '@angular/router';
-import {
-  Observable,
-  catchError,
-  distinctUntilChanged,
-  filter,
-  map,
-  of,
-  switchMap,
-  tap,
-} from 'rxjs';
+import { distinctUntilChanged, filter, map } from 'rxjs';
 import { BookingBriefDto, VehicleDetailsDto } from '../../../../../../contract';
-import { StationService } from '../../../../../core-logic/station/station.service';
 import { Station } from '../../../../../core-logic/station/station.type';
 
 const HOUR_OPTIONS = Array.from(
@@ -71,16 +64,40 @@ const TIME_ORDER_ERROR = 'Giờ trả phải sau giờ nhận.';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CarDetail {
+  readonly stations = input.required<Station[]>();
+  readonly stepIndex = input<number>(0);
+  readonly stepKey = input<'details' | 'checkout' | 'payment' | 'deposit'>('details');
+
+  readonly nextStep = output<void>();
+  readonly previousStep = output<void>();
+  readonly bookingDataReady = output<{
+    vehicle: VehicleDetailsDto;
+    station: Station;
+    bookingEstimate: {
+      days: number;
+      dayTotal: number;
+      hours: number;
+      hourTotal: number;
+      total: number;
+    };
+    depositPrice: number | null;
+    startDate: Date;
+    endDate: Date;
+    startTime: string;
+    endTime: string;
+  }>();
+
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly route = inject(ActivatedRoute);
-  private readonly stationService = inject(StationService);
   private readonly destroyRef = inject(DestroyRef);
 
   readonly hourOptions = HOUR_OPTIONS;
+  readonly today = this.stripTime(new Date());
   readonly rangeError = signal<string>('');
   readonly selectedRange = signal<DateRange<Date> | null>(null);
   readonly vehicle = signal<VehicleDetailsDto | undefined>(undefined);
   readonly stationInfo = signal<{ name: string; address: string } | null>(null);
+  private _currentStation: Station | null = null;
   readonly isLoading = signal<boolean>(true);
   readonly loadError = signal<string | null>(null);
   readonly bookingEstimate = signal<{
@@ -123,6 +140,10 @@ export class CarDetail {
 
   readonly pricePerDay = computed(() =>
     this.formatCurrency(this.vehicle()?.rentalPricePerDay ?? undefined),
+  );
+
+  readonly depositPrice = computed(() =>
+    this.formatCurrency(this.vehicle()?.depositPrice ?? undefined),
   );
 
   readonly vehicleMetrics = computed(() => {
@@ -191,10 +212,16 @@ export class CarDetail {
     formValid: this.form.valid,
     hasEstimate: !!this.bookingEstimate(),
     hasAvailability: this.hasAvailability(),
+    noRangeError: !this.rangeError(),
   }));
   readonly canSubmit = computed(() => {
     const readiness = this.submitReadiness();
-    return readiness.formValid && readiness.hasEstimate && readiness.hasAvailability;
+    return (
+      readiness.formValid &&
+      readiness.hasEstimate &&
+      readiness.hasAvailability &&
+      readiness.noRangeError
+    );
   });
 
   readonly dateClass: MatCalendarCellClassFunction<Date> = (cellDate) =>
@@ -205,59 +232,124 @@ export class CarDetail {
       return true;
     }
 
+    if (this.isDateBeforeToday(date)) {
+      return false;
+    }
+
     return !this.bookedDateKeys().has(this.formatDateKey(date));
   };
 
+  readonly isStartHourDisabled = (hour: string): boolean => {
+    const range = this.form.controls.range.value;
+    const startDate = range?.start ?? null;
+    if (!startDate) {
+      return false;
+    }
+
+    return this.isDateTimeInPast(startDate, hour);
+  };
+
+  readonly getEndHourDisableReason = (hour: string): 'past' | 'beforeStart' | null => {
+    const range = this.form.controls.range.value;
+    const endDate = range?.end ?? null;
+    if (!endDate) {
+      return null;
+    }
+
+    const endDateTime = this.combineDateAndTime(endDate, hour);
+    if (!endDateTime) {
+      return null;
+    }
+
+    const now = new Date();
+    const endDay = this.stripTime(endDate);
+    const today = this.stripTime(now);
+    if (endDay.getTime() < today.getTime()) {
+      return 'past';
+    }
+    if (endDay.getTime() === today.getTime() && endDateTime.getTime() <= now.getTime()) {
+      return 'past';
+    }
+
+    const startDate = range?.start ?? null;
+    const startTime = this.form.controls.startTime.value ?? '';
+    if (startDate && startTime) {
+      const startDateTime = this.combineDateAndTime(startDate, startTime);
+      if (startDateTime && endDateTime.getTime() <= startDateTime.getTime()) {
+        return 'beforeStart';
+      }
+    }
+
+    return null;
+  };
+
+  readonly isEndHourDisabled = (hour: string): boolean =>
+    this.getEndHourDisableReason(hour) !== null;
+
+  private readonly vehicleId = toSignal(
+    this.route.paramMap.pipe(
+      map((params) => params.get('id')?.trim() ?? ''),
+      filter((id) => id.length > 0),
+      distinctUntilChanged(),
+    ),
+    { initialValue: '' },
+  );
+
   constructor() {
-    this.route.paramMap
-      .pipe(
-        map((params) => params.get('id')?.trim() ?? ''),
-        filter((id) => id.length > 0),
-        distinctUntilChanged(),
-        tap(() => {
+    // Effect to load vehicle when vehicleId or stations change
+    effect(() => {
+      const vehicleId = this.vehicleId();
+      const stations = this.stations();
+
+      // Only proceed if we have both vehicleId and stations
+      if (!vehicleId || stations.length === 0) {
+        // If we have vehicleId but no stations yet, show loading
+        if (vehicleId && stations.length === 0) {
           this.isLoading.set(true);
           this.loadError.set(null);
-        }),
-        switchMap((vehicleId) =>
-          this._loadStationsIfNeeded().pipe(
-            map((stations) => this._findVehicleInStations(stations, vehicleId)),
-          ),
-        ),
-        takeUntilDestroyed(),
-      )
-      .subscribe((result) => {
-        this.isLoading.set(false);
-
-        if (!result) {
-          this.vehicle.set(undefined);
-          this.stationInfo.set(null);
-          if (!this.loadError()) {
-            this.loadError.set('Không tìm thấy thông tin xe.');
-          }
-          this.cdr.markForCheck();
-          return;
         }
-
-        this.vehicle.set(result.vehicle);
-        this.stationInfo.set({
-          name: result.station.name,
-          address: result.station.address,
-        });
-        this.loadError.set(null);
-
-        const available = this.vehicleHasFullDayAvailability(result.vehicle);
-        if (!available) {
-          this.loadError.set('Xe hiện không còn ngày trống tối thiểu 1 ngày.');
-        } else {
-          this.loadError.set(null);
-          if (available) {
-            this.resetFormState();
-            this.updateBookingEstimate();
-          }
-        }
-
         this.cdr.markForCheck();
+        return;
+      }
+
+      // Both vehicleId and stations are available, try to find vehicle
+      this.isLoading.set(true);
+      this.loadError.set(null);
+
+      const result = this._findVehicleInStations(stations, vehicleId);
+
+      this.isLoading.set(false);
+
+      if (!result) {
+        this.vehicle.set(undefined);
+        this.stationInfo.set(null);
+        this.loadError.set('Không tìm thấy thông tin xe.');
+        this.cdr.markForCheck();
+        return;
+      }
+
+      this.vehicle.set(result.vehicle);
+      this.stationInfo.set({
+        name: result.station.name,
+        address: result.station.address,
       });
+      // Store full station object for later use
+      this._currentStation = result.station;
+      this.loadError.set(null);
+
+      const available = this.vehicleHasFullDayAvailability(result.vehicle);
+      if (!available) {
+        this.loadError.set('Xe hiện không còn ngày trống tối thiểu 1 ngày.');
+      } else {
+        this.loadError.set(null);
+        if (available) {
+          this.resetFormState();
+          this.updateBookingEstimate();
+        }
+      }
+
+      this.cdr.markForCheck();
+    });
 
     const rangeGroup = this.form.controls.range;
     const startCtrl = rangeGroup.controls.start;
@@ -267,9 +359,52 @@ export class CarDetail {
       const start = val?.start ?? null;
       const end = val?.end ?? null;
 
-      startCtrl.setErrors(null);
-      endCtrl.setErrors(null);
-      this.rangeError.set('');
+      // Clear only range conflict errors, preserve TIME_ORDER_ERROR if exists
+      const currentError = this.rangeError();
+      const isTimeOrderError = currentError === TIME_ORDER_ERROR;
+
+      // Clear control errors related to range conflict
+      const startErrors = startCtrl.errors;
+      const endErrors = endCtrl.errors;
+      if (startErrors?.['rangeConflict']) {
+        const restStartErrors = { ...startErrors };
+        delete restStartErrors['rangeConflict'];
+        startCtrl.setErrors(Object.keys(restStartErrors).length > 0 ? restStartErrors : null);
+      }
+      if (endErrors?.['rangeConflict']) {
+        const restEndErrors = { ...endErrors };
+        delete restEndErrors['rangeConflict'];
+        endCtrl.setErrors(Object.keys(restEndErrors).length > 0 ? restEndErrors : null);
+      }
+
+      // Clear range error only if it's not TIME_ORDER_ERROR
+      if (!isTimeOrderError) {
+        this.rangeError.set('');
+      }
+
+      if (start && this.isDateBeforeToday(start)) {
+        const errKey = 'pastDate';
+        this.rangeError.set('Ngày nhận không thể ở trong quá khứ.');
+        startCtrl.setErrors({ ...(startCtrl.errors ?? {}), [errKey]: true });
+        startCtrl.markAsTouched();
+        startCtrl.markAsDirty();
+      } else if (startCtrl.errors?.['pastDate']) {
+        const restStartErrors = { ...startCtrl.errors };
+        delete restStartErrors['pastDate'];
+        startCtrl.setErrors(Object.keys(restStartErrors).length > 0 ? restStartErrors : null);
+      }
+
+      if (end && this.isDateBeforeToday(end)) {
+        const errKey = 'pastDate';
+        this.rangeError.set('Ngày trả không thể ở trong quá khứ.');
+        endCtrl.setErrors({ ...(endCtrl.errors ?? {}), [errKey]: true });
+        endCtrl.markAsTouched();
+        endCtrl.markAsDirty();
+      } else if (endCtrl.errors?.['pastDate']) {
+        const restEndErrors = { ...endCtrl.errors };
+        delete restEndErrors['pastDate'];
+        endCtrl.setErrors(Object.keys(restEndErrors).length > 0 ? restEndErrors : null);
+      }
 
       if (start && end && this.rangeContainsBooked(start, end)) {
         const errKey = 'rangeConflict';
@@ -290,16 +425,34 @@ export class CarDetail {
         this.selectedRange.set(null);
       }
 
+      if (
+        this.rangeError() &&
+        this.rangeError() !== TIME_ORDER_ERROR &&
+        !startCtrl.errors &&
+        !endCtrl.errors
+      ) {
+        this.rangeError.set('');
+      }
+
+      this.enforceStartTimeValidity();
+      this.enforceEndTimeValidity();
       this.updateBookingEstimate();
       this.cdr.markForCheck();
     });
 
     this.form.controls.startTime.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => this.updateBookingEstimate());
+      .subscribe(() => {
+        this.enforceStartTimeValidity();
+        this.enforceEndTimeValidity();
+        this.updateBookingEstimate();
+      });
     this.form.controls.endTime.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => this.updateBookingEstimate());
+      .subscribe(() => {
+        this.enforceEndTimeValidity();
+        this.updateBookingEstimate();
+      });
   }
 
   onRangeChange(
@@ -326,6 +479,22 @@ export class CarDetail {
         return;
       }
 
+      if (this.isDateBeforeToday(start)) {
+        this.rangeError.set('Ngày nhận không thể ở trong quá khứ.');
+        this.markRangeControlInvalid(input, 'pastDate');
+        this.selectedRange.set(range);
+        picker.close();
+        return;
+      }
+
+      if (this.isDateBeforeToday(end)) {
+        this.rangeError.set('Ngày trả không thể ở trong quá khứ.');
+        this.markRangeControlInvalid(input, 'pastDate');
+        this.selectedRange.set(range);
+        picker.close();
+        return;
+      }
+
       this.rangeError.set('');
       this.selectedRange.set(range);
       this.clearRangeControlState(input);
@@ -340,11 +509,43 @@ export class CarDetail {
 
   submitBooking(): void {
     this.form.markAllAsTouched();
-    if (this.form.invalid) {
+    if (this.form.invalid || !this.canSubmit()) {
       return;
     }
 
-    // Placeholder for future booking submission logic.
+    const vehicle = this.vehicle();
+    const station = this.stationInfo();
+    const estimate = this.bookingEstimate();
+    const formValue = this.form.value;
+
+    if (!vehicle || !station || !estimate || !formValue.range?.start || !formValue.range?.end) {
+      return;
+    }
+
+    // Find station object from stations input
+    let stationObj = this.stations().find((s) => s.name === station.name);
+    if (!stationObj && this._currentStation) {
+      // Fallback: try to get from stored station
+      stationObj = this.stations().find((s) => s.id === this._currentStation?.id);
+    }
+    if (!stationObj) {
+      return;
+    }
+
+    // Emit booking data to parent
+    this.bookingDataReady.emit({
+      vehicle,
+      station: stationObj,
+      bookingEstimate: estimate,
+      depositPrice: vehicle.depositPrice ?? null,
+      startDate: formValue.range.start,
+      endDate: formValue.range.end,
+      startTime: formValue.startTime ?? '',
+      endTime: formValue.endTime ?? '',
+    });
+
+    // After successful validation, move to next step
+    this.nextStep.emit();
   }
 
   private resetFormState(): void {
@@ -358,6 +559,8 @@ export class CarDetail {
     });
     this.rangeError.set('');
     this.selectedRange.set(null);
+    this.form.controls.startTime.setErrors(null);
+    this.form.controls.endTime.setErrors(null);
   }
 
   private updateBookingEstimate(): void {
@@ -506,12 +709,93 @@ export class CarDetail {
     return combined;
   }
 
-  private markRangeControlInvalid(input: MatDateRangeInput<Date>): void {
+  private isDateTimeInPast(date: Date, time: string): boolean {
+    const dateTime = this.combineDateAndTime(date, time);
+    if (!dateTime) {
+      return false;
+    }
+    return dateTime.getTime() <= Date.now();
+  }
+
+  private isDateBeforeToday(date: Date): boolean {
+    const today = this.stripTime(new Date());
+    return this.stripTime(date).getTime() < today.getTime();
+  }
+
+  private enforceStartTimeValidity(): void {
+    const control = this.form.controls.startTime;
+    const value = control.value ?? '';
+    if (!value) {
+      return;
+    }
+
+    if (this.isStartHourDisabled(value)) {
+      this.invalidateTimeControl(control, 'invalidPastTime');
+      return;
+    }
+
+    this.clearControlError(control, 'invalidPastTime');
+  }
+
+  private enforceEndTimeValidity(): void {
+    const control = this.form.controls.endTime;
+    const value = control.value ?? '';
+    if (!value) {
+      return;
+    }
+
+    const reason = this.getEndHourDisableReason(value);
+    if (!reason) {
+      this.clearControlError(control, 'invalidPastTime');
+      this.clearControlError(control, 'beforeStartTime');
+      return;
+    }
+
+    if (reason === 'past') {
+      this.invalidateTimeControl(control, 'invalidPastTime');
+      this.clearControlError(control, 'beforeStartTime');
+      return;
+    }
+
+    this.invalidateTimeControl(control, 'beforeStartTime');
+    this.clearControlError(control, 'invalidPastTime');
+  }
+
+  private invalidateTimeControl(control: FormControl<string | null>, errorKey: string): void {
+    control.setValue('', { emitEvent: false });
+    this.setControlError(control, errorKey);
+    control.markAsTouched();
+    control.markAsDirty();
+  }
+
+  private setControlError(control: FormControl<string | null>, errorKey: string): void {
+    const errors = control.errors ?? {};
+    if (errors[errorKey]) {
+      return;
+    }
+    control.setErrors({ ...errors, [errorKey]: true });
+  }
+
+  private clearControlError(control: FormControl<string | null>, errorKey: string): void {
+    const errors = control.errors;
+    if (!errors?.[errorKey]) {
+      return;
+    }
+
+    const updated = { ...errors };
+    delete updated[errorKey];
+    control.setErrors(Object.keys(updated).length ? updated : null);
+  }
+
+  private markRangeControlInvalid(
+    input: MatDateRangeInput<Date>,
+    errorKey = 'rangeConflict',
+  ): void {
     const control = input.ngControl?.control;
     if (!control) {
       return;
     }
-    control.setErrors({ rangeConflict: true });
+    control.setErrors({ ...(control.errors ?? {}), [errorKey]: true });
     control.markAsTouched();
     control.markAsDirty();
   }
@@ -546,20 +830,6 @@ export class CarDetail {
     });
 
     return keys;
-  }
-
-  private _loadStationsIfNeeded(): Observable<Station[]> {
-    const existing = this.stationService.stations;
-    if (existing.length > 0) {
-      return of(existing);
-    }
-
-    return this.stationService.getStations().pipe(
-      catchError(() => {
-        this.loadError.set('Không thể tải danh sách trạm. Vui lòng thử lại sau.');
-        return of<Station[]>([]);
-      }),
-    );
   }
 
   private _findVehicleInStations(

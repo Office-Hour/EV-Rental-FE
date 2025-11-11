@@ -1,1 +1,196 @@
-<p>checkout works!</p>
+<section class="checkout-page w-full max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">
+  <div class="checkout-container flex flex-col gap-6">
+    <header class="checkout-header">
+      <h1 class="checkout-title">Xác nhận thông tin đặt xe</h1>
+      <p class="checkout-subtitle">Vui lòng kiểm tra lại thông tin trước khi xác nhận</p>
+    </header>
+
+    @if (bookingData(); as data) {
+      <div class="checkout-content grid gap-6">
+        <!-- Thông tin khách hàng -->
+        <div class="checkout-card rounded-2xl border p-4 sm:p-6">
+          <h2 class="checkout-card__title flex items-center gap-2">
+            <mat-icon>person</mat-icon>
+            <span>Thông tin khách hàng</span>
+          </h2>
+          <div class="checkout-card__content mt-4 flex flex-col gap-3">
+            <div class="checkout-info-row">
+              <span class="checkout-info-label">Họ và tên:</span>
+              <span class="checkout-info-value">{{ userName() || 'Chưa cập nhật' }}</span>
+            </div>
+            <div class="checkout-info-row">
+              <span class="checkout-info-label">Số điện thoại:</span>
+              <span class="checkout-info-value">{{ phoneNumber() || 'Chưa cập nhật' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Thông tin xe -->
+        <div class="checkout-card rounded-2xl border p-4 sm:p-6">
+          <h2 class="checkout-card__title flex items-center gap-2">
+            <mat-icon>directions_car</mat-icon>
+            <span>Thông tin xe</span>
+          </h2>
+          <div class="checkout-card__content mt-4 flex flex-col gap-3">
+            <div class="checkout-info-row">
+              <span class="checkout-info-label">Tên xe:</span>
+              <span class="checkout-info-value">{{ vehicleName() }}</span>
+            </div>
+            @if (data.vehicle.make) {
+              <div class="checkout-info-row">
+                <span class="checkout-info-label">Hãng:</span>
+                <span class="checkout-info-value">{{ data.vehicle.make }}</span>
+              </div>
+            }
+            @if (data.vehicle.model) {
+              <div class="checkout-info-row">
+                <span class="checkout-info-label">Model:</span>
+                <span class="checkout-info-value">{{ data.vehicle.model }}</span>
+              </div>
+            }
+            @if (data.vehicle.modelYear) {
+              <div class="checkout-info-row">
+                <span class="checkout-info-label">Năm sản xuất:</span>
+                <span class="checkout-info-value">{{ data.vehicle.modelYear }}</span>
+              </div>
+            }
+            @if (data.vehicle.rangeKm) {
+              <div class="checkout-info-row">
+                <span class="checkout-info-label">Phạm vi:</span>
+                <span class="checkout-info-value">{{ data.vehicle.rangeKm }} km</span>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Thông tin trạm -->
+        <div class="checkout-card rounded-2xl border p-4 sm:p-6">
+          <h2 class="checkout-card__title flex items-center gap-2">
+            <mat-icon>location_on</mat-icon>
+            <span>Thông tin trạm</span>
+          </h2>
+          <div class="checkout-card__content mt-4 flex flex-col gap-3">
+            <div class="checkout-info-row">
+              <span class="checkout-info-label">Tên trạm:</span>
+              <span class="checkout-info-value">{{ data.station.name }}</span>
+            </div>
+            <div class="checkout-info-row">
+              <span class="checkout-info-label">Địa chỉ:</span>
+              <span class="checkout-info-value">{{ data.station.address }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Thông tin lịch trình -->
+        <div class="checkout-card rounded-2xl border p-4 sm:p-6">
+          <h2 class="checkout-card__title flex items-center gap-2">
+            <mat-icon>schedule</mat-icon>
+            <span>Lịch trình thuê</span>
+          </h2>
+          <div class="checkout-card__content mt-4 flex flex-col gap-3">
+            <div class="checkout-info-row">
+              <span class="checkout-info-label">Ngày nhận:</span>
+              <span class="checkout-info-value"
+                >{{ formatDate(data.startDate) }} - {{ data.startTime }}</span
+              >
+            </div>
+            <div class="checkout-info-row">
+              <span class="checkout-info-label">Ngày trả:</span>
+              <span class="checkout-info-value"
+                >{{ formatDate(data.endDate) }} - {{ data.endTime }}</span
+              >
+            </div>
+            <div class="checkout-info-row">
+              <span class="checkout-info-label">Số ngày thuê:</span>
+              <span class="checkout-info-value">{{ data.bookingEstimate.days }} ngày</span>
+            </div>
+            <div class="checkout-info-row">
+              <span class="checkout-info-label">Số giờ thuê:</span>
+              <span class="checkout-info-value">{{ data.bookingEstimate.hours }} giờ</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tổng thanh toán -->
+        <div class="checkout-card checkout-card--total rounded-2xl border p-4 sm:p-6">
+          <h2 class="checkout-card__title flex items-center gap-2">
+            <mat-icon>payments</mat-icon>
+            <span>Tổng thanh toán</span>
+          </h2>
+          <div class="checkout-card__content mt-4 flex flex-col gap-3">
+            <div class="checkout-info-row">
+              <span class="checkout-info-label"
+                >Tiền ngày ({{ data.bookingEstimate.days }} ngày):</span
+              >
+              <span class="checkout-info-value">{{
+                formatCurrency(data.bookingEstimate.dayTotal)
+              }}</span>
+            </div>
+            <div class="checkout-info-row">
+              <span class="checkout-info-label"
+                >Tiền giờ ({{ data.bookingEstimate.hours }} giờ):</span
+              >
+              <span class="checkout-info-value">{{
+                formatCurrency(data.bookingEstimate.hourTotal)
+              }}</span>
+            </div>
+            @if (data.depositPrice) {
+              <div class="checkout-info-row">
+                <span class="checkout-info-label">Tiền đặt cọc:</span>
+                <span class="checkout-info-value">{{ formatCurrency(data.depositPrice) }}</span>
+              </div>
+            }
+            <div class="checkout-divider"></div>
+            <div class="checkout-info-row checkout-info-row--total">
+              <span class="checkout-info-label">Tổng cộng:</span>
+              <span class="checkout-info-value">{{
+                formatCurrency(data.bookingEstimate.total)
+              }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Error Message -->
+      @if (error()) {
+        <div class="checkout-error rounded-xl border border-error p-4 bg-error-container">
+          <p class="text-on-error-container">{{ error() }}</p>
+        </div>
+      }
+
+      <!-- Actions -->
+      <div class="checkout-actions flex gap-4 justify-end">
+        <button
+          matButton="outlined"
+          type="button"
+          (click)="previousStep.emit()"
+          [disabled]="isLoading()"
+          aria-label="Quay lại"
+        >
+          Quay lại
+        </button>
+        <button
+          matButton="filled"
+          type="button"
+          color="primary"
+          (click)="confirmBooking()"
+          [disabled]="isLoading()"
+          aria-label="Xác nhận đặt xe"
+        >
+          @if (isLoading()) {
+            <span>Đang xử lý...</span>
+          } @else {
+            <span>Xác nhận đặt xe</span>
+          }
+        </button>
+      </div>
+    } @else {
+      <div class="checkout-empty text-center py-8">
+        <p>Không có thông tin đặt xe. Vui lòng quay lại bước trước.</p>
+        <button matButton="outlined" type="button" (click)="previousStep.emit()" class="mt-4">
+          Quay lại
+        </button>
+      </div>
+    }
+  </div>
+</section>

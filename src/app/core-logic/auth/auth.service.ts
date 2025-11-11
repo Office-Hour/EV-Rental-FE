@@ -119,6 +119,7 @@ export class AuthService {
         this.isAuthenticated = false;
         // Clear the user role from the user service
         this._userService.userRole = 'renter';
+        this._userService.renterId = undefined;
         // Return the observable
         return of({
           data: null,
@@ -241,6 +242,7 @@ export class AuthService {
   private _applyRoleFromToken(accessToken: string): void {
     if (!accessToken) {
       this._userService.userRole = 'renter';
+      this._userService.renterId = undefined;
       return;
     }
 
@@ -253,8 +255,10 @@ export class AuthService {
       } else if (decodedToken.Renter) {
         this._userService.userRole = 'renter';
       }
+      this._userService.renterId = decodedToken.RenterId?.toString() || undefined;
     } catch {
       this._userService.userRole = 'renter';
+      this._userService.renterId = undefined;
     }
   }
 
@@ -278,5 +282,6 @@ export class AuthService {
     this._tokenService.clearAllTokens();
     this._userService.user = undefined;
     this._userService.userRole = 'renter';
+    this._userService.renterId = undefined;
   }
 }

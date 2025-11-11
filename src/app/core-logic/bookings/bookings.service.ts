@@ -1,4 +1,14 @@
 import { inject, Injectable, signal } from '@angular/core';
+import { catchError, finalize, forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
+import type {
+  ApiResponse,
+  BookingStatus,
+  BookingVerificationStatus,
+  CancelCheckinRequest,
+  CreateBookingRequest,
+  DepositFeeDtoApiResponse,
+  RenterProfileDtoApiResponse,
+} from '../../../contract';
 import {
   BookingDetailsDto,
   BookingDetailsDtoListApiResponse,
@@ -6,14 +16,13 @@ import {
   BookingStatus as BookingStatusEnum,
   RentalDetailsDto,
   RentalDetailsDtoListApiResponse,
+  RentalService,
   RenterProfileDto,
   RenterProfileDtoListApiResponse,
   StaffService,
   VehicleDetailsDto,
   VehicleDetailsDtoApiResponse,
 } from '../../../contract';
-import type { BookingStatus, BookingVerificationStatus } from '../../../contract';
-import { catchError, finalize, forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
 
 export interface StaffBookingRecord {
   readonly bookingId: string;
@@ -38,7 +47,7 @@ type VehicleDetailsMap = Map<string, VehicleDetailsDto | undefined>;
 export class BookingsService {
   private readonly _bookingService = inject(BookingService);
   private readonly _staffService = inject(StaffService);
-
+  private readonly _rentalService = inject(RentalService);
   private readonly _staffBookings = signal<StaffBookingRecord[]>([]);
   private readonly _loading = signal<boolean>(false);
   private readonly _error = signal<string | null>(null);
@@ -46,6 +55,24 @@ export class BookingsService {
   readonly staffBookings = this._staffBookings.asReadonly();
   readonly staffBookingsLoading = this._loading.asReadonly();
   readonly staffBookingsError = this._error.asReadonly();
+
+  cancelCheckinBooking(
+    cancelCheckinRequest: CancelCheckinRequest,
+  ): Observable<DepositFeeDtoApiResponse> {
+    return this._bookingService.apiBookingCancelPost(cancelCheckinRequest);
+  }
+
+  createBooking(booking: CreateBookingRequest): Observable<ApiResponse> {
+    return this._bookingService.apiBookingPost(booking);
+  }
+
+  getRenterProfile(renterId: string): Observable<RenterProfileDto> {
+    return this._bookingService
+      .apiBookingRenterProfileGet(renterId)
+      .pipe(
+        map((response: RenterProfileDtoApiResponse) => response.data ?? ({} as RenterProfileDto)),
+      );
+  }
 
   loadStaffBookings(): Observable<StaffBookingRecord[]> {
     this._loading.set(true);
@@ -91,6 +118,20 @@ export class BookingsService {
       finalize(() => {
         this._loading.set(false);
       }),
+    );
+  }
+
+  /**
+   * Get bookings for a renter (customer view)
+   */
+  getBookings(
+    renterId: string,
+    pageNumber?: number,
+    pageSize?: number,
+  ): Observable<BookingDetailsDto[]> {
+    return this._bookingService.apiBookingGet(renterId, pageNumber, pageSize).pipe(
+      map((response) => response.data?.items ?? []),
+      catchError(() => of<BookingDetailsDto[]>([])),
     );
   }
 

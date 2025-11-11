@@ -5,7 +5,7 @@
         <mat-label>Trạm</mat-label>
         <mat-select formControlName="station">
           <mat-option value="all">Tất cả trạm</mat-option>
-          @for (station of stations(); track station.id) {
+          @for (station of stationsForFilter(); track station.id) {
             <mat-option [value]="station.id">{{ station.name }}</mat-option>
           }
         </mat-select>

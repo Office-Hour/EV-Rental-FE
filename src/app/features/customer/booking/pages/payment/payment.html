@@ -1,0 +1,33 @@
+<section class="payment-result h-screen w-full max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
+  <div class="flex flex-col items-center gap-4 text-center">
+    @if (isSuccess()) {
+      <div class="flex items-center gap-2 text-green-600">
+        <mat-icon aria-hidden="true">check_circle</mat-icon>
+        <h1 class="text-xl font-semibold">Thanh toán thành công</h1>
+      </div>
+      <p>
+        Mã đặt xe của bạn: <strong>{{ bookingId() }}</strong>
+      </p>
+      <button
+        matButton="filled"
+        (click)="goToBookingDetail()"
+        aria-label="Chuyển đến chi tiết đặt xe"
+      >
+        Đi tới chi tiết đặt xe
+      </button>
+    } @else {
+      <div class="flex items-center gap-2 text-red-600">
+        <mat-icon aria-hidden="true">error</mat-icon>
+        <h1 class="text-xl font-semibold">Thanh toán thất bại</h1>
+      </div>
+      <p>
+        Mã lỗi: <strong>{{ responseCode() || 'N/A' }}</strong>
+      </p>
+      @if (bookingId()) {
+        <p>
+          Mã đặt xe: <strong>{{ bookingId() }}</strong>
+        </p>
+      }
+    }
+  </div>
+</section>

@@ -2,7 +2,11 @@
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CarCard } from '../../components/car-card/car-card';
-import { BookingBriefDto, VehicleDetailsDto } from '../../../../../../contract';
+import {
+  BookingBriefDto,
+  VehicleDetailsDto,
+  VehicleAtStationStatus,
+} from '../../../../../../contract';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -13,6 +17,7 @@ import { StationService } from '../../../../../core-logic/station/station.servic
 
 @Component({
   selector: 'app-car-list',
+  standalone: true,
   imports: [
     CarCard,
     ReactiveFormsModule,
@@ -45,8 +50,7 @@ export class CarList {
   });
 
   constructor() {
-    // Stations are typically loaded by AuthService during login/session restore.
-    // This is a fallback in case stations haven't been loaded yet (e.g., race condition, direct navigation).
+    // Load stations if not already loaded
     if (this._stationService.stations.length === 0) {
       this._stationService.getStations().subscribe({
         next: () => {
@@ -104,7 +108,7 @@ export class CarList {
   });
 
   // Get stations with id and name for filter dropdown
-  readonly stations = computed(() => {
+  readonly stationsForFilter = computed(() => {
     const stationIds = new Set<string>();
 
     // Collect unique station IDs from carsWithStation
@@ -136,6 +140,11 @@ export class CarList {
 
     return this.carsWithStation().filter((item) => {
       const { car, stationId: carStationId } = item;
+
+      // Show only vehicles that are currently available
+      if (car.status !== VehicleAtStationStatus.Available) {
+        return false;
+      }
 
       // Filter by station ID
       if (stationId !== 'all' && carStationId !== stationId) {

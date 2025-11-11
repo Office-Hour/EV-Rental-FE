@@ -1,16 +1,16 @@
-.checkout-page {
+.deposit-page {
   min-height: 100vh;
 }
 
-.checkout-container {
+.deposit-container {
   max-width: 100%;
 }
 
-.checkout-header {
+.deposit-header {
   margin-bottom: 1rem;
 }
 
-.checkout-title {
+.deposit-title {
   font-size: 1.875rem;
   font-weight: 700;
   line-height: 2.25rem;
@@ -18,37 +18,32 @@
   margin-bottom: 0.5rem;
 }
 
-.checkout-subtitle {
+.deposit-subtitle {
   font-size: 1rem;
   color: var(--mat-sys-on-surface-variant);
 }
 
-.checkout-content {
+.deposit-content {
   grid-template-columns: 1fr;
 }
 
-.checkout-card {
+.deposit-card {
   background: var(--mat-sys-surface);
   border-color: var(--mat-sys-outline-variant);
-
-  &--total {
-    background: var(--mat-sys-primary-container);
-    border-color: var(--mat-sys-primary);
-  }
 }
 
-.checkout-card__title {
+.deposit-card__title {
   font-size: 1.25rem;
   font-weight: 600;
   color: var(--mat-sys-on-surface);
   margin: 0;
 }
 
-.checkout-card__content {
+.deposit-card__content {
   color: var(--mat-sys-on-surface-variant);
 }
 
-.checkout-info-row {
+.deposit-info-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -58,52 +53,27 @@
   &:last-child {
     border-bottom: none;
   }
-
-  &--total {
-    font-weight: 700;
-    font-size: 1.125rem;
-    padding-top: 1rem;
-    margin-top: 0.5rem;
-    border-top: 2px solid var(--mat-sys-outline);
-    border-bottom: none;
-  }
 }
 
-.checkout-info-label {
+.deposit-info-label {
   font-weight: 500;
   color: var(--mat-sys-on-surface-variant);
 }
 
-.checkout-info-value {
+.deposit-info-value {
   font-weight: 600;
   color: var(--mat-sys-on-surface);
   text-align: right;
 }
 
-.checkout-divider {
-  height: 1px;
-  background: var(--mat-sys-outline-variant);
-  margin: 0.5rem 0;
-}
-
-.checkout-actions {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--mat-sys-outline-variant);
-}
-
-.checkout-empty {
+.deposit-empty {
   padding: 3rem 1rem;
   color: var(--mat-sys-on-surface-variant);
 }
 
 @media (min-width: 768px) {
-  .checkout-content {
+  .deposit-content {
     grid-template-columns: repeat(2, 1fr);
-  }
-
-  .checkout-card--total {
-    grid-column: 1 / -1;
   }
 }
 

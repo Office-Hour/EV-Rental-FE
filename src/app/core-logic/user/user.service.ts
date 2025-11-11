@@ -8,6 +8,7 @@ export class UserService {
   private _user = signal<UserInfoDto | undefined>(undefined);
   private _userRole = signal<UserRole>('renter');
   private _accountService = inject(AccountService);
+  private _renterId = signal<string | undefined>(undefined);
 
   // -----------------------------------------------------------------------------------------------------
   // @ Accessors
@@ -31,6 +32,16 @@ export class UserService {
   }
   set userRole(role: UserRole) {
     this._userRole.set(role);
+  }
+
+  /**
+   * Getter & Setter for renter id
+   */
+  get renterId(): string | undefined {
+    return this._renterId();
+  }
+  set renterId(id: string | undefined) {
+    this._renterId.set(id);
   }
   // -----------------------------------------------------------------------------------------------------
   // @ Public methods

@@ -52,7 +52,8 @@
     "stylelint-selector-bem-pattern": "^4.0.1",
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.16",
-    "tslib": "^2.8.1"
+    "tslib": "^2.8.1",
+    "angularx-qrcode": "^20.0.0"
   },
   "devDependencies": {
     "@angular-eslint/builder": "20.4.0",

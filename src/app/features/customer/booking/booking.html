@@ -1,0 +1,241 @@
+<section class="bookings-container">
+  <header class="bookings-header">
+    <div class="bookings-header__text">
+      <h1 class="bookings-header__title">Đơn đặt xe của bạn</h1>
+      <p class="bookings-header__subtitle">
+        Theo dõi trạng thái các đơn hiện tại, đơn chờ và lịch sử đặt xe.
+      </p>
+    </div>
+    <button
+      matButton="outlined"
+      type="button"
+      (click)="refresh()"
+      [disabled]="isLoading()"
+      aria-label="Tải lại danh sách đơn đặt xe"
+    >
+      <mat-icon aria-hidden="true">refresh</mat-icon>
+      <span>Tải lại</span>
+    </button>
+  </header>
+
+  @if (isLoading()) {
+    <div class="state state--loading" role="status" aria-live="polite">
+      <mat-icon aria-hidden="true">hourglass_bottom</mat-icon>
+      <p>Đang tải danh sách đơn đặt xe...</p>
+    </div>
+  } @else if (error(); as errorMessage) {
+    <div class="state state--error" role="alert">
+      <mat-icon aria-hidden="true">error</mat-icon>
+      <p>{{ errorMessage }}</p>
+      <button matButton="filled" type="button" (click)="refresh()">Thử lại</button>
+    </div>
+  } @else {
+    <div class="bookings-sections">
+      <section class="booking-section">
+        <h2 class="booking-section__title">Đơn đang có</h2>
+        @if (activeBookings().length > 0) {
+          <div class="booking-grid">
+            @for (booking of activeBookings(); track trackByBookingId($index, booking)) {
+              <article class="booking-card">
+                <header class="booking-card__header">
+                  <h3 class="booking-card__title">
+                    Đơn #{{ booking.bookingId ?? 'Không xác định' }}
+                  </h3>
+                  <span class="status-badge" [attr.data-status]="statusKey(booking.status)">
+                    {{ getStatusLabel(booking.status) }}
+                  </span>
+                </header>
+
+                <div class="booking-meta">
+                  @if (booking.startTime) {
+                    <div class="booking-meta__item">
+                      <span class="booking-meta__label">Thời gian nhận xe</span>
+                      <span>{{ formatDateTime(booking.startTime) }}</span>
+                    </div>
+                  }
+                  @if (booking.endTime) {
+                    <div class="booking-meta__item">
+                      <span class="booking-meta__label">Thời gian trả xe</span>
+                      <span>{{ formatDateTime(booking.endTime) }}</span>
+                    </div>
+                  }
+                  @if (booking.bookingCreatedAt) {
+                    <div class="booking-meta__item">
+                      <span class="booking-meta__label">Ngày tạo đơn</span>
+                      <span>{{ formatDateTime(booking.bookingCreatedAt) }}</span>
+                    </div>
+                  }
+                </div>
+
+                <div class="booking-actions">
+                  @if (booking.bookingId) {
+                    <button
+                      matButton="tonal"
+                      type="button"
+                      [routerLink]="['/bookings', booking.bookingId]"
+                      aria-label="Xem chi tiết đơn {{ booking.bookingId }}"
+                    >
+                      Xem chi tiết
+                    </button>
+                  }
+                </div>
+              </article>
+            }
+          </div>
+        } @else {
+          <p class="booking-empty">Hiện bạn chưa có đơn nào đang được xử lý.</p>
+        }
+      </section>
+
+      <section class="booking-section">
+        <h2 class="booking-section__title">Chờ hoàn tất</h2>
+        @if (pendingBookings().length > 0) {
+          <div class="booking-grid">
+            @for (booking of pendingBookings(); track trackByBookingId($index, booking)) {
+              <article class="booking-card">
+                <header class="booking-card__header">
+                  <h3 class="booking-card__title">
+                    Đơn #{{ booking.bookingId ?? 'Không xác định' }}
+                  </h3>
+                  <span class="status-badge" [attr.data-status]="statusKey(booking.status)">
+                    {{ getStatusLabel(booking.status) }}
+                  </span>
+                </header>
+
+                <div class="booking-meta">
+                  @if (booking.startTime) {
+                    <div class="booking-meta__item">
+                      <span class="booking-meta__label">Thời gian dự kiến</span>
+                      <span>{{ formatDateTime(booking.startTime) }}</span>
+                    </div>
+                  }
+                  @if (booking.bookingCreatedAt) {
+                    <div class="booking-meta__item">
+                      <span class="booking-meta__label">Ngày tạo đơn</span>
+                      <span>{{ formatDateTime(booking.bookingCreatedAt) }}</span>
+                    </div>
+                  }
+                </div>
+
+                <div class="booking-actions">
+                  @if (booking.bookingId) {
+                    <button
+                      matButton="outlined"
+                      type="button"
+                      [routerLink]="['/bookings', booking.bookingId]"
+                      aria-label="Xem chi tiết đơn {{ booking.bookingId }}"
+                    >
+                      Xem chi tiết
+                    </button>
+                  }
+                </div>
+              </article>
+            }
+          </div>
+        } @else {
+          <p class="booking-empty">Không có đơn nào đang chờ hoàn tất.</p>
+        }
+      </section>
+
+      <section class="booking-section">
+        <h2 class="booking-section__title">Lịch sử</h2>
+        @if (historyBookings().length > 0) {
+          <div class="booking-grid">
+            @for (booking of historyBookings(); track trackByBookingId($index, booking)) {
+              <article class="booking-card">
+                <header class="booking-card__header">
+                  <h3 class="booking-card__title">
+                    Đơn #{{ booking.bookingId ?? 'Không xác định' }}
+                  </h3>
+                  <span class="status-badge" [attr.data-status]="statusKey(booking.status)">
+                    {{ getStatusLabel(booking.status) }}
+                  </span>
+                </header>
+
+                <div class="booking-meta">
+                  @if (booking.startTime) {
+                    <div class="booking-meta__item">
+                      <span class="booking-meta__label">Bắt đầu thuê</span>
+                      <span>{{ formatDateTime(booking.startTime) }}</span>
+                    </div>
+                  }
+                  @if (booking.endTime) {
+                    <div class="booking-meta__item">
+                      <span class="booking-meta__label">Kết thúc thuê</span>
+                      <span>{{ formatDateTime(booking.endTime) }}</span>
+                    </div>
+                  }
+                </div>
+
+                <div class="booking-actions">
+                  @if (booking.bookingId) {
+                    <button
+                      matButton="outlined"
+                      type="button"
+                      [routerLink]="['/bookings', booking.bookingId]"
+                      aria-label="Xem chi tiết đơn {{ booking.bookingId }}"
+                    >
+                      Xem chi tiết
+                    </button>
+                  }
+                </div>
+              </article>
+            }
+          </div>
+        } @else {
+          <p class="booking-empty">Chưa có lịch sử đặt xe nào.</p>
+        }
+      </section>
+
+      <section class="booking-section">
+        <h2 class="booking-section__title">Đơn hủy</h2>
+        @if (cancelledBookings().length > 0) {
+          <div class="booking-grid">
+            @for (booking of cancelledBookings(); track trackByBookingId($index, booking)) {
+              <article class="booking-card">
+                <header class="booking-card__header">
+                  <h3 class="booking-card__title">
+                    Đơn #{{ booking.bookingId ?? 'Không xác định' }}
+                  </h3>
+                  <span class="status-badge" [attr.data-status]="statusKey(booking.status)">
+                    {{ getStatusLabel(booking.status) }}
+                  </span>
+                </header>
+
+                <div class="booking-meta">
+                  @if (booking.bookingCreatedAt) {
+                    <div class="booking-meta__item">
+                      <span class="booking-meta__label">Ngày tạo đơn</span>
+                      <span>{{ formatDateTime(booking.bookingCreatedAt) }}</span>
+                    </div>
+                  }
+                  @if (booking.cancelReason) {
+                    <div class="booking-meta__item">
+                      <span class="booking-meta__label">Lý do hủy</span>
+                      <span>{{ booking.cancelReason }}</span>
+                    </div>
+                  }
+                </div>
+
+                <div class="booking-actions">
+                  @if (booking.bookingId) {
+                    <button
+                      matButton="outlined"
+                      type="button"
+                      [routerLink]="['/bookings', booking.bookingId]"
+                      aria-label="Xem chi tiết đơn {{ booking.bookingId }}"
+                    >
+                      Xem chi tiết
+                    </button>
+                  }
+                </div>
+              </article>
+            }
+          </div>
+        } @else {
+          <p class="booking-empty">Không có đơn nào bị hủy.</p>
+        }
+      </section>
+    </div>
+  }
+</section>

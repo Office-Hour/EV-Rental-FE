@@ -1,0 +1,16 @@
+:host {
+  .booking-stepper__hidden-header {
+    ::ng-deep .mat-step-header {
+      display: none !important;
+    }
+
+    ::ng-deep .mat-stepper-horizontal-line {
+      display: none !important;
+    }
+
+    ::ng-deep .mat-stepper-header-container {
+      display: none !important;
+    }
+  }
+}
+
