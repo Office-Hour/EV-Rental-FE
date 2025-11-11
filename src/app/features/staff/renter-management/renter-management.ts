@@ -88,6 +88,35 @@ export class RenterManagement {
   readonly error = computed(() => this.rentersService.staffRentersError());
   private readonly allRenters = computed(() => this.rentersService.staffRenters());
   private readonly normalizedSearch = computed(() => this.searchTerm().trim().toLowerCase());
+  readonly riskCounts = computed<Record<RiskFilterKey, number>>(() => {
+    const renters = this.allRenters();
+    let low = 0;
+    let medium = 0;
+    let high = 0;
+
+    for (const record of renters) {
+      switch (this._determineRiskLevel(record.riskScore)) {
+        case 'low':
+          low += 1;
+          break;
+        case 'medium':
+          medium += 1;
+          break;
+        case 'high':
+          high += 1;
+          break;
+        default:
+          break;
+      }
+    }
+
+    return {
+      all: renters.length,
+      low,
+      medium,
+      high,
+    } satisfies Record<RiskFilterKey, number>;
+  });
 
   private readonly filteredRenters = computed(() => {
     const query = this.normalizedSearch();

@@ -35,6 +35,7 @@ interface VehicleStatusCounters {
 interface VehicleTabDescriptor {
   readonly key: VehicleTabKey;
   readonly label: string;
+  readonly description: string;
   readonly counterKey: keyof VehicleStatusCounters;
 }
 
@@ -85,10 +86,20 @@ interface SelectedVehicleViewModel {
 }
 
 const VEHICLE_TABS: readonly VehicleTabDescriptor[] = [
-  { key: 'all', label: 'All', counterKey: 'total' },
-  { key: 'available', label: 'Available', counterKey: 'available' },
-  { key: 'booked', label: 'Booked', counterKey: 'booked' },
-  { key: 'maintenance', label: 'Maintenance', counterKey: 'maintenance' },
+  { key: 'all', label: 'All vehicles', description: 'Every vehicle status', counterKey: 'total' },
+  {
+    key: 'available',
+    label: 'Available',
+    description: 'Ready for renters',
+    counterKey: 'available',
+  },
+  { key: 'booked', label: 'Booked', description: 'Currently reserved', counterKey: 'booked' },
+  {
+    key: 'maintenance',
+    label: 'Maintenance',
+    description: 'Requires attention',
+    counterKey: 'maintenance',
+  },
 ] as const;
 
 const VEHICLE_STATUS_BADGES: Partial<Record<VehicleAtStationStatusType, StatusBadge>> = {
@@ -179,6 +190,8 @@ export class VehicleManagement {
         this._matchesSearch(record, query),
     );
   });
+
+  readonly filteredCount = computed(() => this.filteredRecords().length);
 
   readonly cardViewModels = computed<VehicleCardViewModel[]>(() =>
     this.filteredRecords().map((record) => {
