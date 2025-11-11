@@ -3,6 +3,7 @@
 @use 'app/lib/common-ui/styles/splash-screen.scss' as splash-screen;
 @use 'app/lib/common-ui/animations/animations.scss' as animations;
 @use 'app/lib/common-ui/styles/theme.scss' as theme;
+@use 'app/lib/common-ui/styles/toast.scss' as toast;
 
 // CSS containment for better performance
 * {

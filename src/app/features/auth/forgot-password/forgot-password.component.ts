@@ -7,6 +7,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { AuthService } from '../../../core-logic/auth/auth.service';
+import { ToastService } from '../../../lib/common-ui/services/toast/toast.service';
 
 @Component({
   selector: 'app-forgot-password',
@@ -28,6 +29,7 @@ export class ForgotPasswordComponent {
   private _formBuilder = inject(FormBuilder);
   private _authService = inject(AuthService);
   private _router = inject(Router);
+  private _toastService = inject(ToastService);
 
   forgotPasswordForm: FormGroup;
   isLoading = signal(false);
@@ -46,6 +48,8 @@ export class ForgotPasswordComponent {
   sendResetLink(): void {
     // Return if the form is invalid
     if (this.forgotPasswordForm.invalid) {
+      this.forgotPasswordForm.markAllAsTouched();
+      this._toastService.error('Enter a valid email address so we can send you a reset link.');
       return;
     }
 
@@ -62,6 +66,9 @@ export class ForgotPasswordComponent {
       // Set success state
       this.isEmailSent.set(true);
       this.isLoading.set(false);
+      this._toastService.success(
+        `We sent a password reset link to ${email}. Check your inbox and spam folder.`,
+      );
     }, 2000);
   }
 
@@ -76,14 +83,20 @@ export class ForgotPasswordComponent {
 
     // Set loading state
     this.isResending.set(true);
+    this.isLoading.set(true);
 
     // TODO: Implement resendResetLink method in AuthService
     // For now, simulate API call
     setTimeout(() => {
-      // Show success message
-      //<AlertComponent>
+      const email = this.forgotPasswordForm.value.email;
+      this._toastService.info(
+        email
+          ? `We just sent another password reset link to ${email}.`
+          : 'We sent another password reset link.',
+      );
       // Set resending state
       this.isResending.set(false);
+      this.isLoading.set(false);
     }, 2000);
   }
 

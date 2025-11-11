@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { AuthService } from '../../../core-logic/auth/auth.service';
+import { ToastService } from '../../../lib/common-ui/services/toast/toast.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-sign-out',
@@ -13,6 +15,7 @@ import { AuthService } from '../../../core-logic/auth/auth.service';
 export class SignOutComponent implements OnInit {
   private _authService = inject(AuthService);
   private _router = inject(Router);
+  private _toastService = inject(ToastService);
 
   countdown = signal(5);
 
@@ -42,9 +45,22 @@ export class SignOutComponent implements OnInit {
    */
   redirectToSignIn(): void {
     // Sign out the user
-    this._authService.signOut().subscribe(() => {
-      // Redirect to sign-in page
-      this._router.navigate(['/sign-in']);
-    });
+    this._authService
+      .signOut()
+      .pipe(
+        finalize(() => {
+          this._toastService.info('You are now signed out. Come back anytime.');
+        }),
+      )
+      .subscribe({
+        next: () => {
+          // Redirect to sign-in page
+          this._router.navigate(['/sign-in']);
+        },
+        error: (error) => {
+          console.error('Sign out error:', error);
+          this._toastService.error('Something went wrong while signing out. Please try again.');
+        },
+      });
   }
 }
