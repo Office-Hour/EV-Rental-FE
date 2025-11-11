@@ -11,5 +11,6 @@ export interface TokenInfo {
   Renter?: boolean;
   Admin?: boolean;
   Staff?: boolean;
+  StaffId?: string;
   RenterId?: string;
 }
