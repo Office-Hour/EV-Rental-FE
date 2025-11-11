@@ -14,8 +14,9 @@ import { BookingsService, StaffBookingRecord } from '../../../core-logic/booking
 import {
   BookingStatus as BookingStatusEnum,
   BookingVerificationStatus as BookingVerificationStatusEnum,
+  RentalStatus as RentalStatusEnum,
 } from '../../../../contract';
-import type { BookingStatus, BookingVerificationStatus } from '../../../../contract';
+import type { BookingStatus, BookingVerificationStatus, RentalStatus } from '../../../../contract';
 
 type BookingTabKey = 'all' | 'pendingVerification' | 'verified' | 'cancelled';
 
@@ -48,6 +49,7 @@ interface BookingCardViewModel {
   readonly totalAmountDisplay: string;
   readonly depositDisplay: string;
   readonly vehicleDisplay: string;
+  readonly rentalSummary: string;
   readonly badges: readonly StatusBadge[];
 }
 
@@ -61,6 +63,7 @@ interface SelectedBookingViewModel {
   readonly totalAmountDisplay: string;
   readonly depositDisplay: string;
   readonly vehicleDisplay: string;
+  readonly rentalSummary: string;
   readonly rentalDays?: number;
 }
 
@@ -86,6 +89,32 @@ const BOOKING_VERIFICATION_BADGES: Record<BookingVerificationStatus, StatusBadge
     tone: 'danger',
   },
   [BookingVerificationStatusEnum.RejectedOther]: { text: 'Verification Rejected', tone: 'danger' },
+};
+
+const RENTAL_STATUS_LABELS: Record<RentalStatus, string> = {
+  [RentalStatusEnum.Reserved]: 'Reserved',
+  [RentalStatusEnum.InProgress]: 'In Progress',
+  [RentalStatusEnum.Completed]: 'Completed',
+  [RentalStatusEnum.Late]: 'Late',
+  [RentalStatusEnum.Cancelled]: 'Cancelled',
+};
+
+const RENTAL_STATUS_BADGES: Record<RentalStatus, StatusBadge> = {
+  [RentalStatusEnum.Reserved]: { text: 'Rental Reserved', tone: 'info' },
+  [RentalStatusEnum.InProgress]: { text: 'Rental In Progress', tone: 'info' },
+  [RentalStatusEnum.Completed]: { text: 'Rental Completed', tone: 'success' },
+  [RentalStatusEnum.Late]: { text: 'Rental Late', tone: 'danger' },
+  [RentalStatusEnum.Cancelled]: { text: 'Rental Cancelled', tone: 'danger' },
+};
+
+const RENTAL_NOT_CREATED_BADGE: StatusBadge = {
+  text: 'Rental Not Created',
+  tone: 'pending',
+};
+
+const RENTAL_LINKED_BADGE: StatusBadge = {
+  text: 'Rental Linked',
+  tone: 'info',
 };
 
 @Component({
@@ -161,6 +190,7 @@ export class StaffDashboard {
       totalAmountDisplay: this.formatCurrency(this._computeEstimatedTotal(record)),
       depositDisplay: this.formatCurrency(record.vehicleDetails?.depositPrice),
       vehicleDisplay: this._resolveVehicleLabel(record),
+      rentalSummary: this._resolveRentalSummary(record),
       badges: this._buildBadges(record),
     })),
   );
@@ -181,6 +211,7 @@ export class StaffDashboard {
       totalAmountDisplay: this.formatCurrency(this._computeEstimatedTotal(record)),
       depositDisplay: this.formatCurrency(record.vehicleDetails?.depositPrice),
       vehicleDisplay: this._resolveVehicleLabel(record),
+      rentalSummary: this._resolveRentalSummary(record),
       rentalDays: this._computeRentalDays(record),
     } satisfies SelectedBookingViewModel;
   });
@@ -323,6 +354,8 @@ export class StaffDashboard {
       record.bookingId,
       record.renterId,
       record.vehicleAtStationId,
+      record.rental?.rentalId ?? undefined,
+      record.rental?.vehicleId ?? undefined,
       record.vehicleDetails?.make ?? undefined,
       record.vehicleDetails?.model ?? undefined,
       record.renterProfile?.address ?? undefined,
@@ -363,6 +396,72 @@ export class StaffDashboard {
     return 'Vehicle --';
   }
 
+  private _resolveRentalSummary(record: StaffBookingRecord): string {
+    if (!record.rental) {
+      switch (record.status) {
+        case BookingStatusEnum.Cancelled:
+          return 'Booking cancelled';
+        case BookingStatusEnum.PendingVerification:
+          return 'Awaiting verification';
+        case BookingStatusEnum.RentalCreated:
+          return 'Rental creation in progress';
+        case BookingStatusEnum.Verified:
+          return 'Awaiting rental creation';
+        default:
+          return 'Rental not created';
+      }
+    }
+
+    const rental = record.rental;
+    const status = rental.status;
+    const statusLabel = status ? this.rentalStatusLabel(status) : 'Rental Linked';
+    const rentalId =
+      this._normalize(rental.rentalId) ??
+      this._normalize(rental.bookingId) ??
+      this._normalize(rental.booking?.bookingId);
+
+    if (rentalId) {
+      return `${statusLabel} · ${this._shortenIdentifier(rentalId)}`;
+    }
+
+    const startTimeDisplay = this.formatDateTime(rental.startTime);
+    if (statusLabel && startTimeDisplay !== '--') {
+      return `${statusLabel} · Starts ${startTimeDisplay}`;
+    }
+
+    return statusLabel;
+  }
+
+  rentalStatusLabel(status?: RentalStatus | null): string {
+    if (!status) {
+      return 'Rental Linked';
+    }
+
+    return RENTAL_STATUS_LABELS[status] ?? 'Rental Linked';
+  }
+
+  private _resolveRentalBadge(record: StaffBookingRecord): StatusBadge | null {
+    const rental = record.rental;
+    if (!rental) {
+      if (
+        record.status === BookingStatusEnum.Verified ||
+        record.status === BookingStatusEnum.RentalCreated
+      ) {
+        return RENTAL_NOT_CREATED_BADGE;
+      }
+      return null;
+    }
+
+    if (rental.status) {
+      const badge = RENTAL_STATUS_BADGES[rental.status];
+      if (badge) {
+        return badge;
+      }
+    }
+
+    return RENTAL_LINKED_BADGE;
+  }
+
   private _buildBadges(record: StaffBookingRecord): StatusBadge[] {
     const badges: StatusBadge[] = [];
 
@@ -378,6 +477,11 @@ export class StaffDashboard {
       if (verificationBadge && !badges.includes(verificationBadge)) {
         badges.push(verificationBadge);
       }
+    }
+
+    const rentalBadge = this._resolveRentalBadge(record);
+    if (rentalBadge && !badges.includes(rentalBadge)) {
+      badges.push(rentalBadge);
     }
 
     return badges;

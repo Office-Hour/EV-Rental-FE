@@ -127,6 +127,12 @@
                 <span class="booking-card__section-label">Deposit</span>
                 <span class="booking-card__section-value">{{ card.depositDisplay }}</span>
               </div>
+              <div class="booking-card__section booking-card__section--full">
+                <span class="booking-card__section-label">Rental</span>
+                <span class="booking-card__section-value" title="{{ card.rentalSummary }}">
+                  {{ card.rentalSummary }}
+                </span>
+              </div>
             </div>
 
             <footer class="booking-card__footer">
@@ -227,6 +233,47 @@
             <span class="details-panel__label">Rental Days</span>
             <span class="details-panel__value">{{ detail.rentalDays ?? '--' }}</span>
           </div>
+          <div>
+            <span class="details-panel__label">Rental Summary</span>
+            <span class="details-panel__value">{{ detail.rentalSummary }}</span>
+          </div>
+        </section>
+
+        <section class="details-panel__section">
+          <h3>Rental Progress</h3>
+          @if (detail.record.rental; as rental) {
+            <dl class="details-panel__definition details-panel__definition--columns">
+              <div>
+                <dt>Rental ID</dt>
+                <dd>{{ rental.rentalId ?? '--' }}</dd>
+              </div>
+              <div>
+                <dt>Status</dt>
+                <dd>{{ rental.status ? rentalStatusLabel(rental.status) : '--' }}</dd>
+              </div>
+              <div>
+                <dt>Rental Start</dt>
+                <dd>{{ formatDateTime(rental.startTime) }}</dd>
+              </div>
+              <div>
+                <dt>Rental End</dt>
+                <dd>{{ formatDateTime(rental.endTime) }}</dd>
+              </div>
+              <div>
+                <dt>Contracts</dt>
+                <dd>{{ rental.contracts?.length ?? 0 }}</dd>
+              </div>
+              <div>
+                <dt>Vehicle ID</dt>
+                <dd>{{ rental.vehicleId ?? rental.vehicle?.vehicleId ?? '--' }}</dd>
+              </div>
+            </dl>
+          } @else {
+            <p class="details-panel__note">
+              No rental has been created for this booking yet. Complete check-in to generate a
+              rental and contract.
+            </p>
+          }
         </section>
 
         <section class="details-panel__section">

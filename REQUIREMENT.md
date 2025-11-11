@@ -1,0 +1,13 @@
+Tui đang có 1 hệ thống booking xe có luồng như sau:
+
+- Renter điền thông tin trong trang Booking trên FE -> FE tạo POST request tới /api/Booking/create BE -> BE tạo 1 entity Booking xuống DB -> DB return booking đã tạo -> BE return Booking ID đã tạo -> FE nhận được booking ID -> Fe gọi POST request /api/Payment/create để tạo 1 url thanh toán bằng Booking ID vừa nhận -> BE nhận bookingId, tạo URL thanh toán, return cho FE -> FE redirect User tới Payment Provider -> User nhập thông tin thanh toán và xác nhận thanh toán cho Payment provider -> Payment provider thanh toán thành công, gọi webhook tới api/Payment/ipn cho backend và redirect user về ReturnURL ở FE -> Người dùng nhận thông tin booking đã thanh toán phí deposit thành công.
+
+- Staff vào màn hình all bookings -> chọn booking details của một booking đang trong trạng thái đã thanh toán và đang đợi xác nhận -> Staff nhấn xác nhận booking -> FE gửi POST /api/Booking/checkin với bookingId và BookingStatus là Approved -> BE nhận request, cập nhật trạng thái booking thành Approved xuống DB -> DB xác nhận thành công -> BE return message "Booking check-in processed successfully" cho FE -> FE hiển thị.
+
+- Staff vào màn hình tạo rental cho booking đã checkin -> bấm xác nhận -> FE gửi POST request tới api/Rental với bookingId -> BE nhận request, tạo mới 1 rental, update booking sang status rental_created, gửi xuống DB -> DB tạo thành công, return rental id -> BE return rental ID cho FE -> FE hiển thị tạo rental thành công -> FE gọi request POST tạo contract api/Rental/contract với RentalId và EsignProvider là Native -> BE nhận được, tạo contract entity xuống DB -> DB return ContractId cho BE -> BE return contractId cho FE
+
+- Staff vào màn hình rental details, chọn upload inspection -> FE nhận thông tin, gửi POST request tới /api/Rental/inspection với RentalId, CurrentBatteryCapacityKwh, InspectedAt, InspectorStaffId, URL -> BE nhận được inspection payload, tạo entity inspection xuống DB -> DB tạo thành công, trả về InspectionId -> BE return inspectionId cho FE
+
+- Làm 2 lần, lần 1 là chữ ký renter, lần 2 là chữ ký staff: Staff mở màn hình rental details, upload chữ ký -> FE gửi request POST tới api/Rental/sign, gồm ContractId, DocumentUrl, DocumentHash, Role (Renter, Staff, Other), SignatureEvent.Pickup, SignatureType, SignedAt -> BE nhận payload, tạo signature xuống DB -> DB tạo thành công -> BE return contractId của chữ ký đó cho FE
+
+- Staff bấm xác nhận đã nhận xe -> FE gửi POST request tới api/Rental/vehicle/receive gồm RentalId, ReceivedAt, ReceivedByStaffId cho BE -> BE update trạng thái Rental sang In_Progress, return status code 204 cho FE -> FE hiện thị Rental sang trạng thái in progress (tức là xe đã được nhận)
