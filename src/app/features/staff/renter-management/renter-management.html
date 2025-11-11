@@ -1,0 +1,126 @@
+<section class="renter-management">
+  <header class="page-header">
+    <div class="page-header__titles">
+      <h1 class="page-header__title">Renters Management</h1>
+      <p class="page-header__subtitle">
+        Theo dõi hồ sơ khách thuê, điểm rủi ro và thông tin liên hệ để hỗ trợ vận hành.
+      </p>
+    </div>
+    <button type="button" class="refresh-button" (click)="refresh()" [disabled]="loading()">
+      <mat-icon aria-hidden="true">refresh</mat-icon>
+      <span>Làm mới</span>
+    </button>
+  </header>
+
+  <div class="toolbar">
+    <div class="toolbar__search">
+      <mat-icon aria-hidden="true">search</mat-icon>
+      <input
+        type="search"
+        class="toolbar__input"
+        [value]="searchTerm()"
+        (input)="onSearchInput($event)"
+        placeholder="Tìm kiếm tên, mã khách hoặc số bằng lái"
+        autocomplete="off"
+      />
+      @if (searchTerm()) {
+        <button
+          type="button"
+          class="toolbar__clear"
+          (click)="clearSearch()"
+          aria-label="Xóa tìm kiếm"
+        >
+          <mat-icon aria-hidden="true">close</mat-icon>
+        </button>
+      }
+    </div>
+
+    <div class="toolbar__filters" aria-label="Lọc theo mức độ rủi ro">
+      @for (filter of riskFilters; track filter.key) {
+        <button
+          type="button"
+          class="filter-chip"
+          [class.filter-chip--active]="riskFilter() === filter.key"
+          (click)="onRiskFilterChange(filter.key)"
+        >
+          <span class="filter-chip__label">{{ filter.label }}</span>
+          <span class="filter-chip__count">{{ riskCounters()[filter.key] }}</span>
+        </button>
+      }
+    </div>
+  </div>
+
+  @if (error()) {
+    <div class="alert alert--error" role="alert">
+      <div class="alert__content">
+        <mat-icon aria-hidden="true">error</mat-icon>
+        <span>{{ error() }}</span>
+      </div>
+      <button type="button" class="alert__action" (click)="refresh()">Thử lại</button>
+    </div>
+  }
+
+  @if (loading()) {
+    <div class="loading-state" aria-live="polite">
+      <div class="loading-state__spinner"></div>
+      <p>Đang tải danh sách khách thuê...</p>
+    </div>
+  } @else {
+    @if (listViewModels().length > 0) {
+      <ul class="renter-list">
+        @for (item of listViewModels(); track item.record.renterId) {
+          <li class="renter-card">
+            <div class="renter-card__header">
+              <div class="renter-card__avatar" aria-hidden="true">{{ item.initials }}</div>
+              <div class="renter-card__identity">
+                <h2 class="renter-card__name">{{ item.nameDisplay }}</h2>
+                <p class="renter-card__identifier">Mã khách: {{ item.identifierDisplay }}</p>
+              </div>
+              @if (item.riskBadge; as badge) {
+                <span
+                  class="badge"
+                  [class.badge--success]="badge.tone === 'success'"
+                  [class.badge--info]="badge.tone === 'info'"
+                  [class.badge--danger]="badge.tone === 'danger'"
+                  [class.badge--pending]="badge.tone === 'pending'"
+                >
+                  {{ badge.text }}
+                </span>
+              }
+            </div>
+
+            <div class="renter-card__body">
+              <div class="renter-card__section">
+                <span class="renter-card__section-label">Số bằng lái</span>
+                <span class="renter-card__section-value">{{ item.licenseDisplay }}</span>
+              </div>
+              <div class="renter-card__section">
+                <span class="renter-card__section-label">Ngày sinh</span>
+                <span class="renter-card__section-value">{{ item.dateOfBirthDisplay }}</span>
+              </div>
+              <div class="renter-card__section">
+                <span class="renter-card__section-label">Tuổi</span>
+                <span class="renter-card__section-value">{{ item.ageDisplay }}</span>
+              </div>
+              <div class="renter-card__section renter-card__section--wide">
+                <span class="renter-card__section-label">Địa chỉ</span>
+                <span class="renter-card__section-value">{{ item.addressDisplay }}</span>
+              </div>
+              <div class="renter-card__section">
+                <span class="renter-card__section-label">Điểm rủi ro</span>
+                <span class="renter-card__section-value">{{ item.riskScoreDisplay }}</span>
+              </div>
+            </div>
+          </li>
+        }
+      </ul>
+    } @else {
+      <div class="empty-state">
+        <mat-icon aria-hidden="true">group_off</mat-icon>
+        <h2>Không tìm thấy khách thuê</h2>
+        <p>Hãy điều chỉnh bộ lọc hoặc xóa từ khóa tìm kiếm.</p>
+        <button type="button" (click)="clearSearch()">Xóa tìm kiếm</button>
+      </div>
+    }
+  }
+</section>
