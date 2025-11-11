@@ -10,6 +10,7 @@
 
 export interface RenterProfileDto {
   renterId?: string;
+  userName?: string | null;
   driverLicenseNo?: string | null;
   dateOfBirth?: string | null;
   address?: string | null;

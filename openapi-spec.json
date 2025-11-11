@@ -2776,6 +2776,10 @@
             "type": "string",
             "format": "uuid"
           },
+          "userName": {
+            "type": "string",
+            "nullable": true
+          },
           "driverLicenseNo": {
             "type": "string",
             "nullable": true
