@@ -32,7 +32,7 @@ description: 'Task list template for feature implementation'
 
 - [x] T001 Run `pnpm install` in workspace root ./ to sync dependencies before feature work
 - [x] T002 Run `pnpm lint` and `pnpm lint-style` in workspace root ./ to capture baseline diagnostics
-- [ ] T003 Create feature architecture README describing planned folders at `src/app/features/staff/booking-fulfillment/README.md`
+- [x] T003 Create feature architecture README describing planned folders at `src/app/features/staff/booking-fulfillment/README.md`
 
 ---
 
@@ -42,12 +42,12 @@ description: 'Task list template for feature implementation'
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T004 Define fulfillment domain types (steps, artifacts, timeline, errors) in `src/app/core-logic/rental-fulfillment/fulfillment.types.ts`
-- [ ] T005 Implement signal-backed `FulfillmentStateStore` managing ordered milestones in `src/app/core-logic/rental-fulfillment/fulfillment.state.ts`
-- [ ] T006 Implement `FulfillmentOrchestrator` coordinating generated API clients in `src/app/core-logic/rental-fulfillment/fulfillment.service.ts`
-- [ ] T007 Export rental-fulfillment APIs through `src/app/core-logic/rental-fulfillment/index.ts`
-- [ ] T008 Extend booking aggregation with a single-record loader and timeline merge in `src/app/core-logic/bookings/bookings.service.ts`
-- [ ] T009 [P] Create analytics helper emitting `staff_booking_fulfillment_*` events in `src/app/core-logic/rental-fulfillment/fulfillment.analytics.ts`
+- [x] T004 Define fulfillment domain types (steps, artifacts, timeline, errors) in `src/app/core-logic/rental-fulfillment/fulfillment.types.ts`
+- [x] T005 Implement signal-backed `FulfillmentStateStore` managing ordered milestones in `src/app/core-logic/rental-fulfillment/fulfillment.state.ts`
+- [x] T006 Implement `FulfillmentOrchestrator` coordinating generated API clients in `src/app/core-logic/rental-fulfillment/fulfillment.service.ts`
+- [x] T007 Export rental-fulfillment APIs through `src/app/core-logic/rental-fulfillment/index.ts`
+- [x] T008 Extend booking aggregation with a single-record loader and timeline merge in `src/app/core-logic/bookings/bookings.service.ts`
+- [x] T009 [P] Create analytics helper emitting `staff_booking_fulfillment_*` events in `src/app/core-logic/rental-fulfillment/fulfillment.analytics.ts`
 
 **Checkpoint**: Foundation ready—user story implementation can now begin in parallel
 
