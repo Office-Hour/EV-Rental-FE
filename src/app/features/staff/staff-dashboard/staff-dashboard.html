@@ -306,6 +306,17 @@
             </div>
           </dl>
         </section>
+
+        <footer class="details-panel__actions">
+          <button
+            type="button"
+            class="details-panel__action"
+            (click)="openFulfillment(detail.record)"
+            [disabled]="!canOpenFulfillment(detail.record)"
+          >
+            Tiếp tục xử lý
+          </button>
+        </footer>
       </div>
     </div>
   }

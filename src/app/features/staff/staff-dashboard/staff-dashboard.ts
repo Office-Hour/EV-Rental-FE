@@ -17,6 +17,7 @@ import {
   RentalStatus as RentalStatusEnum,
 } from '../../../../contract';
 import type { BookingStatus, BookingVerificationStatus, RentalStatus } from '../../../../contract';
+import { Router } from '@angular/router';
 
 type BookingTabKey = 'all' | 'pendingVerification' | 'verified' | 'cancelled';
 
@@ -147,6 +148,7 @@ const RENTAL_LINKED_BADGE: StatusBadge = {
 })
 export class StaffDashboard {
   private readonly bookingsService = inject(BookingsService);
+  private readonly router = inject(Router);
   @ViewChild('detailPanel') private detailPanel?: ElementRef<HTMLDivElement>;
   private activeDetailTrigger: HTMLElement | null = null;
 
@@ -315,6 +317,23 @@ export class StaffDashboard {
         target.focus();
       });
     }
+  }
+
+  openFulfillment(record: StaffBookingRecord): void {
+    if (!record.bookingId) {
+      return;
+    }
+
+    this.closeDetails();
+    void this.router.navigate(['/staff/bookings', record.bookingId, 'fulfillment']);
+  }
+
+  canOpenFulfillment(record: StaffBookingRecord): boolean {
+    return (
+      record.verificationStatus === BookingVerificationStatusEnum.Approved ||
+      record.status === BookingStatusEnum.Verified ||
+      record.status === BookingStatusEnum.RentalCreated
+    );
   }
 
   onOverlayClick(event: MouseEvent): void {

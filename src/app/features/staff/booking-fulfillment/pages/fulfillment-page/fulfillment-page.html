@@ -1,0 +1,180 @@
+<section class="fulfillment" aria-labelledby="fulfillment-title">
+  <header class="fulfillment__header">
+    <a class="fulfillment__back" routerLink="/staff/bookings">
+      <mat-icon aria-hidden="true">arrow_back</mat-icon>
+      <span>Quay lại danh sách booking</span>
+    </a>
+    <p class="fulfillment__eyebrow">Quy trình xử lý đặt xe</p>
+    <h1 #pageHeading id="fulfillment-title" tabindex="-1">Xử lý đặt xe</h1>
+    <p class="fulfillment__description">
+      Hoàn tất tuần tự các bước bên dưới để chuyển đổi đặt xe thành đơn thuê hoạt động.
+    </p>
+  </header>
+
+  @if (initializationErrorMessage(); as errorMessage) {
+    <section class="fulfillment__error" role="alert">
+      <mat-icon aria-hidden="true">error</mat-icon>
+      <div class="fulfillment__error-content">
+        <h2>Không thể tải thông tin booking</h2>
+        <p>{{ errorMessage }}</p>
+        <button type="button" (click)="retry()">Thử lại</button>
+      </div>
+    </section>
+  } @else {
+    <div class="fulfillment__layout">
+      <section class="summary">
+        <header class="summary__header">
+          <h2>Thông tin booking</h2>
+          @if (summaryView(); as summary) {
+            <span class="summary__badge">{{ summary.bookingId }}</span>
+          }
+        </header>
+
+        @if (summaryView(); as summary) {
+          <dl class="summary__grid">
+            <div>
+              <dt>Trạng thái booking</dt>
+              <dd>{{ summary.bookingStatusLabel }}</dd>
+            </div>
+            <div>
+              <dt>Trạng thái xác thực</dt>
+              <dd>{{ summary.verificationStatusLabel }}</dd>
+            </div>
+            <div>
+              <dt>Khởi tạo</dt>
+              <dd>{{ summary.createdAtDisplay }}</dd>
+            </div>
+            <div>
+              <dt>Thời gian thuê</dt>
+              <dd>{{ summary.rentalWindowDisplay }}</dd>
+            </div>
+            <div>
+              <dt>Khách thuê</dt>
+              <dd>{{ summary.renterName }}</dd>
+            </div>
+            <div>
+              <dt>Giấy phép lái xe</dt>
+              <dd>{{ summary.renterLicense }}</dd>
+            </div>
+            <div>
+              <dt>Địa chỉ</dt>
+              <dd>{{ summary.renterAddress }}</dd>
+            </div>
+            <div>
+              <dt>Xe</dt>
+              <dd>{{ summary.vehicleLabel }}</dd>
+            </div>
+            <div>
+              <dt>Tiền cọc</dt>
+              <dd>{{ summary.depositDisplay }}</dd>
+            </div>
+          </dl>
+        } @else {
+          <div class="summary__loading" aria-live="polite">
+            <div class="summary__spinner"></div>
+            <p>Đang tải thông tin booking…</p>
+          </div>
+        }
+
+        <footer class="summary__footer">
+          <button type="button" class="summary__refresh" (click)="refresh()" [disabled]="isBusy()">
+            <mat-icon aria-hidden="true">refresh</mat-icon>
+            <span>Cập nhật dữ liệu</span>
+          </button>
+        </footer>
+      </section>
+
+      <section class="steps" aria-labelledby="fulfillment-steps-title">
+        <header class="steps__header">
+          <div>
+            <h2 id="fulfillment-steps-title">Checklist xử lý</h2>
+            <p>Hoàn thành lần lượt từng bước để tiếp tục tiến trình.</p>
+          </div>
+          <span class="steps__progress">{{ completionPercentage() }}%</span>
+        </header>
+
+        <ol class="steps__list">
+          @for (step of stepViewModels(); track trackByStep($index, step)) {
+            <li class="steps__item" [class.steps__item--current]="step.isCurrent">
+              <div class="steps__status steps__status--{{ step.status }}" aria-hidden="true"></div>
+              <div class="steps__content">
+                <div class="steps__titles">
+                  <h3>{{ step.title }}</h3>
+                  <p>{{ step.description }}</p>
+                </div>
+                <span class="steps__state">{{ statusLabel(step.status) }}</span>
+                @if (step.completedAtDisplay && step.status === 'fulfilled') {
+                  <span class="steps__timestamp">Hoàn tất: {{ step.completedAtDisplay }}</span>
+                }
+                @if (step.errorMessage) {
+                  <p class="steps__error" role="alert">{{ step.errorMessage }}</p>
+                }
+
+                @if (step.step === 'checkin') {
+                  <button
+                    type="button"
+                    class="steps__cta"
+                    (click)="onCheckIn()"
+                    [disabled]="step.disabled"
+                  >
+                    Xác nhận check-in booking
+                  </button>
+                }
+              </div>
+            </li>
+          }
+        </ol>
+
+        @if (hasFailure()) {
+          <div class="steps__hint" role="status">
+            <mat-icon aria-hidden="true">warning</mat-icon>
+            <p>Hãy xử lý lỗi ở các bước thất bại trước khi tiếp tục.</p>
+          </div>
+        }
+      </section>
+
+      <section class="timeline" aria-labelledby="fulfillment-timeline-title">
+        <header class="timeline__header">
+          <h2 id="fulfillment-timeline-title">Nhật ký thực hiện</h2>
+          <p>Theo dõi lịch sử hành động phục vụ kiểm toán.</p>
+        </header>
+
+        @if (timelineView().length === 0) {
+          <div class="timeline__empty" aria-live="polite">
+            <mat-icon aria-hidden="true">hourglass_empty</mat-icon>
+            <p>Chưa có sự kiện nào được ghi nhận.</p>
+          </div>
+        } @else {
+          <ol class="timeline__list">
+            @for (event of timelineView(); track trackByTimeline($index, event)) {
+              <li class="timeline__item">
+                <div class="timeline__marker" aria-hidden="true"></div>
+                <div class="timeline__body">
+                  <h3>{{ event.title }}</h3>
+                  @if (event.description) {
+                    <p class="timeline__description">{{ event.description }}</p>
+                  }
+                  <p class="timeline__meta">
+                    <span>{{ event.actorLabel }}</span>
+                    <span aria-hidden="true">•</span>
+                    <span>{{ event.occurredAtDisplay }}</span>
+                  </p>
+                  @if (event.metadataEntries.length > 0) {
+                    <dl class="timeline__metadata">
+                      @for (meta of event.metadataEntries; track meta.label) {
+                        <div>
+                          <dt>{{ meta.label }}</dt>
+                          <dd>{{ meta.value }}</dd>
+                        </div>
+                      }
+                    </dl>
+                  }
+                </div>
+              </li>
+            }
+          </ol>
+        }
+      </section>
+    </div>
+  }
+</section>

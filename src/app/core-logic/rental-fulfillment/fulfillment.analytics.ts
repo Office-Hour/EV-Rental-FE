@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import {
   FulfillmentAnalyticsFailurePayload,
   FulfillmentAnalyticsPayload,
+  FulfillmentAnalyticsRoutePayload,
+  FulfillmentAnalyticsStartedPayload,
   FulfillmentAnalyticsSuccessPayload,
   FulfillmentStepId,
 } from './fulfillment.types';
@@ -13,6 +15,31 @@ interface GlobalAnalyticsChannel {
 
 @Injectable({ providedIn: 'root' })
 export class FulfillmentAnalyticsService {
+  routeEntered(bookingId: string): void {
+    if (!bookingId) {
+      return;
+    }
+
+    const payload: FulfillmentAnalyticsRoutePayload = {
+      name: 'staff_booking_fulfillment_route_viewed',
+      bookingId,
+    };
+    this._emit(payload);
+  }
+
+  stepStarted(bookingId: string, step: FulfillmentStepId): void {
+    if (!bookingId || !step) {
+      return;
+    }
+
+    const payload: FulfillmentAnalyticsStartedPayload = {
+      name: 'staff_booking_fulfillment_step_started',
+      bookingId,
+      step,
+    };
+    this._emit(payload);
+  }
+
   stepCompleted(bookingId: string, step: FulfillmentStepId, durationMs?: number): void {
     const payload: FulfillmentAnalyticsSuccessPayload = {
       name: 'staff_booking_fulfillment_step_completed',
@@ -42,7 +69,11 @@ export class FulfillmentAnalyticsService {
   }
 
   private _emit(payload: FulfillmentAnalyticsPayload): void {
-    if (!payload.bookingId || !payload.step) {
+    if (!payload.bookingId) {
+      return;
+    }
+
+    if ('step' in payload && !payload.step) {
       return;
     }
 
