@@ -1,53 +1,30 @@
 import { inject, Injectable, signal } from '@angular/core';
 import {
   BookingBriefDto,
-  BookingService,
-  StationDetailsDto,
-  StationDetailsDtoApiResponse,
-  StationDto,
-  StationDtoPagedResultApiResponse,
-  StationsService,
+  StaffService,
   VehicleDetailsDto,
-  VehicleDetailsDtoApiResponse,
-  VehicleDto,
+  VehicleDetailsDtoListApiResponse,
 } from '../../../contract';
-import type { VehicleAtStationStatus as VehicleAtStationStatusType } from '../../../contract';
-import { catchError, finalize, forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
-
-type VehicleDetailsMap = Map<string, VehicleDetailsDto | undefined>;
-
-type StationDetailsMap = Map<string, StationDetailsDto | undefined>;
-
-interface StationVehicleSnapshot {
-  readonly stationId: string;
-  readonly stationName: string;
-  readonly stationAddress?: string;
-  readonly vehicleAtStationId?: string;
-  readonly vehicleId?: string;
-  readonly status?: VehicleAtStationStatusType;
-  readonly currentBatteryCapacityKwh?: number;
-  readonly startTime?: string;
-  readonly endTime?: string | null;
-}
+import type { VehicleAtStationStatus } from '../../../contract';
+import { catchError, finalize, map, Observable, of, tap } from 'rxjs';
 
 export interface StaffVehicleRecord {
+  readonly vehicleId?: string;
+  readonly vehicleAtStationId?: string;
   readonly stationId: string;
   readonly stationName: string;
   readonly stationAddress?: string;
-  readonly vehicleAtStationId?: string;
-  readonly vehicleId?: string;
-  readonly status?: VehicleAtStationStatusType;
-  readonly currentBatteryCapacityKwh?: number;
+  readonly status?: VehicleAtStationStatus;
   readonly startTime?: string;
   readonly endTime?: string;
+  readonly currentBatteryCapacityKwh?: number;
   readonly vehicleDetails?: VehicleDetailsDto;
   readonly upcomingBookings: readonly BookingBriefDto[];
 }
 
 @Injectable({ providedIn: 'root' })
 export class VehiclesService {
-  private readonly _stationsService = inject(StationsService);
-  private readonly _bookingService = inject(BookingService);
+  private readonly _staffService = inject(StaffService);
 
   private readonly _staffVehicles = signal<StaffVehicleRecord[]>([]);
   private readonly _loading = signal(false);
@@ -61,267 +38,157 @@ export class VehiclesService {
     this._loading.set(true);
     this._error.set(null);
 
-    return this._stationsService.apiStationsGet().pipe(
-      switchMap((stationsResponse: StationDtoPagedResultApiResponse) => {
-        const stationItems = stationsResponse.data?.items ?? [];
-        const formattedStations = this._normalizeStations(stationItems);
-        const stationIds = Array.from(formattedStations.keys());
-
-        if (stationIds.length === 0) {
-          const empty: StaffVehicleRecord[] = [];
-          return of(empty);
-        }
-
-        return this._loadStationDetails(stationIds).pipe(
-          switchMap((stationDetailsMap) => {
-            const snapshots = this._buildVehicleSnapshots(formattedStations, stationDetailsMap);
-            if (snapshots.length === 0) {
-              const empty: StaffVehicleRecord[] = [];
-              return of(empty);
-            }
-
-            const uniqueVehicleIds = this._collectVehicleIds(snapshots);
-            if (uniqueVehicleIds.size === 0) {
-              const records = this._mapSnapshotsToRecords(snapshots, new Map());
-              return of(records);
-            }
-
-            return this._loadVehicleDetails(uniqueVehicleIds).pipe(
-              map((vehicleDetailsMap) => this._mapSnapshotsToRecords(snapshots, vehicleDetailsMap)),
-            );
-          }),
-        );
-      }),
+    return this._staffService.apiStaffVehiclesGet().pipe(
+      map((response: VehicleDetailsDtoListApiResponse) => response.data ?? []),
+      map((vehicles) => this._mapStaffVehicles(vehicles)),
       tap((records) => {
         this._staffVehicles.set(records);
         this._error.set(null);
       }),
       catchError((error: unknown) => {
         this._error.set(this._resolveErrorMessage(error));
-        const fallback = [...this._staffVehicles()];
-        return of(fallback);
+        const previous = [...this._staffVehicles()];
+        return of(previous);
       }),
-      finalize(() => {
-        this._loading.set(false);
-      }),
+      finalize(() => this._loading.set(false)),
     );
   }
 
-  private _loadStationDetails(stationIds: readonly string[]): Observable<StationDetailsMap> {
-    const requests = stationIds.map((stationId) =>
-      this._stationsService.apiStationsStationIdGet(stationId).pipe(
-        map(
-          (response: StationDetailsDtoApiResponse) =>
-            [stationId, response.data ?? undefined] as const,
-        ),
-        catchError(() =>
-          of<readonly [string, StationDetailsDto | undefined]>([stationId, undefined]),
-        ),
-      ),
-    );
-
-    if (requests.length === 0) {
-      return of(new Map());
-    }
-
-    return forkJoin(requests).pipe(map((entries) => new Map(entries)));
-  }
-
-  private _loadVehicleDetails(vehicleIds: ReadonlySet<string>): Observable<VehicleDetailsMap> {
-    const requests = Array.from(vehicleIds).map((vehicleId) =>
-      this._bookingService.apiBookingVehiclesVehicleIdGet(vehicleId).pipe(
-        map(
-          (response: VehicleDetailsDtoApiResponse) =>
-            [vehicleId, response.data ?? undefined] as const,
-        ),
-        catchError(() =>
-          of<readonly [string, VehicleDetailsDto | undefined]>([vehicleId, undefined]),
-        ),
-      ),
-    );
-
-    if (requests.length === 0) {
-      return of(new Map());
-    }
-
-    return forkJoin(requests).pipe(map((entries) => new Map(entries)));
-  }
-
-  private _normalizeStations(stations: readonly (StationDto | null)[]): Map<string, StationDto> {
-    const result = new Map<string, StationDto>();
-
-    for (const station of stations) {
-      if (!station) {
-        continue;
-      }
-
-      const stationId = this._normalizeString(station.id);
-      if (!stationId) {
-        continue;
-      }
-
-      result.set(stationId, {
-        ...station,
-        id: stationId,
-        name: this._normalizeString(station.name) ?? `Station ${stationId.slice(-4)}`,
-        address: this._normalizeString(station.address) ?? undefined,
-      });
-    }
-
-    return result;
-  }
-
-  private _buildVehicleSnapshots(
-    stations: Map<string, StationDto>,
-    stationDetails: StationDetailsMap,
-  ): StationVehicleSnapshot[] {
-    const snapshots: StationVehicleSnapshot[] = [];
-
-    for (const [stationId, stationInfo] of stations.entries()) {
-      const details = stationDetails.get(stationId);
-      const vehicles = details?.vehicles ?? [];
-
-      for (const vehicle of vehicles ?? []) {
-        snapshots.push(this._createSnapshot(stationInfo, vehicle));
-      }
-    }
-
-    return snapshots;
-  }
-
-  private _createSnapshot(station: StationDto, vehicle: VehicleDto): StationVehicleSnapshot {
-    return {
-      stationId: station.id ?? '',
-      stationName: station.name ?? `Station ${station.id?.slice(-4) ?? ''}`,
-      stationAddress: station.address ?? undefined,
-      vehicleAtStationId: this._normalizeString(vehicle.vehicleAtStationId) ?? undefined,
-      vehicleId: this._normalizeString(vehicle.vehicleId) ?? undefined,
-      status: vehicle.status,
-      currentBatteryCapacityKwh: vehicle.currentBatteryCapacityKwh ?? undefined,
-      startTime: this._normalizeString(vehicle.startTime) ?? undefined,
-      endTime: this._normalizeString(vehicle.endTime ?? undefined) ?? undefined,
-    } satisfies StationVehicleSnapshot;
-  }
-
-  private _collectVehicleIds(snapshots: readonly StationVehicleSnapshot[]): ReadonlySet<string> {
-    const ids = new Set<string>();
-
-    for (const snapshot of snapshots) {
-      if (snapshot.vehicleId) {
-        ids.add(snapshot.vehicleId);
-      }
-    }
-
-    return ids;
-  }
-
-  private _mapSnapshotsToRecords(
-    snapshots: readonly StationVehicleSnapshot[],
-    vehicleDetailsMap: VehicleDetailsMap,
-  ): StaffVehicleRecord[] {
+  private _mapStaffVehicles(vehicleDtos: readonly VehicleDetailsDto[]): StaffVehicleRecord[] {
     const records: StaffVehicleRecord[] = [];
 
-    for (const snapshot of snapshots) {
-      const detail = snapshot.vehicleId ? vehicleDetailsMap.get(snapshot.vehicleId) : undefined;
-      const vehicleDetails = detail ? this._cloneVehicleDetails(detail) : undefined;
-      const upcomingBookings = vehicleDetails?.upcomingBookings ?? [];
+    for (const vehicleDto of vehicleDtos ?? []) {
+      if (!vehicleDto) {
+        continue;
+      }
+
+      const vehicleId = this._normalizeString(vehicleDto.vehicleId);
+      const vehicleAtStationId = this._normalizeString(vehicleDto.vehicleAtStationId);
+      const stationId =
+        this._readExtraField(vehicleDto, 'stationId') ??
+        this._extractStationId(vehicleAtStationId) ??
+        '__unknown_station__';
+
+      const stationName =
+        this._readExtraField(vehicleDto, 'stationName') ?? this._fallbackStationName(stationId);
+
+      const stationAddress = this._readExtraField(vehicleDto, 'stationAddress');
+
+      const startTime =
+        this._readExtraField(vehicleDto, 'startTime') ??
+        this._readExtraField(vehicleDto, 'currentRentalStart') ??
+        this._readExtraField(vehicleDto, 'currentStartTime');
+
+      const endTime =
+        this._readExtraField(vehicleDto, 'endTime') ??
+        this._readExtraField(vehicleDto, 'currentRentalEnd') ??
+        this._readExtraField(vehicleDto, 'currentEndTime');
 
       records.push({
-        stationId: snapshot.stationId,
-        stationName: snapshot.stationName,
-        stationAddress: snapshot.stationAddress,
-        vehicleAtStationId: snapshot.vehicleAtStationId,
-        vehicleId: snapshot.vehicleId,
-        status: snapshot.status,
-        currentBatteryCapacityKwh: snapshot.currentBatteryCapacityKwh,
-        startTime: snapshot.startTime,
-        endTime: snapshot.endTime ?? undefined,
-        vehicleDetails,
-        upcomingBookings,
+        vehicleId,
+        vehicleAtStationId,
+        stationId,
+        stationName,
+        stationAddress: stationAddress ?? undefined,
+        status: vehicleDto.status ?? undefined,
+        startTime,
+        endTime,
+        currentBatteryCapacityKwh: vehicleDto.currentBatteryCapacityKwh ?? undefined,
+        vehicleDetails: vehicleDto,
+        upcomingBookings: this._mapUpcomingBookings(vehicleDto.upcomingBookings),
       });
     }
 
-    return records.sort((first, second) => this._compareRecords(first, second));
+    return records.sort((first, second) => {
+      const stationCompare = first.stationName.localeCompare(second.stationName);
+      if (stationCompare !== 0) {
+        return stationCompare;
+      }
+
+      const firstLabel = first.vehicleAtStationId ?? first.vehicleId ?? '';
+      const secondLabel = second.vehicleAtStationId ?? second.vehicleId ?? '';
+      return firstLabel.localeCompare(secondLabel);
+    });
   }
 
-  private _cloneVehicleDetails(detail: VehicleDetailsDto): VehicleDetailsDto {
-    const safeBookings = this._sanitizeBookings(detail.upcomingBookings ?? []);
-    return {
-      ...detail,
-      upcomingBookings: [...safeBookings],
-    } satisfies VehicleDetailsDto;
-  }
+  private _mapUpcomingBookings(
+    values: readonly BookingBriefDto[] | null | undefined,
+  ): readonly BookingBriefDto[] {
+    if (!values || values.length === 0) {
+      return [];
+    }
 
-  private _sanitizeBookings(
-    bookings: readonly (BookingBriefDto | null | undefined)[],
-  ): BookingBriefDto[] {
-    const results: BookingBriefDto[] = [];
-
-    for (const booking of bookings) {
+    const bookings: BookingBriefDto[] = [];
+    for (const booking of values) {
       if (!booking) {
         continue;
       }
+      const startDate = this._normalizeString(booking.startDate ?? undefined);
+      const endDate = this._normalizeString(booking.endDate ?? undefined);
+      const renterId = this._normalizeString(booking.renterId ?? undefined);
+      const bookingId = this._normalizeString(booking.bookingId ?? undefined);
 
-      results.push({
-        startDate: this._normalizeString(booking.startDate) ?? undefined,
-        endDate: this._normalizeString(booking.endDate) ?? undefined,
-        renterId: this._normalizeString(booking.renterId) ?? undefined,
-        bookingId: this._normalizeString(booking.bookingId) ?? undefined,
+      bookings.push({
+        startDate,
+        endDate,
+        renterId,
+        bookingId,
       });
     }
 
-    return results;
+    return bookings;
   }
 
-  private _compareRecords(first: StaffVehicleRecord, second: StaffVehicleRecord): number {
-    const stationComparison = first.stationName.localeCompare(second.stationName);
-    if (stationComparison !== 0) {
-      return stationComparison;
+  private _readExtraField(source: VehicleDetailsDto, key: string): string | undefined {
+    const rawValue = (source as Record<string, unknown>)[key];
+    if (typeof rawValue === 'string') {
+      return this._normalizeString(rawValue);
     }
-
-    const firstDisplay = this._resolveVehicleDisplay(first);
-    const secondDisplay = this._resolveVehicleDisplay(second);
-    return firstDisplay.localeCompare(secondDisplay);
+    return undefined;
   }
 
-  private _resolveVehicleDisplay(record: StaffVehicleRecord): string {
-    const make = this._normalizeString(record.vehicleDetails?.make ?? undefined);
-    const model = this._normalizeString(record.vehicleDetails?.model ?? undefined);
-    const modelYear = record.vehicleDetails?.modelYear;
-    const parts = [make, model, modelYear ? modelYear.toString() : undefined].filter(
-      (value): value is string => !!value,
-    );
-
-    if (parts.length > 0) {
-      return parts.join(' ');
+  private _extractStationId(vehicleAtStationId?: string): string | undefined {
+    if (!vehicleAtStationId) {
+      return undefined;
     }
 
-    if (record.vehicleAtStationId) {
-      return `Vehicle ${this._shortenIdentifier(record.vehicleAtStationId)}`;
+    const normalized = vehicleAtStationId.trim();
+    if (normalized.length === 0) {
+      return undefined;
     }
 
-    if (record.vehicleId) {
-      return `Vehicle ${this._shortenIdentifier(record.vehicleId)}`;
+    const separators = [':', '_', '-'];
+    for (const separator of separators) {
+      const [maybeStation] = normalized.split(separator);
+      if (maybeStation && maybeStation.length > 0 && maybeStation !== normalized) {
+        return maybeStation;
+      }
     }
 
-    return 'Vehicle';
+    return undefined;
+  }
+
+  private _fallbackStationName(stationId: string): string {
+    if (!stationId || stationId === '__unknown_station__') {
+      return 'Unknown station';
+    }
+    return `Station ${this._shortenIdentifier(stationId)}`;
+  }
+
+  private _normalizeString(value: string | null | undefined): string | undefined {
+    if (!value) {
+      return undefined;
+    }
+
+    const trimmed = value.trim();
+    return trimmed.length > 0 ? trimmed : undefined;
   }
 
   private _shortenIdentifier(value: string): string {
     if (value.length <= 8) {
       return value;
     }
-
     return `${value.slice(0, 4)}...${value.slice(-4)}`;
-  }
-
-  private _normalizeString(value: string | null | undefined): string | undefined {
-    if (value === null || value === undefined) {
-      return undefined;
-    }
-
-    const trimmed = value.trim();
-    return trimmed.length > 0 ? trimmed : undefined;
   }
 
   private _resolveErrorMessage(error: unknown): string {

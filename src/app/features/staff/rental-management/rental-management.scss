@@ -504,6 +504,10 @@
   gap: 0.75rem;
 }
 
+.details-panel__definition--columns {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
 .details-panel__definition div {
   display: grid;
   gap: 0.25rem;
