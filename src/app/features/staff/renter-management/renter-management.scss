@@ -62,7 +62,7 @@
 .toolbar {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 1rem;
 }
@@ -70,6 +70,7 @@
 .toolbar__search {
   position: relative;
   flex: 1 1 320px;
+  max-width: 420px;
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -114,9 +115,10 @@
 
 .toolbar__filters {
   display: flex;
+  flex: 1 1 420px;
   flex-wrap: wrap;
   gap: 0.75rem;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .filter-chip {
@@ -259,10 +261,14 @@
 }
 
 .renter-card__header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: start;
   gap: 0.75rem;
+}
+
+.renter-card__header .badge {
+  justify-self: end;
 }
 
 .renter-card__identifier {
@@ -481,6 +487,15 @@
 @media (max-width: 768px) {
   .toolbar {
     align-items: stretch;
+  }
+
+  .toolbar__search {
+    max-width: none;
+  }
+
+  .toolbar__filters {
+    flex: 1 1 100%;
+    justify-content: space-between;
   }
 
   .toolbar__actions {
