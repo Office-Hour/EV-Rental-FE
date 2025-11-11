@@ -1,0 +1,306 @@
+<section class="booking-workflow">
+  <header class="booking-workflow__header">
+    <div>
+      <h1>Booking Workflow</h1>
+      <p>
+        Complete the rental lifecycle for booking <strong>{{ bookingIdValue() ?? '--' }}</strong
+        >.
+      </p>
+    </div>
+    <a routerLink="/staff/bookings" class="booking-workflow__back">
+      <mat-icon aria-hidden="true">arrow_back</mat-icon>
+      <span>Back to bookings</span>
+    </a>
+  </header>
+
+  @if (hasMissingBooking()) {
+    <div class="booking-workflow__alert" role="alert">
+      <mat-icon aria-hidden="true">error</mat-icon>
+      <div>
+        <h2>Booking not found</h2>
+        <p>
+          The booking information could not be loaded. Return to the booking list and try again.
+        </p>
+      </div>
+    </div>
+  } @else {
+    @if (booking(); as record) {
+      <section class="booking-summary" aria-labelledby="booking-summary-title">
+        <h2 id="booking-summary-title">Booking summary</h2>
+        <div class="booking-summary__grid">
+          <div>
+            <span class="booking-summary__label">Booking ID</span>
+            <span class="booking-summary__value">{{ record.bookingId }}</span>
+          </div>
+          <div>
+            <span class="booking-summary__label">Customer</span>
+            <span class="booking-summary__value">{{ record.renterId ?? '—' }}</span>
+          </div>
+          <div>
+            <span class="booking-summary__label">Start Time</span>
+            <span class="booking-summary__value">{{ record.startTime ?? '—' }}</span>
+          </div>
+          <div>
+            <span class="booking-summary__label">End Time</span>
+            <span class="booking-summary__value">{{ record.endTime ?? '—' }}</span>
+          </div>
+          <div>
+            <span class="booking-summary__label">Verification Status</span>
+            <span class="booking-summary__value">{{ record.verificationStatus ?? '—' }}</span>
+          </div>
+          <div>
+            <span class="booking-summary__label">Rental Status</span>
+            <span class="booking-summary__value">{{ record.rental?.status ?? 'Not created' }}</span>
+          </div>
+        </div>
+      </section>
+    }
+
+    <form class="workflow-form" [formGroup]="form" (ngSubmit)="submitWorkflow()" novalidate>
+      <fieldset class="workflow-form__section" formGroupName="booking">
+        <legend>Booking check-in</legend>
+        <div class="workflow-form__grid">
+          <label class="workflow-form__field">
+            <span>Verified by staff ID</span>
+            <input type="text" formControlName="verifiedByStaffId" autocomplete="off" />
+            @if (
+              form.get('booking.verifiedByStaffId')?.touched &&
+              form.get('booking.verifiedByStaffId')?.invalid
+            ) {
+              <span class="workflow-form__error">Staff ID is required.</span>
+            }
+          </label>
+          <label class="workflow-form__field">
+            <span>Verification status</span>
+            <select formControlName="verificationStatus">
+              <option [value]="BookingVerificationStatusEnum.Approved">Approved</option>
+              <option [value]="BookingVerificationStatusEnum.Pending">Pending</option>
+              <option [value]="BookingVerificationStatusEnum.RejectedMismatch">
+                Rejected (Mismatch)
+              </option>
+              <option [value]="BookingVerificationStatusEnum.RejectedOther">
+                Rejected (Other)
+              </option>
+            </select>
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="workflow-form__section" formGroupName="rental">
+        <legend>Rental creation</legend>
+        <div class="workflow-form__grid">
+          <label class="workflow-form__field">
+            <span>Rental start time</span>
+            <input type="datetime-local" formControlName="startTime" />
+            @if (form.get('rental.startTime')?.touched && form.get('rental.startTime')?.invalid) {
+              <span class="workflow-form__error">Start time is required.</span>
+            }
+          </label>
+          <label class="workflow-form__field">
+            <span>Rental end time</span>
+            <input type="datetime-local" formControlName="endTime" />
+            @if (form.get('rental.endTime')?.touched && form.get('rental.endTime')?.invalid) {
+              <span class="workflow-form__error">End time is required.</span>
+            }
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="workflow-form__section" formGroupName="contract">
+        <legend>Contract</legend>
+        <label class="workflow-form__field workflow-form__field--single">
+          <span>eSign provider</span>
+          <select formControlName="provider">
+            <option [value]="EsignProvider.Native">Native</option>
+            <option [value]="EsignProvider.Docusign">DocuSign</option>
+            <option [value]="EsignProvider.Adobesign">Adobe Sign</option>
+            <option [value]="EsignProvider.Signnow">SignNow</option>
+            <option [value]="EsignProvider.Other">Other</option>
+          </select>
+        </label>
+      </fieldset>
+
+      <fieldset class="workflow-form__section" formGroupName="inspection">
+        <legend>Vehicle inspection</legend>
+        <div class="workflow-form__grid">
+          <label class="workflow-form__field">
+            <span>Battery capacity (kWh)</span>
+            <input type="number" formControlName="currentBatteryCapacityKwh" min="0" step="1" />
+            @if (
+              form.get('inspection.currentBatteryCapacityKwh')?.touched &&
+              form.get('inspection.currentBatteryCapacityKwh')?.invalid
+            ) {
+              <span class="workflow-form__error">Enter a non-negative value.</span>
+            }
+          </label>
+          <label class="workflow-form__field">
+            <span>Inspection time</span>
+            <input type="datetime-local" formControlName="inspectedAt" />
+            @if (
+              form.get('inspection.inspectedAt')?.touched &&
+              form.get('inspection.inspectedAt')?.invalid
+            ) {
+              <span class="workflow-form__error">Inspection time is required.</span>
+            }
+          </label>
+          <label class="workflow-form__field">
+            <span>Inspector staff ID</span>
+            <input type="text" formControlName="inspectorStaffId" autocomplete="off" />
+            @if (
+              form.get('inspection.inspectorStaffId')?.touched &&
+              form.get('inspection.inspectorStaffId')?.invalid
+            ) {
+              <span class="workflow-form__error">Inspector staff ID is required.</span>
+            }
+          </label>
+          <label class="workflow-form__field">
+            <span>Inspection report URL (optional)</span>
+            <input type="url" formControlName="url" autocomplete="off" />
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="workflow-form__section" formGroupName="renterSignature">
+        <legend>Renter signature</legend>
+        <div class="workflow-form__grid">
+          <label class="workflow-form__field">
+            <span>Document URL</span>
+            <input type="url" formControlName="documentUrl" autocomplete="off" />
+          </label>
+          <label class="workflow-form__field">
+            <span>Document hash</span>
+            <input type="text" formControlName="documentHash" autocomplete="off" />
+          </label>
+          <label class="workflow-form__field">
+            <span>Signature event</span>
+            <select formControlName="signatureEvent">
+              <option [value]="SignatureEvent.Pickup">Pickup</option>
+              <option [value]="SignatureEvent.Dropoff">Dropoff</option>
+            </select>
+          </label>
+          <label class="workflow-form__field">
+            <span>Signature type</span>
+            <select formControlName="type">
+              <option [value]="SignatureType.Drawn">Drawn</option>
+              <option [value]="SignatureType.Typed">Typed</option>
+              <option [value]="SignatureType.DigitalCert">Digital Certificate</option>
+              <option [value]="SignatureType.OnPaper">On Paper</option>
+            </select>
+          </label>
+          <label class="workflow-form__field">
+            <span>Signed at</span>
+            <input type="datetime-local" formControlName="signedAt" />
+            @if (
+              form.get('renterSignature.signedAt')?.touched &&
+              form.get('renterSignature.signedAt')?.invalid
+            ) {
+              <span class="workflow-form__error">Signature time is required.</span>
+            }
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="workflow-form__section" formGroupName="staffSignature">
+        <legend>Staff signature</legend>
+        <div class="workflow-form__grid">
+          <label class="workflow-form__field">
+            <span>Document URL</span>
+            <input type="url" formControlName="documentUrl" autocomplete="off" />
+          </label>
+          <label class="workflow-form__field">
+            <span>Document hash</span>
+            <input type="text" formControlName="documentHash" autocomplete="off" />
+          </label>
+          <label class="workflow-form__field">
+            <span>Signature event</span>
+            <select formControlName="signatureEvent">
+              <option [value]="SignatureEvent.Pickup">Pickup</option>
+              <option [value]="SignatureEvent.Dropoff">Dropoff</option>
+            </select>
+          </label>
+          <label class="workflow-form__field">
+            <span>Signature type</span>
+            <select formControlName="type">
+              <option [value]="SignatureType.Drawn">Drawn</option>
+              <option [value]="SignatureType.Typed">Typed</option>
+              <option [value]="SignatureType.DigitalCert">Digital Certificate</option>
+              <option [value]="SignatureType.OnPaper">On Paper</option>
+            </select>
+          </label>
+          <label class="workflow-form__field">
+            <span>Signed at</span>
+            <input type="datetime-local" formControlName="signedAt" />
+            @if (
+              form.get('staffSignature.signedAt')?.touched &&
+              form.get('staffSignature.signedAt')?.invalid
+            ) {
+              <span class="workflow-form__error">Signature time is required.</span>
+            }
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="workflow-form__section" formGroupName="receive">
+        <legend>Vehicle receive</legend>
+        <div class="workflow-form__grid">
+          <label class="workflow-form__field">
+            <span>Received at</span>
+            <input type="datetime-local" formControlName="receivedAt" />
+            @if (
+              form.get('receive.receivedAt')?.touched && form.get('receive.receivedAt')?.invalid
+            ) {
+              <span class="workflow-form__error">Received time is required.</span>
+            }
+          </label>
+          <label class="workflow-form__field">
+            <span>Receiving staff ID</span>
+            <input type="text" formControlName="receivedByStaffId" autocomplete="off" />
+            @if (
+              form.get('receive.receivedByStaffId')?.touched &&
+              form.get('receive.receivedByStaffId')?.invalid
+            ) {
+              <span class="workflow-form__error">Receiving staff ID is required.</span>
+            }
+          </label>
+        </div>
+      </fieldset>
+
+      <div class="workflow-form__actions">
+        <button type="submit" [disabled]="processingState()">Start workflow</button>
+        @if (processingState()) {
+          <span class="workflow-form__status">Processing: {{ workflowStepLabel() }}</span>
+        }
+      </div>
+    </form>
+  }
+
+  <section class="workflow-status" aria-live="polite">
+    <h2>Status</h2>
+    <p>
+      Current step: <strong>{{ workflowStepLabel() }}</strong>
+    </p>
+    @if (processingState()) {
+      <p class="workflow-status__note">The workflow is running. Please keep this page open.</p>
+    }
+    @if (errorState(); as message) {
+      <div class="workflow-status__error" role="alert">
+        <mat-icon aria-hidden="true">error</mat-icon>
+        <span>{{ message }}</span>
+      </div>
+    }
+    @if (resultState(); as outcome) {
+      <div class="workflow-status__success" role="status">
+        <mat-icon aria-hidden="true">check_circle</mat-icon>
+        <div>
+          <p>Workflow completed successfully.</p>
+          <ul>
+            <li>Rental ID: {{ outcome.rentalId }}</li>
+            <li>Contract ID: {{ outcome.contractId }}</li>
+            <li>Inspection ID: {{ outcome.inspectionId }}</li>
+            <li>Signature IDs: {{ outcome.signatureIds[0] }}, {{ outcome.signatureIds[1] }}</li>
+          </ul>
+        </div>
+      </div>
+    }
+  </section>
+</section>

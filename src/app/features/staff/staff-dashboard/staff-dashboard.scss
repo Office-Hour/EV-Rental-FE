@@ -580,6 +580,30 @@
   line-height: 1.45;
 }
 
+.details-panel__actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.details-panel__primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--mat-sys-primary, #2563eb);
+  color: var(--mat-sys-on-primary, #fff);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.details-panel__primary:hover {
+  background: color-mix(in srgb, var(--mat-sys-primary, #2563eb) 90%, #fff);
+  box-shadow: 0 12px 24px rgb(37 99 235 / 25%);
+}
+
 @keyframes spin {
   to {
     transform: rotate(360deg);
