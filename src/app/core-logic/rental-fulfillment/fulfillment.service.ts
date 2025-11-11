@@ -22,6 +22,7 @@ import {
 } from '../../../contract';
 import { BookingsService } from '../bookings/bookings.service';
 import { UserService } from '../user/user.service';
+import { TokenService } from '../token/token.service';
 import {
   BookingFulfillmentSummary,
   FulfillmentArtifact,
@@ -59,6 +60,7 @@ export class FulfillmentOrchestrator {
   private readonly _rentalService = inject(RentalService);
   private readonly _bookingsService = inject(BookingsService);
   private readonly _userService = inject(UserService);
+  private readonly _tokenService = inject(TokenService);
   private readonly _state = inject(FulfillmentStateStore);
   private readonly _analytics = inject(FulfillmentAnalyticsService);
 
@@ -114,6 +116,11 @@ export class FulfillmentOrchestrator {
     const bookingId = this._requireBookingId();
     const startedAt = this._now();
     const staffId = this._resolveStaffId();
+
+    if (!staffId) {
+      const error = new Error('Không xác định được nhân viên duyệt booking.');
+      return this._handleStepError('checkin', error, startedAt);
+    }
 
     this._state.setBusy(true);
     this._state.markStepInProgress('checkin');
@@ -577,6 +584,11 @@ export class FulfillmentOrchestrator {
       return userId;
     }
 
+    const tokenUserId = this._resolveTokenUserId();
+    if (tokenUserId) {
+      return tokenUserId;
+    }
+
     const summary = this._state.summary();
     return this._normalizeString(summary?.booking?.verifiedByStaffId);
   }
@@ -612,6 +624,40 @@ export class FulfillmentOrchestrator {
 
     const trimmed = value.trim();
     return trimmed.length > 0 ? trimmed : undefined;
+  }
+
+  private _resolveTokenUserId(): string | undefined {
+    const accessToken = this._tokenService.accessToken.token;
+    const token = this._normalizeString(accessToken);
+    if (!token) {
+      return undefined;
+    }
+
+    try {
+      const payload = this._tokenService.decodeToken(token);
+      const staffId = this._normalizeString(payload.StaffId);
+      if (staffId) {
+        return staffId;
+      }
+
+      const subject = this._normalizeString(payload.sub);
+      if (subject) {
+        return subject;
+      }
+
+      const rawPayload = payload as Record<string, unknown>;
+      const nameIdentifierKey =
+        'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier';
+      const nameIdentifierClaim = this._normalizeString(
+        typeof rawPayload[nameIdentifierKey] === 'string'
+          ? (rawPayload[nameIdentifierKey] as string)
+          : undefined,
+      );
+
+      return nameIdentifierClaim;
+    } catch {
+      return undefined;
+    }
   }
 
   private _toFulfillmentError(error: unknown): FulfillmentError {

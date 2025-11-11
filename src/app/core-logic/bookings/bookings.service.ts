@@ -25,8 +25,6 @@ import {
   VehicleDetailsDto,
   VehicleDetailsDtoApiResponse,
 } from '../../../contract';
-import type { BookingStatus, BookingVerificationStatus } from '../../../contract';
-import { catchError, finalize, forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
 import {
   BookingFulfillmentSummary,
   FulfillmentTimelineEvent,
