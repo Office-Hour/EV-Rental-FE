@@ -9,6 +9,9 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../core-logic/auth/auth.service';
 import { LoginRequest } from '../../../../contract';
+import { ToastService } from '../../../lib/common-ui/services/toast/toast.service';
+import { extractAuthErrorMessage } from '../../../core-logic/auth/auth-error.util';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-sign-in',
@@ -32,6 +35,7 @@ import { LoginRequest } from '../../../../contract';
 export class SignInComponent {
   private _formBuilder = inject(FormBuilder);
   private _authService = inject(AuthService);
+  private _toastService = inject(ToastService);
 
   signInForm: FormGroup;
   isLoading = signal(false);
@@ -64,16 +68,22 @@ export class SignInComponent {
     };
 
     // Sign in
-    this._authService.signIn(credentials).subscribe({
-      next: () => {
-        this.isLoading.set(false);
-      },
-      error: (error) => {
-        console.error('Sign in error:', error);
-        // Reset loading state
-        this.isLoading.set(false);
-      },
-    });
+    this._authService
+      .signIn(credentials)
+      .pipe(finalize(() => this.isLoading.set(false)))
+      .subscribe({
+        next: () => {
+          this._toastService.success('Welcome back! You are now signed in.');
+        },
+        error: (error) => {
+          console.error('Sign in error:', error);
+          const message = extractAuthErrorMessage(
+            error,
+            'Unable to sign in. Check your credentials and try again.',
+          );
+          this._toastService.error(message);
+        },
+      });
   }
 
   /**

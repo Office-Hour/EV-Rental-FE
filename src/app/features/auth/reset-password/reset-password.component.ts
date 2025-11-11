@@ -15,6 +15,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { AuthService } from '../../../core-logic/auth/auth.service';
+import { ToastService } from '../../../lib/common-ui/services/toast/toast.service';
 
 /**
  * Custom validator for password requirements
@@ -58,6 +59,7 @@ export class ResetPasswordComponent {
   private _formBuilder = inject(FormBuilder);
   private _authService = inject(AuthService);
   private _router = inject(Router);
+  private _toastService = inject(ToastService);
 
   resetPasswordForm: FormGroup;
   isLoading = signal(false);
@@ -100,6 +102,8 @@ export class ResetPasswordComponent {
   resetPassword(): void {
     // Return if the form is invalid
     if (this.resetPasswordForm.invalid) {
+      this.resetPasswordForm.markAllAsTouched();
+      this._toastService.error('Please fix the validation errors before continuing.');
       return;
     }
 
@@ -116,6 +120,7 @@ export class ResetPasswordComponent {
       // Set success state
       this.isPasswordReset.set(true);
       this.isLoading.set(false);
+      this._toastService.success('Your password has been updated. You can sign in with it now.');
     }, 2000);
   }
 

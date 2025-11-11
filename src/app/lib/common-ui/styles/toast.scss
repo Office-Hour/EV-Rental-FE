@@ -1,0 +1,51 @@
+.app-toast-container {
+  --app-toast-bg: var(--mat-sys-surface-container-highest, #111827);
+  --app-toast-fg: var(--mat-sys-on-surface, #f9fafb);
+  --app-toast-shadow: 0 20px 25px -5px rgb(15 23 42 / 0.25), 0 10px 10px -5px rgb(15 23 42 / 0.15);
+
+  &.app-toast-container--success {
+    --app-toast-bg: var(--mat-sys-success, #065f46);
+    --app-toast-fg: var(--mat-sys-on-success, #ecfdf5);
+  }
+
+  &.app-toast-container--error {
+    --app-toast-bg: var(--mat-sys-error, #7f1d1d);
+    --app-toast-fg: var(--mat-sys-on-error, #fee2e2);
+  }
+
+  &.app-toast-container--warning {
+    --app-toast-bg: var(--mat-sys-tertiary, #92400e);
+    --app-toast-fg: var(--mat-sys-on-tertiary, #fef3c7);
+  }
+
+  &.app-toast-container--info {
+    --app-toast-bg: var(--mat-sys-primary, #1d4ed8);
+    --app-toast-fg: var(--mat-sys-on-primary, #eff6ff);
+  }
+
+  .mdc-snackbar__surface {
+    border-radius: 0.75rem;
+    background-color: var(--app-toast-bg);
+    color: var(--app-toast-fg);
+    padding: 0.75rem 1rem;
+    box-shadow: var(--app-toast-shadow);
+    min-width: 280px;
+  }
+
+  .mdc-snackbar__label {
+    font-size: 0.95rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    line-height: 1.5;
+  }
+
+  .mdc-button {
+    color: var(--app-toast-fg);
+    font-weight: 600;
+    text-transform: none;
+  }
+
+  .mdc-snackbar__actions {
+    margin-inline-start: 1.5rem;
+  }
+}

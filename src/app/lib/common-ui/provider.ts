@@ -1,6 +1,7 @@
 import {
   EnvironmentProviders,
   Provider,
+  importProvidersFrom,
   inject,
   provideEnvironmentInitializer,
 } from '@angular/core';
@@ -8,6 +9,7 @@ import { SplashScreenService } from './services/splash-screen/splash-screen.serv
 import { provideScrollbarOptions } from 'ngx-scrollbar';
 import { provideCacheableAnimationLoader, provideLottieOptions } from 'ngx-lottie';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 /**
  * Provider
@@ -19,6 +21,7 @@ export const provideCommonUI = (): (Provider | EnvironmentProviders)[] => {
 
     //Services
     provideEnvironmentInitializer(() => inject(SplashScreenService)),
+    importProvidersFrom(MatSnackBarModule),
 
     //Lottie Animation
     provideLottieOptions({

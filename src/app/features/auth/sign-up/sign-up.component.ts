@@ -17,6 +17,9 @@ import { MatInput } from '@angular/material/input';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { AuthService } from '../../../core-logic/auth/auth.service';
 import { RegisterRequest } from '../../../../contract';
+import { ToastService } from '../../../lib/common-ui/services/toast/toast.service';
+import { extractAuthErrorMessage } from '../../../core-logic/auth/auth-error.util';
+import { finalize } from 'rxjs';
 
 /**
  * Custom validator for password requirements
@@ -61,6 +64,7 @@ export class SignUpComponent {
   private _formBuilder = inject(FormBuilder);
   private _authService = inject(AuthService);
   private _router = inject(Router);
+  private _toastService = inject(ToastService);
 
   signUpForm: FormGroup;
   isLoading = signal(false);
@@ -135,17 +139,24 @@ export class SignUpComponent {
     };
 
     // Sign up
-    this._authService.signUp(signUpData).subscribe({
-      next: () => {
-        // Show success message
-        //<AlertComponent>
-      },
-      error: (error) => {
-        console.error('Sign up error:', error);
-        // Reset loading state
-        this.isLoading.set(false);
-      },
-    });
+    this._authService
+      .signUp(signUpData)
+      .pipe(finalize(() => this.isLoading.set(false)))
+      .subscribe({
+        next: () => {
+          this._toastService.success(
+            'Account created successfully. Redirecting to your personalized experience.',
+          );
+        },
+        error: (error) => {
+          console.error('Sign up error:', error);
+          const message = extractAuthErrorMessage(
+            error,
+            'Unable to complete sign up. Please review your details and try again.',
+          );
+          this._toastService.error(message);
+        },
+      });
   }
 
   /**
