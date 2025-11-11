@@ -1,77 +1,95 @@
 {
-  "[jsonc]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "conventionalCommits.gitmoji": false,
-  "conventionalCommits.promptBody": false,
-  "conventionalCommits.promptFooter": false,
-  "conventionalCommits.scopes": ["be", "fe"],
-  "cSpell.words": [
-    "caramellatte",
-    "cinemarooms",
-    "commitlint",
-    "gsap",
-    "iconify",
-    "ICTISO",
-    "logviareg",
-    "mockapi",
-    "MOMO",
-    "primeicons",
-    "primereact",
-    "ptag",
-    "reactbit",
-    "Reactbits",
-    "Registerables",
-    "shadcn",
-    "Showtimes",
-    "sonar",
-    "sonarjs",
-    "sonner",
-    "vite",
-    "Vitest"
-  ],
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.formatOnSave": true,
-  "editor.guides.bracketPairs": true,
-  "editor.inlineSuggest.syntaxHighlightingEnabled": true,
-  "highlight-matching-tag.highlightFromContent": true,
-  "highlight-matching-tag.highlightSelfClosing": true,
-  "highlight-matching-tag.styles": {
-    "closing": {
-      "left": {
-        "underline": "yellow"
-      },
-      "name": {
-        "surround": "yellow",
-        "underline": "yellow"
-      },
-      "right": {
-        "underline": "yellow"
-      }
+    "[jsonc]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
-    "opening": {
-      "left": {
-        "underline": "yellow"
-      },
-      "name": {
-        "surround": "yellow",
-        "underline": "yellow"
-      },
-      "right": {
-        "underline": "yellow"
-      }
+    "conventionalCommits.gitmoji": false,
+    "conventionalCommits.promptBody": false,
+    "conventionalCommits.promptFooter": false,
+    "conventionalCommits.scopes": [
+        "be",
+        "fe"
+    ],
+    "cSpell.words": [
+        "caramellatte",
+        "cinemarooms",
+        "commitlint",
+        "gsap",
+        "iconify",
+        "ICTISO",
+        "logviareg",
+        "mockapi",
+        "MOMO",
+        "primeicons",
+        "primereact",
+        "ptag",
+        "reactbit",
+        "Reactbits",
+        "Registerables",
+        "shadcn",
+        "Showtimes",
+        "sonar",
+        "sonarjs",
+        "sonner",
+        "vite",
+        "Vitest"
+    ],
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.guides.bracketPairs": true,
+    "editor.inlineSuggest.syntaxHighlightingEnabled": true,
+    "highlight-matching-tag.highlightFromContent": true,
+    "highlight-matching-tag.highlightSelfClosing": true,
+    "highlight-matching-tag.styles": {
+        "closing": {
+            "left": {
+                "underline": "yellow"
+            },
+            "name": {
+                "surround": "yellow",
+                "underline": "yellow"
+            },
+            "right": {
+                "underline": "yellow"
+            }
+        },
+        "opening": {
+            "left": {
+                "underline": "yellow"
+            },
+            "name": {
+                "surround": "yellow",
+                "underline": "yellow"
+            },
+            "right": {
+                "underline": "yellow"
+            }
+        }
+    },
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "json.schemaDownload.enable": true,
+    "workbench.tree.indent": 15,
+    "workbench.tree.renderIndentGuides": "always",
+    "angular-schematics.schematicsDefaultOptions": {
+        "angular-*": {
+            "style": "scss",
+            "externalTemplate": true
+        }
+    },
+    "stylelint.packageManager": "pnpm",
+    "stylelint.validate": [
+        "css",
+        "postcss",
+        "scss"
+    ],
+    "chat.promptFilesRecommendations": {
+        "speckit.constitution": true,
+        "speckit.specify": true,
+        "speckit.plan": true,
+        "speckit.tasks": true,
+        "speckit.implement": true
+    },
+    "chat.tools.terminal.autoApprove": {
+        ".specify/scripts/bash/": true,
+        ".specify/scripts/powershell/": true
     }
-  },
-  "javascript.updateImportsOnFileMove.enabled": "always",
-  "json.schemaDownload.enable": true,
-  "workbench.tree.indent": 15,
-  "workbench.tree.renderIndentGuides": "always",
-  "angular-schematics.schematicsDefaultOptions": {
-    "angular-*": {
-      "style": "scss",
-      "externalTemplate": true
-    }
-  },
-  "stylelint.packageManager": "pnpm",
-  "stylelint.validate": ["css", "postcss", "scss"]
 }
