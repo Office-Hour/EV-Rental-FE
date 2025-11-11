@@ -16,6 +16,8 @@
     "bradlc.vscode-tailwindcss",
     "meganrogge.template-string-converter",
     "usernamehw.errorlens",
-    "cyrilletuzi.angular-schematics"
+    "cyrilletuzi.angular-schematics",
+    "formulahendry.auto-close-tag",
+    "formulahendry.auto-rename-tag"
   ]
 }
