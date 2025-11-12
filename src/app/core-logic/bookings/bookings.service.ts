@@ -129,10 +129,20 @@ export class BookingsService {
 
   loadBookingFulfillmentSummary(
     bookingId: string,
+    options?: { readonly forceRefresh?: boolean },
   ): Observable<BookingFulfillmentSummary | undefined> {
     const normalizedId = this._normalizeString(bookingId);
     if (!normalizedId) {
       return of(undefined);
+    }
+
+    const fetchLatest$ = this.loadStaffBookings().pipe(
+      map((records) => records.find((record) => record.bookingId === normalizedId)),
+      map((record) => (record ? this._toFulfillmentSummary(record) : undefined)),
+    );
+
+    if (options?.forceRefresh) {
+      return fetchLatest$;
     }
 
     const cachedRecord = this._staffBookings().find((record) => record.bookingId === normalizedId);
@@ -140,10 +150,7 @@ export class BookingsService {
       return of(this._toFulfillmentSummary(cachedRecord));
     }
 
-    return this.loadStaffBookings().pipe(
-      map((records) => records.find((record) => record.bookingId === normalizedId)),
-      map((record) => (record ? this._toFulfillmentSummary(record) : undefined)),
-    );
+    return fetchLatest$;
   }
 
   /**

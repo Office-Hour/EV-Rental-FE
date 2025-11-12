@@ -256,6 +256,7 @@ export class AuthService {
         this._userService.userRole = 'renter';
       }
       this._userService.renterId = decodedToken.RenterId?.toString() || undefined;
+      this._userService.staffId = decodedToken.StaffId?.toString() || undefined;
     } catch {
       this._userService.userRole = 'renter';
       this._userService.renterId = undefined;

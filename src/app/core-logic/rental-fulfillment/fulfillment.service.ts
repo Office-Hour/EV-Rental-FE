@@ -83,33 +83,37 @@ export class FulfillmentOrchestrator {
     this._state.reset();
     this._state.setBusy(true);
 
-    return this._bookingsService.loadBookingFulfillmentSummary(normalizedId).pipe(
-      tap((summary) => {
-        this._applySummary(summary);
-      }),
-      finalize(() => {
-        this._state.setBusy(false);
-      }),
-      map(() => void 0),
-      catchError((error) => {
-        this._state.setSummary(undefined);
-        return throwError(() => error);
-      }),
-    );
+    return this._bookingsService
+      .loadBookingFulfillmentSummary(normalizedId, { forceRefresh: true })
+      .pipe(
+        tap((summary) => {
+          this._applySummary(summary);
+        }),
+        finalize(() => {
+          this._state.setBusy(false);
+        }),
+        map(() => void 0),
+        catchError((error) => {
+          this._state.setSummary(undefined);
+          return throwError(() => error);
+        }),
+      );
   }
 
   refresh(): Observable<void> {
     const bookingId = this._requireBookingId();
-    return this._bookingsService.loadBookingFulfillmentSummary(bookingId).pipe(
-      tap((summary) => {
-        this._applySummary(summary);
-      }),
-      map(() => void 0),
-      catchError((error) => {
-        console.warn('Không thể cập nhật trạng thái fulfillment', error);
-        return of(void 0);
-      }),
-    );
+    return this._bookingsService
+      .loadBookingFulfillmentSummary(bookingId, { forceRefresh: true })
+      .pipe(
+        tap((summary) => {
+          this._applySummary(summary);
+        }),
+        map(() => void 0),
+        catchError((error) => {
+          console.warn('Không thể cập nhật trạng thái fulfillment', error);
+          return of(void 0);
+        }),
+      );
   }
 
   checkInBooking(): Observable<void> {
@@ -579,14 +583,11 @@ export class FulfillmentOrchestrator {
   }
 
   private _resolveStaffId(): string | undefined {
-    const userId = this._normalizeString(this._userService.user?.id ?? undefined);
-    if (userId) {
-      return userId;
-    }
+    const staffId = this._normalizeString(this._userService.staffId ?? undefined);
+    console.log(staffId);
 
-    const tokenUserId = this._resolveTokenUserId();
-    if (tokenUserId) {
-      return tokenUserId;
+    if (staffId) {
+      return staffId;
     }
 
     const summary = this._state.summary();
