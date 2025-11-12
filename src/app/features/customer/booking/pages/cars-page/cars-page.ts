@@ -1,10 +1,13 @@
 import {
+  AfterRenderRef,
   ChangeDetectionStrategy,
   Component,
+  EnvironmentInjector,
   ViewChild,
   computed,
   DestroyRef,
   inject,
+  runInInjectionContext,
   signal,
   afterNextRender,
 } from '@angular/core';
@@ -45,6 +48,8 @@ export class CarsPage {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly environmentInjector = inject(EnvironmentInjector);
+  private pendingRenderRef: AfterRenderRef | null = null;
 
   readonly steps: BookingStep[] = [
     { key: 'details', label: 'Thông tin xe' },
@@ -97,6 +102,11 @@ export class CarsPage {
       }
 
       this.setActiveStep(targetIndex, { updateFragment: false });
+    });
+
+    this.destroyRef.onDestroy(() => {
+      this.pendingRenderRef?.destroy();
+      this.pendingRenderRef = null;
     });
   }
 
@@ -163,11 +173,9 @@ export class CarsPage {
     if (currentIndex === 1 && !this.paymentStarted()) {
       return;
     }
-
     if (currentIndex >= this.steps.length - 1) {
       return;
     }
-
     this.setActiveStep(currentIndex + 1);
   }
 
@@ -194,39 +202,43 @@ export class CarsPage {
     const previousIndex = this.activeStep();
     const boundedIndex = Math.max(0, Math.min(this.steps.length - 1, nextIndex));
     const shouldUpdateFragment = options?.updateFragment !== false;
+    const shouldResetPayment = boundedIndex < previousIndex && boundedIndex <= 1;
+    const targetIsStart = boundedIndex === 0;
 
     this.activeStep.set(boundedIndex);
 
-    if (boundedIndex === 0) {
-      this.paymentStarted.set(false);
-    }
-    if (boundedIndex < previousIndex && boundedIndex <= 1) {
-      this.paymentStarted.set(false);
-    }
+    this.pendingRenderRef?.destroy();
 
-    const renderRef = afterNextRender({
-      read: () => {
-        if (!this.matStepper) {
-          return;
-        }
-
-        const desiredIndex = this.activeStep();
-        this.matStepper.selectedIndex = desiredIndex;
-
-        const actualIndex = this.matStepper.selectedIndex;
-        if (shouldUpdateFragment) {
-          const key = this.steps[actualIndex]?.key;
-          if (key) {
-            this.updateFragment(key);
+    runInInjectionContext(this.environmentInjector, () => {
+      this.pendingRenderRef = afterNextRender({
+        write: () => {
+          if (!this.matStepper) {
+            return;
           }
-        }
 
-        if (actualIndex !== desiredIndex) {
-          this.activeStep.set(actualIndex);
-        }
-      },
+          const desiredIndex = this.activeStep();
+          this.matStepper.selectedIndex = desiredIndex;
+
+          const actualIndex = this.matStepper.selectedIndex;
+          if (shouldUpdateFragment || actualIndex !== desiredIndex) {
+            const key = this.steps[actualIndex]?.key;
+            if (key) {
+              this.updateFragment(key);
+            }
+          }
+
+          if (actualIndex !== desiredIndex) {
+            this.activeStep.set(actualIndex);
+          }
+
+          if (targetIsStart || (shouldResetPayment && actualIndex <= 1)) {
+            this.paymentStarted.set(false);
+          }
+
+          this.pendingRenderRef = null;
+        },
+      });
     });
-    this.destroyRef.onDestroy(() => renderRef.destroy());
   }
 
   private updateFragment(step: StepKey): void {
