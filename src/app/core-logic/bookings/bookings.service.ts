@@ -57,6 +57,7 @@ export class BookingsService {
   private readonly _staffBookings = signal<StaffBookingRecord[]>([]);
   private readonly _loading = signal<boolean>(false);
   private readonly _error = signal<string | null>(null);
+  private readonly _bookingIndex = new Map<string, StaffBookingRecord>();
 
   readonly staffBookings = this._staffBookings.asReadonly();
   readonly staffBookingsLoading = this._loading.asReadonly();
@@ -114,6 +115,7 @@ export class BookingsService {
       ),
       tap((records) => {
         this._staffBookings.set(records);
+        this._rebuildBookingIndex(records);
         this._error.set(null);
       }),
       catchError((error: unknown) => {
@@ -136,21 +138,22 @@ export class BookingsService {
       return of(undefined);
     }
 
-    const fetchLatest$ = this.loadStaffBookings().pipe(
-      map((records) => records.find((record) => record.bookingId === normalizedId)),
-      map((record) => (record ? this._toFulfillmentSummary(record) : undefined)),
-    );
-
-    if (options?.forceRefresh) {
-      return fetchLatest$;
-    }
-
-    const cachedRecord = this._staffBookings().find((record) => record.bookingId === normalizedId);
-    if (cachedRecord) {
+    const cachedRecord = this._bookingIndex.get(normalizedId);
+    if (cachedRecord && !options?.forceRefresh) {
       return of(this._toFulfillmentSummary(cachedRecord));
     }
 
-    return fetchLatest$;
+    return this._fetchBookingRecord(normalizedId).pipe(
+      tap((record) => {
+        if (record) {
+          this._upsertBookingRecord(record);
+          return;
+        }
+
+        this._removeBookingRecord(normalizedId);
+      }),
+      map((record) => (record ? this._toFulfillmentSummary(record) : undefined)),
+    );
   }
 
   /**
@@ -164,6 +167,87 @@ export class BookingsService {
     return this._bookingService.apiBookingGet(renterId, pageNumber, pageSize).pipe(
       map((response) => response.data?.items ?? []),
       catchError(() => of<BookingDetailsDto[]>([])),
+    );
+  }
+
+  private _fetchBookingRecord(bookingId: string): Observable<StaffBookingRecord | undefined> {
+    return this._staffService.apiStaffBookingsGet().pipe(
+      map((response: BookingDetailsDtoListApiResponse) => response.data ?? []),
+      map((bookings) =>
+        bookings.find((booking) => this._normalizeString(booking.bookingId) === bookingId),
+      ),
+      switchMap((booking) => {
+        if (!booking) {
+          return of(undefined);
+        }
+
+        const bookingIdentifier = this._normalizeString(booking.bookingId) ?? bookingId;
+        const renterId = this._normalizeString(booking.renterId);
+
+        const renter$ = renterId
+          ? this._bookingService.apiBookingRenterProfileGet(renterId).pipe(
+              map((response: RenterProfileDtoApiResponse) => response.data ?? undefined),
+              catchError(() => of(undefined)),
+            )
+          : of(undefined);
+
+        const rental$ = renterId
+          ? this._rentalService.apiRentalByRenterGet(renterId).pipe(
+              map((response) => response.data?.items ?? []),
+              map((items) =>
+                items.find((item) => this._normalizeString(item.bookingId) === bookingIdentifier),
+              ),
+              switchMap((match) => {
+                const rentalId = this._normalizeString(match?.rentalId);
+                if (!rentalId) {
+                  return of(undefined);
+                }
+
+                return this._rentalService.apiRentalRentalIdGet(rentalId).pipe(
+                  map((response) => response.data ?? undefined),
+                  catchError(() => of(undefined)),
+                );
+              }),
+              catchError(() => of(undefined)),
+            )
+          : of(undefined);
+
+        return forkJoin({ renter: renter$, rental: rental$ }).pipe(
+          switchMap(({ renter, rental }) => {
+            const vehicleId = this._normalizeString(
+              rental?.vehicle?.vehicleId ?? rental?.vehicleId,
+            );
+            const vehicle$ = vehicleId
+              ? this._bookingService.apiBookingVehiclesVehicleIdGet(vehicleId).pipe(
+                  map((response: VehicleDetailsDtoApiResponse) => response.data ?? undefined),
+                  catchError(() => of(undefined)),
+                )
+              : of(undefined);
+
+            return vehicle$.pipe(
+              map(
+                (vehicle) =>
+                  ({
+                    bookingId: bookingIdentifier,
+                    renterId,
+                    status: booking.status,
+                    verificationStatus: booking.verificationStatus,
+                    bookingCreatedAt: this._normalizeString(booking.bookingCreatedAt),
+                    startTime: this._normalizeString(booking.startTime),
+                    endTime: this._normalizeString(booking.endTime),
+                    vehicleAtStationId: this._normalizeString(booking.vehicleAtStationId),
+                    verifiedAt: this._normalizeString(booking.verifiedAt),
+                    verifiedByStaffId: this._normalizeString(booking.verifiedByStaffId),
+                    cancelReason: this._normalizeString(booking.cancelReason),
+                    renterProfile: renter,
+                    rental,
+                    vehicleDetails: vehicle,
+                  }) satisfies StaffBookingRecord,
+              ),
+            );
+          }),
+        );
+      }),
     );
   }
 
@@ -280,6 +364,41 @@ export class BookingsService {
     }
 
     return records.sort((a, b) => this._compareByDateDesc(a.bookingCreatedAt, b.bookingCreatedAt));
+  }
+
+  private _upsertBookingRecord(record: StaffBookingRecord): void {
+    this._bookingIndex.set(record.bookingId, record);
+
+    const current = this._staffBookings();
+    const index = current.findIndex((item) => item.bookingId === record.bookingId);
+    if (index === -1) {
+      return;
+    }
+
+    const next = [...current];
+    next[index] = record;
+    this._staffBookings.set(next);
+  }
+
+  private _removeBookingRecord(bookingId: string): void {
+    this._bookingIndex.delete(bookingId);
+
+    const current = this._staffBookings();
+    const index = current.findIndex((item) => item.bookingId === bookingId);
+    if (index === -1) {
+      return;
+    }
+
+    const next = [...current];
+    next.splice(index, 1);
+    this._staffBookings.set(next);
+  }
+
+  private _rebuildBookingIndex(records: readonly StaffBookingRecord[]): void {
+    this._bookingIndex.clear();
+    for (const record of records) {
+      this._bookingIndex.set(record.bookingId, record);
+    }
   }
 
   private _toFulfillmentSummary(record: StaffBookingRecord): BookingFulfillmentSummary {

@@ -83,21 +83,19 @@ export class FulfillmentOrchestrator {
     this._state.reset();
     this._state.setBusy(true);
 
-    return this._bookingsService
-      .loadBookingFulfillmentSummary(normalizedId, { forceRefresh: true })
-      .pipe(
-        tap((summary) => {
-          this._applySummary(summary);
-        }),
-        finalize(() => {
-          this._state.setBusy(false);
-        }),
-        map(() => void 0),
-        catchError((error) => {
-          this._state.setSummary(undefined);
-          return throwError(() => error);
-        }),
-      );
+    return this._bookingsService.loadBookingFulfillmentSummary(normalizedId).pipe(
+      tap((summary) => {
+        this._applySummary(summary);
+      }),
+      finalize(() => {
+        this._state.setBusy(false);
+      }),
+      map(() => void 0),
+      catchError((error) => {
+        this._state.setSummary(undefined);
+        return throwError(() => error);
+      }),
+    );
   }
 
   refresh(): Observable<void> {
