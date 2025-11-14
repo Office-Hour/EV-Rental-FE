@@ -21,6 +21,8 @@ export interface BookingDetailsDto {
   verificationStatus?: BookingVerificationStatus;
   verifiedByStaffId?: string | null;
   verifiedAt?: string | null;
+  depositAmount?: number;
+  totalAmount?: number;
   cancelReason?: string | null;
 }
 export namespace BookingDetailsDto {}

@@ -1941,6 +1941,14 @@
             "format": "date-time",
             "nullable": true
           },
+          "depositAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalAmount": {
+            "type": "number",
+            "format": "double"
+          },
           "cancelReason": {
             "type": "string",
             "nullable": true
