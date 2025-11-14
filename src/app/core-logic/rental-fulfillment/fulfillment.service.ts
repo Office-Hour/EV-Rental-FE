@@ -377,9 +377,6 @@ export class FulfillmentOrchestrator {
         });
         this._analytics.stepCompleted(bookingId, 'vehicle-receive', this._elapsed(startedAt));
 
-        // Clear inspection id from local storage
-        // AND save rental id to indicate fulfillment is completed
-        localStorage.removeItem(`inspectionId_${rentalId}`);
         localStorage.setItem(`rentalFulfilled_${rentalId}`, 'true');
       }),
       switchMap(() => this.refresh()),
