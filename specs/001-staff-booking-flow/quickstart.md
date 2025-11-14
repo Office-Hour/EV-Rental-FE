@@ -4,7 +4,7 @@
 
 1. Ensure dependencies are installed with `pnpm install`.
 2. Start the application locally via `pnpm start` and navigate to `http://localhost:4200/staff/bookings` using a staff account.
-3. Open a booking that is deposit-paid and pending approval, then click **Tiếp tục xử lý** to reach `/staff/bookings/:bookingId/fulfillment`.
+3. Open a booking that is deposit-paid and pending approval, then click **Tiếp tục xử lý** to reach `/staff/fulfillment/:bookingId`.
 
 ## Required API Sequence
 

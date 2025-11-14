@@ -120,8 +120,8 @@
 
             <dl class="renter-card__details">
               <div class="renter-card__row">
-                <dt>License</dt>
-                <dd>{{ card.licenseDisplay }}</dd>
+                <dt>{{ card.primaryKycLabel }}</dt>
+                <dd>{{ card.primaryKycValue }}</dd>
               </div>
               <div class="renter-card__row">
                 <dt>Address</dt>
@@ -190,9 +190,15 @@
                 <dd>{{ detail.renterId }}</dd>
               </div>
               <div>
-                <dt>Driver license</dt>
-                <dd>{{ detail.driverLicense ?? 'No license on file' }}</dd>
+                <dt>{{ detail.primaryKycLabel }}</dt>
+                <dd>{{ detail.primaryKycValue }}</dd>
               </div>
+              @if (detail.showDriverLicense) {
+                <div>
+                  <dt>Driver license</dt>
+                  <dd>{{ detail.driverLicenseDisplay ?? 'Not provided' }}</dd>
+                </div>
+              }
               <div>
                 <dt>Date of birth</dt>
                 <dd>{{ detail.dateOfBirth ?? 'Unavailable' }}</dd>
@@ -202,6 +208,44 @@
                 <dd>{{ detail.address ?? 'Not provided' }}</dd>
               </div>
             </dl>
+          </section>
+
+          <section class="details-section">
+            <h3>KYC documents</h3>
+            @if (detail.kycDocuments.length > 0) {
+              <ul class="kyc-list">
+                @for (document of detail.kycDocuments; track document.id) {
+                  <li class="kyc-list__item">
+                    <div class="kyc-list__header">
+                      <span class="kyc-list__label">{{ document.label }}</span>
+                      <span
+                        class="badge"
+                        [class.badge--success]="document.statusTone === 'success'"
+                        [class.badge--info]="document.statusTone === 'info'"
+                        [class.badge--danger]="document.statusTone === 'danger'"
+                        [class.badge--pending]="document.statusTone === 'pending'"
+                      >
+                        {{ document.statusText }}
+                      </span>
+                    </div>
+                    <dl class="kyc-list__details">
+                      <div>
+                        <dt>Document number</dt>
+                        <dd>{{ document.numberDisplay }}</dd>
+                      </div>
+                      @if (document.lastUpdatedDisplay) {
+                        <div>
+                          <dt>Last updated</dt>
+                          <dd>{{ document.lastUpdatedDisplay }}</dd>
+                        </div>
+                      }
+                    </dl>
+                  </li>
+                }
+              </ul>
+            } @else {
+              <p class="kyc-empty">No KYC documents have been submitted.</p>
+            }
           </section>
 
           <section class="details-section">
