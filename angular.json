@@ -31,7 +31,7 @@
               "src/vendors.scss",
               "src/app/lib/ngm-dev-blocks/styles/ngm-dev-blocks-styles.scss"
             ],
-            "allowedCommonJsDependencies": ["lottie-web"],
+            "allowedCommonJsDependencies": ["lottie-web", "qrcode"],
             "outputPath": "./dist"
           },
           "configurations": {
