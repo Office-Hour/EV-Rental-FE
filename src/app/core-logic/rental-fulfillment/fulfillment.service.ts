@@ -274,6 +274,8 @@ export class FulfillmentOrchestrator {
           });
         }
         this._analytics.stepCompleted(bookingId, 'inspection', this._elapsed(startedAt));
+        // Save inspection id with rental id in local storage
+        localStorage.setItem(`inspectionId_${rentalId}`, inspectionId ?? '');
       }),
       switchMap(() => this.refresh()),
       catchError((error) => this._handleStepError('inspection', error, startedAt)),
@@ -374,6 +376,11 @@ export class FulfillmentOrchestrator {
           metadata: this._buildMetadata({ rentalId, staffId }),
         });
         this._analytics.stepCompleted(bookingId, 'vehicle-receive', this._elapsed(startedAt));
+
+        // Clear inspection id from local storage
+        // AND save rental id to indicate fulfillment is completed
+        localStorage.removeItem(`inspectionId_${rentalId}`);
+        localStorage.setItem(`rentalFulfilled_${rentalId}`, 'true');
       }),
       switchMap(() => this.refresh()),
       catchError((error) => this._handleStepError('vehicle-receive', error, startedAt)),
@@ -420,6 +427,13 @@ export class FulfillmentOrchestrator {
         completedAt,
       );
 
+      // if inspection Id is stored in local storage, mark inspection step as fulfilled
+      const inspectionId = localStorage.getItem(`inspectionId_${rental?.rentalId ?? ''}`);
+      if (inspectionId) {
+        const artifact: FulfillmentArtifact = { inspectionId };
+        this._state.markStepFulfilled('inspection', artifact, undefined);
+      }
+
       if (latestContract.status === ContractStatus.PartiallySigned) {
         this._state.markStepFulfilled('sign-renter', undefined, contractEvent?.occurredAt);
       }
@@ -465,6 +479,11 @@ export class FulfillmentOrchestrator {
         },
       };
       this._state.markStepFulfilled('vehicle-receive', artifact, vehicleReceiveEvent.occurredAt);
+    }
+
+    const rentalFulfilledFlag = localStorage.getItem(`rentalFulfilled_${rental?.rentalId ?? ''}`);
+    if (rentalFulfilledFlag === 'true') {
+      this._state.markStepFulfilled('vehicle-receive', undefined, undefined);
     }
   }
 
