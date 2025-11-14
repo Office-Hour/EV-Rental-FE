@@ -16,7 +16,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideApi({
       basePath:
-        'https://swd-be-webapi-production.politerock-c1f6f715.japaneast.azurecontainerapps.io',
+        'https://swd-production-webapi-app-2.orangewater-0e3c8677.japaneast.azurecontainerapps.io',
     }),
     APIS,
 
