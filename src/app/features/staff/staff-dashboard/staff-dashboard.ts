@@ -153,7 +153,8 @@ export class StaffDashboard {
     }
 
     this.closeDetails();
-    void this.router.navigate(['/staff/fulfillment', record.bookingId]);
+    // void this.router.navigate(['/staff/fulfillment', record.bookingId]);
+    window.location.href = `/staff/fulfillment/${record.bookingId}`;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
