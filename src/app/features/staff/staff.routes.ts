@@ -1,8 +1,9 @@
 import { Routes } from '@angular/router';
-import { StaffDashboard } from './staff-dashboard/staff-dashboard';
+
 import { RentalManagement } from './rental-management/rental-management';
 import { RenterManagement } from './renter-management/renter-management';
 import { VehicleManagement } from './vehicle-management/vehicle-management';
+import { StaffDashboard } from './staff-dashboard/staff-dashboard';
 
 export default [
   {
@@ -11,7 +12,7 @@ export default [
     redirectTo: 'bookings',
   },
   {
-    path: 'bookings/:bookingId/fulfillment',
+    path: 'fulfillment/:bookingId',
     loadChildren: () => import('./booking-fulfillment/booking-fulfillment.routes'),
   },
   {

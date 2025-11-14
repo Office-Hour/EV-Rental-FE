@@ -33,6 +33,7 @@ import {
 export interface StaffBookingRecord {
   readonly bookingId: string;
   readonly renterId?: string;
+  readonly renterUserId?: string;
   readonly status?: BookingStatus;
   readonly verificationStatus?: BookingVerificationStatus;
   readonly bookingCreatedAt?: string;
@@ -183,67 +184,82 @@ export class BookingsService {
 
         const bookingIdentifier = this._normalizeString(booking.bookingId) ?? bookingId;
         const renterId = this._normalizeString(booking.renterId);
+        const userIdFromBooking = this._extractUserId(booking);
 
-        const renter$ = renterId
-          ? this._bookingService.apiBookingRenterProfileGet(renterId).pipe(
-              map((response: RenterProfileDtoApiResponse) => response.data ?? undefined),
-              catchError(() => of(undefined)),
-            )
-          : of(undefined);
+        const userId$ = userIdFromBooking
+          ? of(userIdFromBooking)
+          : this._resolveRenterUserId$(renterId);
 
-        const rental$ = renterId
-          ? this._rentalService.apiRentalByRenterGet(renterId).pipe(
-              map((response) => response.data?.items ?? []),
-              map((items) =>
-                items.find((item) => this._normalizeString(item.bookingId) === bookingIdentifier),
-              ),
-              switchMap((match) => {
-                const rentalId = this._normalizeString(match?.rentalId);
-                if (!rentalId) {
-                  return of(undefined);
-                }
+        return userId$.pipe(
+          switchMap((resolvedUserId) => {
+            const renterLookupId = resolvedUserId ?? renterId;
 
-                return this._rentalService.apiRentalRentalIdGet(rentalId).pipe(
-                  map((response) => response.data ?? undefined),
-                  catchError(() => of(undefined)),
-                );
-              }),
-              catchError(() => of(undefined)),
-            )
-          : of(undefined);
-
-        return forkJoin({ renter: renter$, rental: rental$ }).pipe(
-          switchMap(({ renter, rental }) => {
-            const vehicleId = this._normalizeString(
-              rental?.vehicle?.vehicleId ?? rental?.vehicleId,
-            );
-            const vehicle$ = vehicleId
-              ? this._bookingService.apiBookingVehiclesVehicleIdGet(vehicleId).pipe(
-                  map((response: VehicleDetailsDtoApiResponse) => response.data ?? undefined),
+            const renter$ = renterLookupId
+              ? this._bookingService.apiBookingRenterProfileGet(renterLookupId).pipe(
+                  map((response: RenterProfileDtoApiResponse) => response.data ?? undefined),
                   catchError(() => of(undefined)),
                 )
               : of(undefined);
 
-            return vehicle$.pipe(
-              map(
-                (vehicle) =>
-                  ({
-                    bookingId: bookingIdentifier,
-                    renterId,
-                    status: booking.status,
-                    verificationStatus: booking.verificationStatus,
-                    bookingCreatedAt: this._normalizeString(booking.bookingCreatedAt),
-                    startTime: this._normalizeString(booking.startTime),
-                    endTime: this._normalizeString(booking.endTime),
-                    vehicleAtStationId: this._normalizeString(booking.vehicleAtStationId),
-                    verifiedAt: this._normalizeString(booking.verifiedAt),
-                    verifiedByStaffId: this._normalizeString(booking.verifiedByStaffId),
-                    cancelReason: this._normalizeString(booking.cancelReason),
-                    renterProfile: renter,
-                    rental,
-                    vehicleDetails: vehicle,
-                  }) satisfies StaffBookingRecord,
-              ),
+            const rental$ = renterId
+              ? this._rentalService.apiRentalByRenterGet(renterId).pipe(
+                  map((response) => response.data?.items ?? []),
+                  map((items) =>
+                    items.find(
+                      (item) => this._normalizeString(item.bookingId) === bookingIdentifier,
+                    ),
+                  ),
+                  switchMap((match) => {
+                    const rentalId = this._normalizeString(match?.rentalId);
+                    if (!rentalId) {
+                      return of(undefined);
+                    }
+
+                    return this._rentalService.apiRentalRentalIdGet(rentalId).pipe(
+                      map((response) => response.data ?? undefined),
+                      catchError(() => of(undefined)),
+                    );
+                  }),
+                  catchError(() => of(undefined)),
+                )
+              : of(undefined);
+
+            return forkJoin({ renter: renter$, rental: rental$ }).pipe(
+              switchMap(({ renter, rental }) => {
+                const vehicleId = this._normalizeString(
+                  rental?.vehicle?.vehicleId ?? rental?.vehicleId,
+                );
+                const vehicle$ = vehicleId
+                  ? this._bookingService.apiBookingVehiclesVehicleIdGet(vehicleId).pipe(
+                      map((response: VehicleDetailsDtoApiResponse) => response.data ?? undefined),
+                      catchError(() => of(undefined)),
+                    )
+                  : of(undefined);
+
+                return vehicle$.pipe(
+                  map(
+                    (vehicle) =>
+                      ({
+                        bookingId: bookingIdentifier,
+                        renterId,
+                        renterUserId:
+                          resolvedUserId ?? userIdFromBooking ?? this._extractUserId(renter),
+                        status: booking.status,
+                        verificationStatus: booking.verificationStatus,
+                        bookingCreatedAt: this._normalizeString(booking.bookingCreatedAt),
+                        startTime: this._normalizeString(booking.startTime),
+                        endTime: this._normalizeString(booking.endTime),
+                        vehicleAtStationId: this._normalizeString(booking.vehicleAtStationId),
+                        verifiedAt: this._normalizeString(booking.verifiedAt),
+                        verifiedByStaffId: this._normalizeString(booking.verifiedByStaffId),
+                        cancelReason: this._normalizeString(booking.cancelReason),
+                        renterProfile: renter,
+                        rental,
+                        vehicleDetails: vehicle,
+                      }) satisfies StaffBookingRecord,
+                  ),
+                );
+              }),
             );
           }),
         );
@@ -343,11 +359,13 @@ export class BookingsService {
       const bookingId = booking.bookingId;
       const rental = rentalByBookingId.get(bookingId);
       const renterProfile = booking.renterId ? renterById.get(booking.renterId) : undefined;
+      const renterUserId = this._extractUserId(booking) ?? this._extractUserId(renterProfile);
       const vehicleDetails = this._resolveVehicleDetails(rental, vehicleDetailsMap);
 
       records.push({
         bookingId,
         renterId: this._normalizeString(booking.renterId),
+        renterUserId,
         status: booking.status,
         verificationStatus: booking.verificationStatus,
         bookingCreatedAt: this._normalizeString(booking.bookingCreatedAt),
@@ -551,6 +569,44 @@ export class BookingsService {
 
     const trimmed = value.trim();
     return trimmed.length > 0 ? trimmed : undefined;
+  }
+
+  private _extractUserId(source: unknown): string | undefined {
+    if (!source || typeof source !== 'object') {
+      return undefined;
+    }
+
+    const record = source as Record<string, unknown>;
+    const candidateKeys: readonly string[] = ['userId', 'userID', 'identityId', 'accountId'];
+
+    for (const key of candidateKeys) {
+      const candidate = record[key];
+      if (typeof candidate !== 'string') {
+        continue;
+      }
+
+      const normalized = this._normalizeString(candidate);
+      if (normalized) {
+        return normalized;
+      }
+    }
+
+    return undefined;
+  }
+
+  private _resolveRenterUserId$(renterId: string | undefined): Observable<string | undefined> {
+    if (!renterId) {
+      return of(undefined);
+    }
+
+    return this._staffService.apiStaffRentersGet().pipe(
+      map((response: RenterProfileDtoListApiResponse) => response.data ?? []),
+      map((renters) =>
+        renters.find((renter) => this._normalizeString(renter?.renterId) === renterId),
+      ),
+      map((match) => this._extractUserId(match)),
+      catchError(() => of(undefined)),
+    );
   }
 
   private _compareByDateDesc(first?: string, second?: string): number {

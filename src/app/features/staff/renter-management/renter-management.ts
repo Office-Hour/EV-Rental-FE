@@ -10,7 +10,12 @@ import {
 } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { finalize, take } from 'rxjs';
-import { RentersService, StaffRenterRecord } from '../../../core-logic/renters/renters.service';
+import {
+  RentersService,
+  StaffKycDocument,
+  StaffRenterRecord,
+} from '../../../core-logic/renters/renters.service';
+import { KycType } from '../../../../contract';
 
 interface RiskFilterDescriptor {
   readonly key: RiskFilterKey;
@@ -33,23 +38,37 @@ interface RenterCardViewModel {
   readonly record: StaffRenterRecord;
   readonly name: string;
   readonly identifier: string;
-  readonly licenseDisplay: string;
+  readonly primaryKycLabel: string;
+  readonly primaryKycValue: string;
   readonly locationDisplay: string;
   readonly dateOfBirthDisplay: string;
   readonly riskScoreDisplay: string;
   readonly riskBadge?: StatusBadge;
 }
 
+interface KycDocumentViewModel {
+  readonly id: string;
+  readonly label: string;
+  readonly numberDisplay: string;
+  readonly statusText: string;
+  readonly statusTone: StatusTone;
+  readonly lastUpdatedDisplay?: string;
+}
+
 interface SelectedRenterViewModel {
   readonly record: StaffRenterRecord;
   readonly name: string;
   readonly renterId: string;
-  readonly driverLicense?: string;
+  readonly primaryKycLabel: string;
+  readonly primaryKycValue: string;
+  readonly showDriverLicense: boolean;
+  readonly driverLicenseDisplay?: string;
   readonly address?: string;
   readonly dateOfBirth?: string;
   readonly riskScore?: number;
   readonly riskBadge?: StatusBadge;
   readonly riskDescription: string;
+  readonly kycDocuments: readonly KycDocumentViewModel[];
 }
 
 interface ForceVerifyResult {
@@ -140,11 +159,14 @@ export class RenterManagement {
     this.filteredRenters().map((record) => {
       const riskLevel = this._determineRiskLevel(record.riskScore);
       const badge = RISK_BADGES[riskLevel];
+      const primaryDocument = this._selectPrimaryKyc(record.kycDocuments);
+      const primaryDisplay = this._buildPrimaryKycDisplay(record, primaryDocument);
       return {
         record,
         name: record.name,
         identifier: record.renterId,
-        licenseDisplay: record.driverLicense ?? 'No license on file',
+        primaryKycLabel: primaryDisplay.label,
+        primaryKycValue: primaryDisplay.value,
         locationDisplay: record.address ?? 'Address not provided',
         dateOfBirthDisplay: this._formatDate(record.dateOfBirth) ?? 'Date of birth unavailable',
         riskScoreDisplay:
@@ -161,16 +183,30 @@ export class RenterManagement {
     }
 
     const riskLevel = this._determineRiskLevel(record.riskScore);
+    const primaryDocument = this._selectPrimaryKyc(record.kycDocuments);
+    const primaryDisplay = this._buildPrimaryKycDisplay(record, primaryDocument);
+    const driverLicense = record.driverLicense;
+    const showDriverLicense = Boolean(
+      driverLicense && (!primaryDocument || primaryDocument.type !== KycType.DriverLicense),
+    );
+    const kycDocuments = record.kycDocuments.map((document, index) =>
+      this._mapKycDocument(document, index),
+    );
+
     return {
       record,
       name: record.name,
       renterId: record.renterId,
-      driverLicense: record.driverLicense,
+      primaryKycLabel: primaryDisplay.label,
+      primaryKycValue: primaryDisplay.value,
+      showDriverLicense,
+      driverLicenseDisplay: showDriverLicense ? driverLicense : undefined,
       address: record.address,
       dateOfBirth: this._formatDate(record.dateOfBirth) ?? undefined,
       riskScore: record.riskScore,
       riskBadge: RISK_BADGES[riskLevel],
       riskDescription: this._describeRisk(riskLevel),
+      kycDocuments,
     } satisfies SelectedRenterViewModel;
   });
 
@@ -178,6 +214,14 @@ export class RenterManagement {
     day: '2-digit',
     month: '2-digit',
     year: 'numeric',
+  });
+
+  private readonly dateTimeFormatter = new Intl.DateTimeFormat('vi-VN', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
   });
 
   constructor() {
@@ -280,6 +324,111 @@ export class RenterManagement {
     }
   }
 
+  private _selectPrimaryKyc(documents: readonly StaffKycDocument[]): StaffKycDocument | undefined {
+    if (!documents || documents.length === 0) {
+      return undefined;
+    }
+
+    const priority: readonly StaffKycDocument['type'][] = [
+      KycType.DriverLicense,
+      KycType.NationalId,
+      KycType.Passport,
+      KycType.Other,
+      'unknown',
+    ];
+
+    for (const preferred of priority) {
+      for (const document of documents) {
+        if (document.type === preferred) {
+          return document;
+        }
+      }
+    }
+
+    return documents[0];
+  }
+
+  private _buildPrimaryKycDisplay(
+    record: StaffRenterRecord,
+    primaryDocument: StaffKycDocument | undefined,
+  ): { label: string; value: string } {
+    if (primaryDocument) {
+      return {
+        label: primaryDocument.label,
+        value: primaryDocument.documentNumber ?? 'Not provided',
+      };
+    }
+
+    if (record.driverLicense) {
+      return {
+        label: 'Driver license',
+        value: record.driverLicense,
+      };
+    }
+
+    return {
+      label: 'KYC documents',
+      value: 'No KYC documents on file',
+    };
+  }
+
+  private _mapKycDocument(document: StaffKycDocument, index: number): KycDocumentViewModel {
+    const numberDisplay = document.documentNumber ?? 'Not provided';
+    const statusText = document.status ?? this._defaultStatusLabel(document.statusLevel);
+    const statusTone = this._resolveStatusTone(document.statusLevel);
+    const lastUpdatedDisplay = document.lastUpdated
+      ? (this._formatDateTime(document.lastUpdated) ?? undefined)
+      : undefined;
+
+    return {
+      id: 'kyc-' + document.type + '-' + index,
+      label: document.label,
+      numberDisplay,
+      statusText,
+      statusTone,
+      lastUpdatedDisplay,
+    } satisfies KycDocumentViewModel;
+  }
+
+  private _defaultStatusLabel(level: StaffKycDocument['statusLevel']): string {
+    switch (level) {
+      case 'approved':
+        return 'Approved';
+      case 'pending':
+        return 'Pending review';
+      case 'rejected':
+        return 'Rejected';
+      default:
+        return 'Status unknown';
+    }
+  }
+
+  private _resolveStatusTone(level: StaffKycDocument['statusLevel']): StatusTone {
+    switch (level) {
+      case 'approved':
+        return 'success';
+      case 'rejected':
+        return 'danger';
+      case 'pending':
+        return 'pending';
+      default:
+        return 'info';
+    }
+  }
+
+  private _formatDateTime(isoString: string | undefined): string | null {
+    if (!isoString) {
+      return null;
+    }
+
+    const date = new Date(isoString);
+    if (Number.isNaN(date.getTime())) {
+      return null;
+    }
+
+    return this.dateTimeFormatter.format(date);
+  }
+
   private _matchesSearch(record: StaffRenterRecord, query: string): boolean {
     if (!query) {
       return true;
@@ -288,6 +437,15 @@ export class RenterManagement {
     const haystacks = [record.name, record.renterId, record.driverLicense, record.address]
       .map((value) => value?.toLowerCase() ?? '')
       .filter((value) => value.length > 0);
+
+    for (const document of record.kycDocuments) {
+      if (document.documentNumber) {
+        const normalized = document.documentNumber.toLowerCase();
+        if (normalized.length > 0) {
+          haystacks.push(normalized);
+        }
+      }
+    }
 
     return haystacks.some((value) => value.includes(query));
   }

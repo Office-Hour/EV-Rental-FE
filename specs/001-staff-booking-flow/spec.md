@@ -65,7 +65,7 @@ With the rental package in place, the staff agent secures both renter and staff 
 
 ### Functional Requirements
 
-- **FR-001**: Provide a dedicated fulfillment route (`/staff/bookings/{bookingId}/fulfillment`) available only from the staff bookings workspace for bookings that are deposit-paid and awaiting manual processing; the existing dashboard component must remain unchanged.
+- **FR-001**: Provide a dedicated fulfillment route (`/staff/fulfillment/{bookingId}`) available only from the staff bookings workspace for bookings that are deposit-paid and awaiting manual processing; the existing dashboard component must remain unchanged.
 - **FR-002**: Display booking, renter, vehicle, and rental summaries on the fulfillment route using read-only data from existing staff booking sources so agents can confirm they are working on the correct record.
 - **FR-003**: Present the six required milestones as a sequential checklist that enforces the order `check-in → create rental → create contract → upload inspection → capture renter signature → capture staff signature → confirm vehicle receipt`, unlocking each item only when its predecessors succeed.
 - **FR-004**: When the agent confirms booking check-in, call `/booking/POST/api/Booking/checkin` with `bookingId` and `BookingStatus.Approved`, persist completion metadata, and prevent duplicate submissions while awaiting the response.

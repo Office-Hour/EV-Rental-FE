@@ -1,9 +1,60 @@
 import { HttpErrorResponse, HttpEvent, HttpHandlerFn, HttpRequest } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, catchError, finalize, take, throwError } from 'rxjs';
+import {
+  Observable,
+  catchError,
+  finalize,
+  of,
+  shareReplay,
+  switchMap,
+  take,
+  throwError,
+} from 'rxjs';
 import { AuthService } from './auth.service';
 import { TokenService } from '../token/token.service';
+
+let refreshInFlight$: Observable<unknown> | null = null;
+
+const ensureFreshAccessToken = (
+  authService: AuthService,
+  tokenService: TokenService,
+): Observable<unknown> => {
+  const needsRefresh = tokenService.isAccessTokenExpiration();
+  if (!needsRefresh) {
+    return of(null);
+  }
+
+  const hasRefreshToken = !!tokenService.refreshToken.token;
+  if (!hasRefreshToken) {
+    return throwError(() => new Error('Missing refresh token.'));
+  }
+
+  if (!refreshInFlight$) {
+    refreshInFlight$ = authService.invokeAccessTokenExpiration().pipe(
+      finalize(() => {
+        refreshInFlight$ = null;
+      }),
+      shareReplay({ bufferSize: 1, refCount: true }),
+    );
+  }
+
+  return refreshInFlight$;
+};
+
+const attachAuthorizationHeader = (
+  request: HttpRequest<unknown>,
+  tokenService: TokenService,
+): HttpRequest<unknown> => {
+  const accessToken = tokenService.accessToken.token;
+  if (!accessToken) {
+    return request;
+  }
+
+  return request.clone({
+    headers: request.headers.set('Authorization', `Bearer ${accessToken}`),
+  });
+};
 
 /**
  * Intercept
@@ -18,36 +69,14 @@ export const authInterceptor = (
   const authService = inject(AuthService);
   const tokenService = inject(TokenService);
   const router = inject(Router);
-  // Clone the request object
-  let newReq = req.clone();
 
   // Request
   //Check if the user is authenticated
   if (!authService.isAuthenticated) {
     return next(req);
   }
-  // Check if the access token is expiration
-  if (tokenService.isAccessTokenExpiration()) {
-    // Invoke access token expiration
-    authService.invokeAccessTokenExpiration().subscribe({
-      next: () => {
-        newReq = req.clone({
-          headers: req.headers.set('Authorization', 'Bearer ' + tokenService.accessToken.token),
-        });
-      },
-      error: () => {
-        return throwError(() => new Error('Failed to invoke access token expiration.'));
-      },
-    });
-  } else {
-    // If the access token exists, add the Authorization header.
-    newReq = req.clone({
-      headers: req.headers.set('Authorization', 'Bearer ' + tokenService.accessToken.token),
-    });
-  }
-
-  // Response
-  return next(newReq).pipe(
+  return ensureFreshAccessToken(authService, tokenService).pipe(
+    switchMap(() => next(attachAuthorizationHeader(req, tokenService))),
     catchError((error) => {
       // Catch "401 Unauthorized" responses
       if (error instanceof HttpErrorResponse && error.status === 401) {
@@ -55,26 +84,13 @@ export const authInterceptor = (
         // alertService.show('401 Unauthorized');
         // Run when refresh token is expiration
         // Sign out
-        authService
-          .signOut()
-          .pipe(
-            take(1),
-            finalize(() => {
-              // Reload the app
-              location.reload();
-            }),
-          )
-          .subscribe({
-            next: () => {
-              return next(newReq);
-            },
-            error: () => {
-              return throwError(() => error);
-            },
-            complete: () => {
-              return next(newReq);
-            },
-          });
+        return authService.signOut().pipe(
+          take(1),
+          finalize(() => {
+            location.reload();
+          }),
+          switchMap(() => throwError(() => error)),
+        );
       }
       // Catch other errors
       if (error instanceof HttpErrorResponse) {
